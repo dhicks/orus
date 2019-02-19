@@ -26,7 +26,7 @@ library(tictoc)
 data_dir = '../data/'
 author_folder = str_c(data_dir, 'author_histories/')
 
-plan(multiprocess, workers = 2)
+plan(multiprocess, workers = 1)
 
 ## Load data ----
 oru_df = read_rds(str_c(data_dir, '03_matched.Rds'))
@@ -44,7 +44,7 @@ author_meta = author_meta_unfltd %>%
            first_year > 1970) %>%
     mutate(oru = auid %in% oru_df$auid)
 
-## Basically no overdispersion here
+## Basically no overdispersion now
 mean(author_meta$n_docs, na.rm = TRUE)
 sd(author_meta$n_docs, na.rm = TRUE)
 
@@ -203,20 +203,23 @@ histories_df %>%
     unique() %>% 
     length()
 
-library(lubridate)
-## pub_date is either ymd or NA
+# library(lubridate)
+# ## pub_date is either ymd or NA
+# # histories_df %>% 
+# #     mutate(pubdate = ymd(pub_date)) %>% 
+# #     filter(is.na(pubdate))
+# ## Negative-cumulative count of papers by year
+# ## Trimming things around 2000 -> ~90k papers
 # histories_df %>% 
-#     mutate(pubdate = ymd(pub_date)) %>% 
-#     filter(is.na(pubdate))
-## Negative-cumulative count of papers by year
-## Trimming things around 2000 -> ~90k papers
-histories_df %>% 
-    mutate(pub_date = ymd(pub_date), 
-           pub_year = year(pub_date)) %>% 
-    count(scopus_id, pub_year) %>% 
-    count(pub_year) %>% 
-    rename(n = nn) %>% 
-    mutate(cum_n = cumsum(n), 
-           cum_n_rev = max(cum_n) - cum_n) %>% 
-    ggplot(aes(pub_year, cum_n_rev)) +
-    geom_line()
+#     mutate(pub_date = ymd(pub_date), 
+#            pub_year = year(pub_date)) %>% 
+#     count(scopus_id, pub_year) %>% 
+#     count(pub_year) %>% 
+#     rename(n = nn) %>% 
+#     mutate(cum_n = cumsum(n), 
+#            cum_n_rev = max(cum_n) - cum_n) %>% 
+#     ggplot(aes(pub_year, cum_n_rev)) +
+#     geom_line()
+
+## Write output ----
+write_rds(histories_df, str_c(data_dir, '05_author_histories.Rds'))

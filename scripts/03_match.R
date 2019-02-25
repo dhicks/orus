@@ -1,3 +1,5 @@
+## This script matched ORU faculty to results of a Scopus search for UCD publications, 2016-18
+## It also identifies codepartmental authors in the same Scopus search results
 library(tidyverse)
 
 ## Load data ----
@@ -75,8 +77,9 @@ manual_match = read_csv(str_c(data_dir, '00_manual_matches.csv'),
 ## Combine automatic and manual matches
 matched = bind_rows(matched, manual_match)
 
-## Remaining unmatched
-anti_join(faculty, matched)
+## 9 faculty remain unmatched
+anti_join(faculty, matched) %>% 
+    write_rds(str_c(data_dir, '03_unmatched.Rds'))
 1 - nrow(count(matched, name)) / nrow(count(faculty, name))
 
 ## Are departmental affiliations unique?  
@@ -106,44 +109,52 @@ departments = pubs %>%
     filter(str_detect(aff_name, 'Department of')) %>% 
     pull(aff_name)
 
+
 ## Subjects for our analysis ----
-## Authors in the same departments
+## Authors in the identified departments
 codept = pubs %>% 
     filter(!is.na(doi)) %>% 
     unnest(authors) %>% 
     filter(aff_id %in% ucd_ids, 
            aff_name %in% departments) %>% 
-    count(auid) %>% 
-    pull(auid)
+    count(auid, aff_name) %>% 
+    select(-n)
 
-## Publication counts (2016-18)
-pub_counts = pubs %>% 
-    filter(!is.na(doi)) %>% 
-    unnest(authors) %>% 
-    filter(auid %in% codept) %>% 
-    count(auid, doi) %>% 
-    select(-n) %>% 
-    count(auid)
+## 13 ORU faculty who aren't in codepts (no departmental affiliations)
+matched %>% 
+    filter(! auid %in% codept$auid) %>% 
+    write_rds(str_c(data_dir, '03_dropout.Rds'))
 
-## (counts below ignore false duplicate auids)
-## 6.0k authors have 1+ paper
-## 2.8k authors have 3+ papers
-pub_counts %>% 
-    count(n) %>% 
-    arrange(desc(n)) %>% 
-    mutate(cum = cumsum(nn)) %>% 
-    arrange(n)
-
-## 136 ORU faculty have 1+ papers
-## 120 ORU faculty have 3+ papers
-pub_counts %>% 
-    filter(auid %in% matched$auid) %>% 
-    count(n) %>% 
-    arrange(desc(n)) %>% 
-    mutate(cum = cumsum(nn)) %>% 
-    arrange(n)
+# ## Publication counts (2016-18)
+# pub_counts = pubs %>% 
+#     filter(!is.na(doi)) %>% 
+#     unnest(authors) %>% 
+#     filter(auid %in% codept) %>% 
+#     count(auid, doi) %>% 
+#     select(-n) %>% 
+#     count(auid)
+# 
+# ## (counts below ignore false duplicate auids)
+# ## 6.0k authors have 1+ paper
+# ## 2.8k authors have 3+ papers
+# pub_counts %>% 
+#     count(n) %>% 
+#     arrange(desc(n)) %>% 
+#     mutate(cum = cumsum(nn)) %>% 
+#     arrange(n)
+# 
+# ## 136 ORU faculty have 1+ papers
+# ## 120 ORU faculty have 3+ papers
+# pub_counts %>% 
+#     filter(auid %in% matched$auid) %>% 
+#     count(n) %>% 
+#     arrange(desc(n)) %>% 
+#     mutate(cum = cumsum(nn)) %>% 
+#     arrange(n)
 
 ## Output ----
+## ORU faculty matched to records in the search results
 write_rds(matched, str_c(data_dir, '03_matched.Rds'))
+## auids for matched ORU faculty and codepartmentals
 write_rds(codept, str_c(data_dir, '03_codepartmentals.Rds'))
 

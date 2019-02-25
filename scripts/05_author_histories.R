@@ -26,31 +26,59 @@ library(tictoc)
 data_dir = '../data/'
 author_folder = str_c(data_dir, 'author_histories/')
 
-plan(multiprocess, workers = 1)
+plan(multiprocess, workers = 2)
 
-## Load data ----
-oru_df = read_rds(str_c(data_dir, '03_matched.Rds'))
+filter_conditions = quos(n_docs >= 15, first_year <= 2014, first_year > 1970)
+
+## Load and filter data ----
+dropouts_03 = read_rds(str_c(data_dir, '03_dropout.Rds'))
+oru_df = read_rds(str_c(data_dir, '03_matched.Rds')) %>% 
+    anti_join(dropouts_03, by = 'auid')
+departments = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
 author_meta_unfltd = read_rds(str_c(data_dir, '04_author_meta.Rds'))
-## Poisson distribution? 
+## Poisson distribution of pub counts? 
 ## Substantially overdispersed
 mean(author_meta_unfltd$n_docs, na.rm = TRUE)
 sd(author_meta_unfltd$n_docs, na.rm = TRUE)
 
-## ***Filter conditions here***
+oru_filtered = author_meta_unfltd %>% 
+    filter(!!!filter_conditions) %>%
+    inner_join(oru_df)
+departments_filtered = departments %>% 
+    filter(auid %in% oru_filtered$auid) %>% 
+    count(aff_name) %>% 
+    select(-n) %>% 
+    inner_join(departments)
+
 author_meta = author_meta_unfltd %>% 
-    filter(n_docs >= 15,
-           first_year <= 2014,
-           first_year > 1970) %>%
+    filter(!!!filter_conditions) %>% 
+    filter(auid %in% departments_filtered$auid) %>% 
     mutate(oru = auid %in% oru_df$auid)
 
-## Basically no overdispersion now
+## Confirm that filtering down departments didn't somehow lose any ORU faculty
+author_meta %>% 
+    filter(oru) %>% 
+    pull(auid) %>% 
+    n_distinct() %>% 
+    are_equal(n_distinct(oru_filtered$auid)) %>% 
+    assert_that(msg = 'author_meta and oru_filtered have different numbers of ORU faculty')
+    
+## Dropouts
+## 0 dropouts in script 04
+anti_join(oru_df, author_meta_unfltd, by = 'auid')
+## 21 dropouts with these filters
+anti_join(oru_df, author_meta, by = 'auid') %>% 
+    write_rds(str_c(data_dir, '05_dropout.Rds'))
+
+## Basically no overdispersion of pub counts now
 mean(author_meta$n_docs, na.rm = TRUE)
 sd(author_meta$n_docs, na.rm = TRUE)
 
 ggplot(author_meta, aes(n_docs)) +
     geom_density(data = author_meta_unfltd, aes(color = 'unfiltered')) +
     geom_density(aes(color = 'filtered')) +
+    geom_rug(aes(color = 'filtered')) +
     ## dpois() doesn't play nice with ggplot's interpolation of x values
     # stat_function(fun = function (x) dpois(x, 71),
     #               data = tibble(n_docs = seq(1, 1000, by = 3))) +
@@ -175,28 +203,28 @@ histories_df = author_history_files %>%
 toc()
 
 ## Correct number of docs per author? 
-## Numbers are off for 75 authors
+## Numbers are off for 72 authors
 ## Usually the metadata results have 1 more than the search results; but not always
 ## 1 case w/ difference of 6:  56323044500
-## Metadata retrieval now gives 39, so this may just be due to the time between API queries
+## Metadata retrieval now [sometime in January 2019] gives 39, so this may just be due to the time between API queries
 histories_df %>% 
     count(auid) %>% 
     right_join(author_meta, by = 'auid') %>% 
     mutate(right_count = n == n_docs) %>% 
     filter(!right_count) %>% 
-    # count(n - n_docs)
-    filter(n - n_docs == 6)
+    count(n - n_docs)
+    # filter(n - n_docs == 6)
     # ggplot(aes(log10(n), log10(n_docs))) +
     # geom_point() +
     # stat_function(fun = identity)
 
 ## How many unique papers? 
-## 125k
+## 117k
 histories_df %>% 
     pull(eid) %>% 
     unique() %>% 
     length()
-## 106k using DOIs
+## 100k using DOIs
 histories_df %>% 
     filter(!is.na(doi)) %>% 
     pull(doi) %>% 

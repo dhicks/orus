@@ -12,7 +12,8 @@ library(tictoc)
 data_dir = '../data/'
 pub_folder = str_c(data_dir, 'docs/')  ## Same folder as 02
 
-plan(multiprocess, workers = 6)
+scrape_workers = 6
+parse_workers = 2
 
 ## Load author histories DF ----
 oru_df = read_rds(str_c(data_dir, '03_matched.Rds'))
@@ -53,6 +54,7 @@ scrape = function (this_eid, target_folder) {
 # scrape(eids[1], pub_folder)
 
 ## Do the scraping ----
+plan(multiprocess, workers = scrape_workers)
 tic()
 pub_files = eids %>% 
     # head(2e4) %>% 
@@ -60,7 +62,6 @@ pub_files = eids %>%
                    .progress = TRUE)
 toc()
 
-stop()
 ## Parse XML files ----
 parse_ = function (raw) {
     xml = read_xml(raw)
@@ -194,12 +195,18 @@ parse_ = function (raw) {
 parse = function(target_file) {
     print(target_file)
     raw = read_file(target_file)
-    if (raw == '') {
+    if (raw == '' | str_length(raw) == 155) {
         ## Handle empty responses
         scopus_id = str_extract(target_file, '[0-9]{8,}')
         return(tibble(scopus_id = scopus_id))
     } else {
-        return(parse_(raw))
+        parsed = safely(parse_)(raw)
+        if (is.null(parsed$error)) {
+            return(parsed$result)
+        } else {
+            scopus_id = str_extract(target_file, '[0-9]{8,}')
+            return(tibble(scopus_id = scopus_id, error = as.character(parsed$error)))
+        }
     }
 }
 
@@ -207,10 +214,12 @@ parse = function(target_file) {
 #     unnest(authors) %>% 
 #     select(surname, aff_id, aff_name)
 
-## 46 sec/100 files -> ~3 hours
-## 7785.614 sec = 2+ hours
+## 36 sec/100 files -> ~1.3 hours
+plan(multiprocess, workers = parse_workers)
 tic()
 pubs = pub_files %>% 
+    # head(100) %>% 
     future_map_dfr(parse, .progress = TRUE)
 toc()
 
+write_rds(pubs, str_c(data_dir, '06_oru_histories.Rds'))

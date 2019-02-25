@@ -14,7 +14,7 @@ author_folder = str_c(data_dir, 'authors_meta/')
 plan(multiprocess, workers = 2)
 
 ## Load data ----
-auids = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
+codepts = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
 ## Functions for scraping from API ----
 scrape_ = function (this_auid) {
@@ -48,7 +48,9 @@ scrape = function (this_auid, target_folder) {
 ## Do the scraping ----
 ## 42 sec / 100 records -> ~2.5 sec = ~42 min
 tic()
-author_meta_files = auids %>% 
+author_meta_files = codepts %>% 
+    pull(auid) %>% 
+    unique() %>% 
     # head(1e2) %>%
     future_map_chr(scrape, target_folder = author_folder, 
                    .progress = TRUE)

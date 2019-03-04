@@ -16,6 +16,12 @@
 library(tidyverse)
 library(xml2)
 
+library(igraph)
+library(tidygraph)
+library(ggraph)
+# devtools::install_github("schochastics/smglr")
+library(smglr)
+
 library(furrr)
 library(RCurl)
 source('api_key.R')
@@ -83,6 +89,104 @@ ggplot(author_meta, aes(n_docs)) +
     # stat_function(fun = function (x) dpois(x, 71),
     #               data = tibble(n_docs = seq(1, 1000, by = 3))) +
     scale_x_log10()
+
+
+## Network viz ----
+dept_net = departments_filtered %>% 
+    filter(auid %in% author_meta$auid) %>% 
+    graph_from_data_frame(directed = FALSE) %>% 
+    as_tbl_graph() %>% 
+    left_join(author_meta, by = c(name = 'auid')) %>% 
+    mutate(type = case_when(is.na(oru) ~ 'department', 
+                            oru ~ 'ORU faculty', 
+                            !oru ~ 'other faculty'))
+
+oru_net = oru_df %>% 
+    select(oru = ORU, auid) %>% 
+    graph_from_data_frame(directed = FALSE) %>% 
+    simplify() %>% 
+    as_tbl_graph() %>% 
+    mutate(type = case_when(str_detect(name, '[0-9]+') ~ 'ORU faculty',
+                            TRUE ~ 'ORU'))
+
+net = graph_join(dept_net, oru_net) %>% 
+    as.undirected() %>% 
+    as_tbl_graph() %>% 
+    mutate(degree = centrality_degree(), 
+           btwn = centrality_betweenness())
+
+## Degree distributions for different node types
+# net %>% 
+#     as_tibble() %>% 
+#     group_by(type) %>% 
+#     summarize_at(vars(degree), 
+#                  funs(n = n(), min, mean, median, max))
+
+## 110 sec
+layout_file = '05_layout.Rds'
+if (!file.exists(layout_file)) {
+    ## 110 sec
+    stress = layout_with_stress(net)
+    stress = stress %>% 
+        as_tibble() %>% 
+        rename(x = V1, y = V2)
+    write_rds(stress, str_c(data_dir, layout_file))
+} else {
+    stress = read_rds(str_c(data_dir, layout_file))
+}
+
+# ## 105 sec
+# tic()
+# backbone = layout_as_backbone(net)
+# toc()
+
+graph_attr(thing, 'layout') = NULL
+
+net %>% 
+    mutate(x = stress$x, 
+           y = stress$y) %>% 
+    filter(degree > 1) %>% 
+    `graph_attr<-`('layout', data.frame(x = V(.)$x, 
+                                        y = V(.)$y)) %>% 
+    ggraph(layout = 'nicely') +
+    geom_edge_link(alpha = .5) +
+    geom_node_point(aes(color = type, size = btwn)) +
+    geom_node_text(aes(label = name), 
+                   data = function(dataf) {
+                       subset(dataf, type == 'ORU')
+                   }) +
+    geom_node_text(aes(label = name), 
+                   size = 1,
+                   data = function(dataf) {
+                       subset(dataf, type == 'department')
+                   }) +
+    theme_graph()
+ggsave(str_c('../plots/', '05_network.png'), 
+       height = 10, width = 15, dpi = 300, scale = 1/2)
+
+## ORU-dep't network
+## NB could use dep't-dep't and ORU-ORU connections
+# inner_join(oru_df, departments_filtered) %>% 
+#     select(oru = ORU, aff_name) %>% 
+#     graph_from_data_frame(directed = FALSE) %>% 
+#     as_tbl_graph() %>% 
+#     mutate(type = ifelse(name %in% oru_df$ORU, 
+#                          'ORU', 
+#                          'department')) %>% 
+#     ggraph(layout = 'nicely') +
+#     geom_edge_fan(alpha = .5) +
+#     geom_node_point(aes(color = type)) +
+#     geom_node_text(aes(label = name), 
+#                    data = function(dataf) {
+#                        subset(dataf, type == 'ORU')
+#                    }) +
+#     geom_node_text(aes(label = name), 
+#                    size = 1,
+#                    data = function(dataf) {
+#                        subset(dataf, type == 'department')
+#                    }) +
+#     theme_graph()
+
 
 
 ## Functions for scraping from API ----

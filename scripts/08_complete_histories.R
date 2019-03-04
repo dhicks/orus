@@ -275,6 +275,18 @@ assert_that(length(eids) == nrow(pubs))
 ## Validation:  exactly `known_na` empty rows
 assert_that(sum(is.na(pubs$date)) == known_na)
 
+## Write outputs ----
 write_rds(pubs, str_c(data_dir, '08_full_histories.Rds'))
 
+## Comprehensive sample
+pubs_comp = filter(pubs, scopus_id %in% comp$histories$scopus_id)
+assert_that(n_distinct(pubs_comp$scopus_id) + 1 == n_distinct(comp$histories$scopus_id)) ## +1 for NA
+comp$histories = pubs_comp
+write_rds(comp, str_c(data_dir, '08_comp.Rds'))
+
+## DID sample
+pubs_did = filter(pubs, scopus_id %in% did$histories$scopus_id)
+assert_that(n_distinct(pubs_did$scopus_id) + 1 == n_distinct(did$histories$scopus_id)) ## +1 for NA
+did$histories = pubs_did
+write_rds(did, str_c(data_dir, '08_did.Rds'))
 

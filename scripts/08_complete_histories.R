@@ -268,6 +268,8 @@ pubs = blocks %>%
                    .progress = TRUE)
 toc()
 
+## Validation:  no NA scopus IDs
+assert_that(sum(is.na(pubs$scopus_id)) == 0)
 ## Validation:  no parsing errors
 assert_that(! 'error' %in% names(pubs))
 ## Validation:  exactly 1 row per input document ID

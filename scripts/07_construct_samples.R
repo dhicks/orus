@@ -1,8 +1,8 @@
 ## This script first uses paper-level metadata for ORU authors to attempt to identify years of first affiliation for each author-ORU
 ## This is partially successful, matching ~2/3 ORU faculty overall but with large gaps (eg, almost no JMIE faculty).  
 ## This suggests splitting the analysis into two designs:  
-## 1. A difference-in-differences (DID) design, comparing ORU faculty for whom we have ORU affiliation dates (referred to as "matched" in this script) to their codepartmentals, and 
-## 2. A "comprehensive" design, including all faculty identified in steps 03+05 but only using papers published since 2000
+## 1. A difference-in-differences (DID) design, comparing ORU faculty for whom we have ORU affiliation dates (referred to as "matched" in this script) to their codepartmentals; and 
+## 2. A "comprehensive" design, including all faculty identified in steps 03-05 but only using papers published since 2000
 ## 
 ## This script then constructs parallel data files for each sample
 

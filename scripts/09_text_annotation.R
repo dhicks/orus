@@ -27,4 +27,4 @@ pubs_ann = pubs_df %>%
     cnlp_annotate()
 toc()
 
-write_rds(str_c(data_dir, '09_annotated.Rds'))
+write_rds(pubs_ann, str_c(data_dir, '09_annotated.Rds'))

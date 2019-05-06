@@ -19,6 +19,8 @@ parse_workers = 2
 ## Num. papers where we know API returned "resource not found"
 known_na = 76
 
+full_histories_file = str_c(data_dir, '08_full_histories.Rds')
+
 ## Load sample data files ----
 did = read_rds(str_c(data_dir, '07_did_sample.Rds'))
 comp = read_rds(str_c(data_dir, '07_comp_sample.Rds'))
@@ -62,13 +64,17 @@ scrape = function (this_eid, target_folder) {
 # scrape(eids[1], pub_folder)
 
 ## Do the scraping ----
-plan(multiprocess, workers = scrape_workers)
-tic()
-pub_files = eids %>% 
-    # head(2e3) %>%
-    future_map_chr(scrape, target_folder = pub_folder, 
-                   .progress = TRUE)
-toc()
+if (to_be_downloaded > 0) {
+    plan(multiprocess, workers = scrape_workers)
+    tic()
+    pub_files = eids %>% 
+        # head(2e3) %>%
+        future_map_chr(scrape, target_folder = pub_folder, 
+                       .progress = TRUE)
+    toc()
+} else {
+    pub_files = str_c(pub_folder, eids, '.xml')
+}
 
 assert_that(length(pub_files) == length(eids))
 
@@ -250,35 +256,40 @@ parse_block = function(target_files,
 
 # parse_block(pub_files[1:10])
 
-block_size = 300
-n_blocks = ceiling(length(pub_files) / block_size)
-blocks = split(pub_files, 1:n_blocks)
-
-options(error = recover)
-
-## ~1 min for block of 300
-## x 380 blocks = 6+ hours w/o parallelization
-plan(multiprocess, workers = parse_workers)
-tic()
-pubs = blocks %>% 
-    # head(300) %>% 
-    future_map_dfr(parse_block, 
-                   target_folder = str_c(data_dir, 
-                                         'parsed_doc_blocks/'),
-                   .progress = TRUE)
-toc()
-
-## Validation:  no NA scopus IDs
-assert_that(sum(is.na(pubs$scopus_id)) == 0)
-## Validation:  no parsing errors
-assert_that(! 'error' %in% names(pubs))
-## Validation:  exactly 1 row per input document ID
-assert_that(length(eids) == nrow(pubs))
-## Validation:  exactly `known_na` empty rows
-assert_that(sum(is.na(pubs$date)) == known_na)
+if (!file.exists(full_histories_file)) {
+    block_size = 300
+    n_blocks = ceiling(length(pub_files) / block_size)
+    blocks = split(pub_files, 1:n_blocks)
+    
+    options(error = recover)
+    
+    ## ~1 min for block of 300
+    ## x 380 blocks = 6+ hours w/o parallelization
+    plan(multiprocess, workers = parse_workers)
+    tic()
+    pubs = blocks %>% 
+        # head(300) %>% 
+        future_map_dfr(parse_block, 
+                       target_folder = str_c(data_dir, 
+                                             'parsed_doc_blocks/'),
+                       .progress = TRUE)
+    toc()
+    
+    ## Validation:  no NA scopus IDs
+    assert_that(sum(is.na(pubs$scopus_id)) == 0)
+    ## Validation:  no parsing errors
+    assert_that(! 'error' %in% names(pubs))
+    ## Validation:  exactly 1 row per input document ID
+    assert_that(length(eids) == nrow(pubs))
+    ## Validation:  exactly `known_na` empty rows
+    assert_that(sum(is.na(pubs$date)) == known_na)
+    
+    write_rds(pubs, full_histories_file)
+} else {
+    pubs = read_rds(full_histories_file)
+}
 
 ## Write outputs ----
-write_rds(pubs, str_c(data_dir, '08_full_histories.Rds'))
 
 ## Comprehensive sample
 pubs_comp = filter(pubs, scopus_id %in% comp$histories$scopus_id)

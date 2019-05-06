@@ -120,6 +120,27 @@ pubs_df %>%
     geom_jitter() +
     stat_function(fun = identity)
 
+## Only 25 matched ORU researchers have >= 10 papers both before and since
+pubs_df %>% 
+    count(auid, year) %>% 
+    inner_join(matched) %>% 
+    mutate(after_aff = year >= first_year) %>% 
+    count(auid, first_year, after_aff) %>% 
+    spread(after_aff, n) %>% 
+    rename(before = `FALSE`, since = `TRUE`) %>% 
+    filter(before >= 10, since >= 10)
+
+## 55 have at least 5 on both sides
+pubs_df %>% 
+    count(auid, year) %>% 
+    inner_join(matched) %>% 
+    mutate(after_aff = year >= first_year) %>% 
+    count(auid, first_year, after_aff) %>% 
+    spread(after_aff, n) %>% 
+    rename(before = `FALSE`, since = `TRUE`) %>% 
+    filter(before >= 5, since >= 5)
+
+
 ## What if we restrict things to 2000? 
 pubs_df %>% 
     count(auid, year) %>% 
@@ -160,8 +181,16 @@ codepts_did = codepts %>%
     inner_join(codepts) %>% 
     ## Capture 05 filtering
     filter(auid %in% histories$auid) %>% 
+    ## Drop departments w/ only 1 member
+    add_count(aff_name) %>% 
+    filter(n > 1) %>% 
+    select(-n) %>% 
+    ## ORU affiliations
+    left_join(matched, by = 'auid') %>% 
+    replace_na(list(ORU = 'none', first_year = Inf)) %>% 
+    rename(oru_name = ORU) %>% 
     ## Construct grouping variables
-    mutate(oru = auid %in% oru_df$auid, 
+    mutate(oru = auid %in% oru_df$auid,
            in_matched = auid %in% matched$auid, 
            dropout_03 = auid %in% dropouts_03$auid,
            dropout_05 = auid %in% dropouts_05$auid,
@@ -169,36 +198,39 @@ codepts_did = codepts %>%
                              oru & !in_matched ~ 'ORU not in DID', 
                              !oru & in_matched ~ 'error', 
                              !oru & !in_matched ~ 'codepartmental')) %>% 
-    ## Drop ORU faculty for whom we don't have first affiliation dates
+    # count(group)
+    ## Drop ORU faculty who aren't in the sample
     filter(group != 'ORU not in DID')
 
 ## Data validation:  no matching errors; no dropouts from scripts 03 and 05
-assert_that(all(codepts_did$group != 'error'), msg = 'erroneous groups in codepts_did')
+assert_that(all(codepts_did$group != 'error'), 
+            msg = 'erroneous groups in codepts_did')
 assert_that(all(!codepts_did$dropout_03))
 assert_that(all(!codepts_did$dropout_05))
 
-## 73 ORU faculty and 1.7k codepartmental comparators (counting by unique auids)
+## 72 ORU faculty and 1.7k codepartmental comparators (counting by unique auids)
 codepts_did %>% 
     count(auid, group) %>% 
     count(group)
 
 author_meta_did = author_meta %>% 
-    inner_join(codepts_did) %>% 
-    select(-aff_name) %>% 
-    filter(!duplicated(.))
+    inner_join(codepts_did, by = 'auid', 
+               suffix = c('_pubs', '_oru')) %>% 
+    nest(aff_name, oru_name, first_year_oru)
 
 ## Data validation:  1 row in author_meta_comp per unique auid
 assert_that(n_distinct(codepts_did$auid) == nrow(author_meta_did))
 
 ## Distributions of first publication years, ORU faculty vs. codepartmentals
 ## These are similar enough that I don't think we need matching or anything at this point
-ggplot(author_meta_did, aes(group, first_year)) +
+ggplot(author_meta_did, aes(group, first_year_pubs)) +
     geom_violin(draw_quantiles = .5, scale = 'count') +
-    geom_dotplot(binaxis = 'y', binwidth = 1, stackdir = 'center', dotsize = .5)
+    geom_dotplot(binaxis = 'y', binwidth = 1, 
+                 stackdir = 'center', dotsize = .5)
 
 ## Author histories = papers to be used for DID analysis
 histories_did = histories %>% 
-    filter(auid %in% codepts_did$auid)
+    filter(auid %in% author_meta_did$auid)
 assert_that(n_distinct(histories_did$auid) == n_distinct(codepts_did$auid))
 
 ## 102k distinct papers
@@ -225,7 +257,17 @@ n_distinct(histories_comp$eid)
 codepts_comp = codepts %>%
     filter(auid %in% histories_comp$auid, 
            !duplicated(.)) %>% 
-    mutate(oru = auid %in% oru_df$auid, 
+    ## Drop departments w/ only 1 member
+    add_count(aff_name) %>% 
+    filter(n > 1) %>% 
+    select(-n) %>% 
+    ## ORU affiliations
+    left_join(select(oru_df, auid, ORU), 
+              by = 'auid') %>% 
+    replace_na(list(ORU = 'none')) %>% 
+    rename(oru_name = ORU) %>% 
+    ## Construct grouping variables
+    mutate(oru = oru_name != 'none',
            dropout_03 = auid %in% dropouts_03$auid,
            dropout_05 = auid %in% dropouts_05$auid,
            group = case_when(oru ~ 'ORU', 
@@ -235,14 +277,14 @@ codepts_comp = codepts %>%
 assert_that(all(!codepts_comp$dropout_03))
 assert_that(all(!codepts_comp$dropout_05))
 
+## 115 ORU faculty, 2.0k codepartmentals
 codepts_comp %>% 
     group_by(group) %>% 
     summarize(n = n_distinct(auid))
 
 author_meta_comp = author_meta %>% 
     inner_join(codepts_comp) %>% 
-    select(-aff_name) %>% 
-    filter(!duplicated(.))
+    nest(aff_name, oru_name)
 
 ## Data validation:  1 row in author_meta_comp per unique auid
 assert_that(n_distinct(codepts_comp$auid) == nrow(author_meta_comp))

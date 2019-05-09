@@ -13,6 +13,8 @@ author_folder = str_c(data_dir, 'authors_meta/')
 
 plan(multiprocess, workers = 2)
 
+force_scrape = TRUE
+
 ## Load data ----
 codepts = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
@@ -28,11 +30,11 @@ scrape_ = function (this_auid) {
     raw
 }
 
-scrape = function (this_auid, target_folder) {
+scrape = function (this_auid, target_folder, force_scrape = FALSE) {
     ## Either scrape from the API + save the result OR pass
     target_file = str_c(target_folder, this_auid, '.xml')
     # target_file = str_c(target_folder, '/', this_auid, '.xml.zip')
-    if (!file.exists(target_file)) {
+    if (!file.exists(target_file)|force_scrape) {
         raw = scrape_(this_auid)
         write_file(raw, target_file)
         # zip(target_file, target_file_xml, flags = '-9Xq')
@@ -53,6 +55,7 @@ author_meta_files = codepts %>%
     unique() %>% 
     # head(1e2) %>%
     future_map_chr(scrape, target_folder = author_folder, 
+                   force_scrape = force_scrape,
                    .progress = TRUE)
 toc()
 

@@ -1,4 +1,4 @@
-## This script retrieves author metadata
+## This script retrieves metadata for all authors identified in the previous script, both ORU affiliates and codepartmentals
 library(tidyverse)
 library(xml2)
 
@@ -65,6 +65,14 @@ parse_ = function(raw) {
     xml = read_xml(raw)
     xml = xml_ns_strip(xml)
     
+    surname = xml %>% 
+        xml_find_first('//preferred-name/surname') %>% 
+        xml_text()
+    
+    given_name = xml %>% 
+        xml_find_first('//preferred-name/given-name') %>% 
+        xml_text()
+    
     auid = xml %>%
         xml_find_first('//dc:identifier') %>% 
         xml_text() %>% 
@@ -94,7 +102,8 @@ parse_ = function(raw) {
         xml_attr('end') %>% 
         as.integer()
     
-    tibble(auid, n_docs, 
+    tibble(auid, surname, given_name,
+           n_docs, 
            cited_by_count, citation_count, 
            first_year, last_year)
 }
@@ -123,8 +132,103 @@ author_meta_df = author_meta_files %>%
 toc()
 
 
+
+## Gender attribution ----
+namsor = function(given, family, namsor_key = NULL, namsor_user = NULL) {
+    query_url = str_c('https://api.namsor.com/onomastics/api/json/gender/',
+                      RCurl::curlEscape(given), '/', 
+                      RCurl::curlEscape(family))
+    full_url = str_c(query_url, '?key1=', namsor_key,
+                     '&key2=', namsor_user)
+    # return(query_url)
+    response = RCurl::getURL(full_url)
+    json = jsonlite::fromJSON(response)
+    json = jsonlite:::null_to_na(json)
+    return(json)
+}
+namsor('Claus Svane',
+       'Søndergaard',
+       namsor_key, namsor_user)
+
+namsor_list = function(names_df, given_col = given, surname_col = family) {
+    given = enquo(given_col)
+    surname = enquo(surname_col)
+    
+    query_url = str_c('https://api.namsor.com/onomastics/api/json/genderList')
+    header = c('Accept' = 'application/json', 
+               'X-Channel-Secret' = namsor_key, 
+               'X-Channel-User' = namsor_user)
+    names_json = names_df %>%
+        select(firstName = !!given, lastName = !!surname) %>%
+        filter(!duplicated(.)) %>%
+        mutate(id = row_number()) %>%
+        list('names' = .) %>%
+        jsonlite::toJSON()
+    
+    response = RCurl::basicTextGatherer()
+    result = RCurl::curlPerform(url = query_url, 
+                                httpheader = header, 
+                                postfields = names_json, 
+                                .encoding = 'utf-8',
+                                writefunction = response$update)
+    
+    response_df = response$value() %>%
+        jsonlite::fromJSON() %>%
+        .$names %>%
+        rename(given = firstName, family = lastName)
+    return(response_df)
+}
+
+# namsor_list(slice(author_meta_df, 1:2), 
+#             given_name, surname)
+
+# author_meta_df %>% 
+#     filter(surname == 'Søndergaard') %>% 
+#     namsor_list(given_col = given_name, 
+#                 surname_col = surname)
+
+namsor_file = str_c(data_dir, '04_namsor.Rds')
+if (!file.exists(namsor_file)) {
+    chunks = author_meta_df %>%
+        count(given_name, surname) %>%
+        filter(complete.cases(.)) %>%
+        mutate(row_num = row_number(), 
+               chunk = as.integer(row_num %/% 1000)) %>%
+        plyr::dlply('chunk', identity)
+    
+    gender_namsor = map_dfr(chunks, namsor_list, 
+                            given_name, surname)
+    gender_namsor = gender_namsor %>%
+        ## Rescale output variables
+        mutate(gender = case_when(gender == 'male' ~ 'm', 
+                                  gender == 'female' ~ 'f', 
+                                  gender == 'unknown' ~ 'indeterminate'), 
+               scale = (scale + 1)/2) %>%
+        rename(gender_namsor = gender, 
+               prob_f_namsor = scale)
+    
+    write_rds(gender_namsor, namsor_file)
+} else {
+    gender_namsor = read_rds(namsor_file)
+}
+
+anti_join(author_meta_df, gender_namsor, 
+          by = c('given_name' = 'given', 
+                 'surname' = 'family')) %>% 
+    filter(!is.na(surname)) %>% 
+    nrow() %>% 
+    assertthat::are_equal(0L) %>% 
+    assertthat::assert_that(msg = 'Some authors missing from gender_namsor')
+
+count(gender_namsor, gender_namsor)
+
+
 ## Write output ----
-write_rds(author_meta_df, str_c(data_dir, '04_author_meta.Rds'))
+author_meta_df %>% 
+    left_join(gender_namsor, 
+              by = c('surname' = 'family', 
+                     'given_name' = 'given')) %>% 
+    write_rds(str_c(data_dir, '04_author_meta.Rds'))
 
 
 stop("Don't automatically run EDA")

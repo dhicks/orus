@@ -16,7 +16,7 @@ data_dir = '../data/'
 dept_thresh = 3 ## Threshold # of researchers required to keep a department
 
 year_thresh = 3 ## Max. difference in first_years for matching
-caliper = .2 ## Width of caliper for matching, in sd of logit propensity scores
+caliper = .25 ## Width of caliper for matching, in sd of logit propensity scores
 
 ## Load data ----
 dropouts_03 = read_rds(str_c(data_dir, '03_dropout.Rds'))
@@ -25,9 +25,9 @@ oru_df = read_rds(str_c(data_dir, '03_matched.Rds')) %>%
 departments = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
 author_meta = read_rds(str_c(data_dir, '04_author_meta.Rds')) %>% 
-    filter(!is.na(gender_namsor)) %>% 
+    mutate(gender = as.character(fct_explicit_na(gender))) %>% 
     left_join(oru_df, by = 'auid', suffix = c('', '.oru')) %>% 
-    select(auid:gender_namsor, 
+    select(auid:probability, 
            oru = ORU) %>% 
     mutate(oru_lgl = !is.na(oru), 
            oru = fct_explicit_na(oru), 
@@ -64,7 +64,7 @@ anti_join(author_meta, dept_dummies) %>%
 
 ## Propensity model ----
 prop_model = author_meta %>% 
-    select(oru_lgl, auid, gender_namsor, first_year) %>% 
+    select(oru_lgl, auid, gender, first_year) %>% 
     inner_join(dept_dummies) %>% 
     column_to_rownames(var = 'auid') %>% 
     glm(oru_lgl ~ ., 
@@ -104,7 +104,17 @@ matched = full_comp %>%
     filter(score_diff == min(score_diff)) %>%
     ungroup()
 
-## 12 ORU authors can't be matched this way
+matched %>%
+    select(auid, auid1,
+           surname, surname1,
+           score_diff,
+           first_year, first_year1,
+           n_docs, n_docs1,
+           gender, gender1,
+           departments, departments1) %>%
+    view()
+
+## 9 ORU authors can't be matched this way
 unmatched = author_meta %>% 
     filter(oru_lgl) %>% 
     filter(auid %in% dept_dummies$auid) %>% 
@@ -122,16 +132,6 @@ right_join(full_comp, unmatched, by = 'auid') %>%
               any_both = any(inside_caliper & close_years), 
               min_score = min(score_diff), 
               min_year = min(first_year_diff))
-
-
-# matched %>%
-#     select(auid, auid1,
-#            score_diff,
-#            first_year, first_year1,
-#            n_docs, n_docs1,
-#            gender_namsor, gender_namsor1,
-#            departments, departments1) %>%
-#     view()
 
 
 ## Tidygraph to visualize matching structure ----
@@ -157,13 +157,13 @@ ggplot(matched, aes(x = score_diff, y = score,
 
 ## Gender
 gender_before = ggplot(author_meta, aes(oru_lgl, 
-                                        fill = gender_namsor)) +
+                                        fill = gender)) +
     geom_bar(position = 'fill')
 
 gender_after = ggplot(matched) +
-    geom_bar(aes(x = oru_lgl, fill = gender_namsor), 
+    geom_bar(aes(x = oru_lgl, fill = gender), 
              position = 'fill') +
-    geom_bar(aes(x = oru_lgl1, fill = gender_namsor1), 
+    geom_bar(aes(x = oru_lgl1, fill = gender), 
              position = 'fill')
 
 plot_grid(gender_before, gender_after)

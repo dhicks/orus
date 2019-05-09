@@ -1,7 +1,4 @@
 ## This script uses propensity scores to match ORU researchers to comparators
-
-## TODO:  track dropouts
-
 library(tidyverse)
 library(broom)
 library(cowplot)

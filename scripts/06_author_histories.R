@@ -1,26 +1,15 @@
 ## This script retrieves EIDs for all of every author's prior papers
-## 
-## The next step here would be to use the abstract retrieval API to retrieve the full metadata for each paper
-## However, with current filtering there are 90k-106k papers to retrieve
-## Some possibilities for further filtering:  
-## - increase the n_docs threshold, eg, to 20 or 25
-##      - this starts to remove more ORU faculty
-## - cut off author histories, eg, at 2000
-##      - this doesn't cut things down that much, eg, 2000 cutoff -> 90k
-## - something based on ORU affiliation dates
-##      - this assumes that we can get data on ORU affiliations outside of Scopus
-##      - emailed Christine Park for help
-## - use Crossref instead
-##      - Crossref doesn't have stable author IDs, has patchy abstract coverage
+
+## TODO:  put the department-ORU network viz back in somewhere
 
 library(tidyverse)
 library(xml2)
 
-library(igraph)
-library(tidygraph)
-library(ggraph)
+# library(igraph)
+# library(tidygraph)
+# library(ggraph)
 # devtools::install_github("schochastics/smglr")
-library(smglr)
+# library(smglr)
 
 library(furrr)
 library(RCurl)
@@ -34,86 +23,46 @@ author_folder = str_c(data_dir, 'author_histories/')
 
 plan(multiprocess, workers = 2)
 
-filter_conditions = quos(n_docs >= 15, first_year <= 2014, first_year > 1970)
 
 ## Load and filter data ----
 dropouts_03 = read_rds(str_c(data_dir, '03_dropout.Rds'))
+dropouts_05 = read_rds(str_c(data_dir, '05_dropouts.Rds'))
 oru_df = read_rds(str_c(data_dir, '03_matched.Rds')) %>% 
-    anti_join(dropouts_03, by = 'auid')
+    anti_join(dropouts_03, by = 'auid') %>% 
+    anti_join(dropouts_05, by = 'auid')
 departments = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
-author_meta_unfltd = read_rds(str_c(data_dir, '04_author_meta.Rds'))
-## Poisson distribution of pub counts? 
-## Substantially overdispersed
-mean(author_meta_unfltd$n_docs, na.rm = TRUE)
-sd(author_meta_unfltd$n_docs, na.rm = TRUE)
+author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds'))
 
-oru_filtered = author_meta_unfltd %>% 
-    filter(!!!filter_conditions) %>%
-    inner_join(oru_df)
-departments_filtered = departments %>% 
-    filter(auid %in% oru_filtered$auid) %>% 
-    count(aff_name) %>% 
-    select(-n) %>% 
-    inner_join(departments)
-
-author_meta = author_meta_unfltd %>% 
-    filter(!!!filter_conditions) %>% 
-    filter(auid %in% departments_filtered$auid) %>% 
-    mutate(oru = auid %in% oru_df$auid)
-
-## Confirm that filtering down departments didn't somehow lose any ORU faculty
-author_meta %>% 
-    filter(oru) %>% 
-    pull(auid) %>% 
-    n_distinct() %>% 
-    are_equal(n_distinct(oru_filtered$auid)) %>% 
-    assert_that(msg = 'author_meta and oru_filtered have different numbers of ORU faculty')
-    
-## Dropouts
-## 0 dropouts in script 04
-anti_join(oru_df, author_meta_unfltd, by = 'auid')
-## 21 dropouts with these filters
 anti_join(oru_df, author_meta, by = 'auid') %>% 
-    write_rds(str_c(data_dir, '05_dropout.Rds'))
-
-## Basically no overdispersion of pub counts now
-mean(author_meta$n_docs, na.rm = TRUE)
-sd(author_meta$n_docs, na.rm = TRUE)
-
-ggplot(author_meta, aes(n_docs)) +
-    geom_density(data = author_meta_unfltd, aes(color = 'unfiltered')) +
-    geom_density(aes(color = 'filtered')) +
-    geom_rug(aes(color = 'filtered')) +
-    ## dpois() doesn't play nice with ggplot's interpolation of x values
-    # stat_function(fun = function (x) dpois(x, 71),
-    #               data = tibble(n_docs = seq(1, 1000, by = 3))) +
-    scale_x_log10()
+    nrow() %>% 
+    are_equal(0L) %>% 
+    assert_that(msg = 'oru_df authors missing from author_meta')
 
 
 ## Network viz ----
-dept_net = departments_filtered %>% 
-    filter(auid %in% author_meta$auid) %>% 
-    graph_from_data_frame(directed = FALSE) %>% 
-    as_tbl_graph() %>% 
-    left_join(author_meta, by = c(name = 'auid')) %>% 
-    mutate(type = case_when(is.na(oru) ~ 'department', 
-                            oru ~ 'ORU faculty', 
-                            !oru ~ 'other faculty'))
-
-oru_net = oru_df %>% 
-    select(oru = ORU, auid) %>% 
-    graph_from_data_frame(directed = FALSE) %>% 
-    simplify() %>% 
-    as_tbl_graph() %>% 
-    mutate(type = case_when(str_detect(name, '[0-9]+') ~ 'ORU faculty',
-                            TRUE ~ 'ORU'))
-
-net = graph_join(dept_net, oru_net) %>% 
-    as.undirected() %>% 
-    as_tbl_graph() %>% 
-    mutate(degree = centrality_degree(), 
-           btwn = centrality_betweenness())
+# dept_net = departments_filtered %>% 
+#     filter(auid %in% author_meta$auid) %>% 
+#     graph_from_data_frame(directed = FALSE) %>% 
+#     as_tbl_graph() %>% 
+#     left_join(author_meta, by = c(name = 'auid')) %>% 
+#     mutate(type = case_when(is.na(oru) ~ 'department', 
+#                             oru ~ 'ORU faculty', 
+#                             !oru ~ 'other faculty'))
+# 
+# oru_net = oru_df %>% 
+#     select(oru = ORU, auid) %>% 
+#     graph_from_data_frame(directed = FALSE) %>% 
+#     simplify() %>% 
+#     as_tbl_graph() %>% 
+#     mutate(type = case_when(str_detect(name, '[0-9]+') ~ 'ORU faculty',
+#                             TRUE ~ 'ORU'))
+# 
+# net = graph_join(dept_net, oru_net) %>% 
+#     as.undirected() %>% 
+#     as_tbl_graph() %>% 
+#     mutate(degree = centrality_degree(), 
+#            btwn = centrality_betweenness())
 
 ## Degree distributions for different node types
 # net %>% 
@@ -123,46 +72,46 @@ net = graph_join(dept_net, oru_net) %>%
 #                  funs(n = n(), min, mean, median, max))
 
 ## 110 sec
-layout_file = '05_layout.Rds'
-if (!file.exists(layout_file)) {
-    ## 110 sec
-    stress = layout_with_stress(net)
-    stress = stress %>% 
-        as_tibble() %>% 
-        rename(x = V1, y = V2)
-    write_rds(stress, str_c(data_dir, layout_file))
-} else {
-    stress = read_rds(str_c(data_dir, layout_file))
-}
-
-# ## 105 sec
-# tic()
-# backbone = layout_as_backbone(net)
-# toc()
-
-graph_attr(thing, 'layout') = NULL
-
-net %>% 
-    mutate(x = stress$x, 
-           y = stress$y) %>% 
-    filter(degree > 1) %>% 
-    `graph_attr<-`('layout', data.frame(x = V(.)$x, 
-                                        y = V(.)$y)) %>% 
-    ggraph(layout = 'nicely') +
-    geom_edge_link(alpha = .5) +
-    geom_node_point(aes(color = type, size = btwn)) +
-    geom_node_text(aes(label = name), 
-                   data = function(dataf) {
-                       subset(dataf, type == 'ORU')
-                   }) +
-    geom_node_text(aes(label = name), 
-                   size = 1,
-                   data = function(dataf) {
-                       subset(dataf, type == 'department')
-                   }) +
-    theme_graph()
-ggsave(str_c('../plots/', '05_network.png'), 
-       height = 10, width = 15, dpi = 300, scale = 1/2)
+# layout_file = '05_layout.Rds'
+# if (!file.exists(layout_file)) {
+#     ## 110 sec
+#     stress = layout_with_stress(net)
+#     stress = stress %>% 
+#         as_tibble() %>% 
+#         rename(x = V1, y = V2)
+#     write_rds(stress, str_c(data_dir, layout_file))
+# } else {
+#     stress = read_rds(str_c(data_dir, layout_file))
+# }
+# 
+# # ## 105 sec
+# # tic()
+# # backbone = layout_as_backbone(net)
+# # toc()
+# 
+# graph_attr(thing, 'layout') = NULL
+# 
+# net %>% 
+#     mutate(x = stress$x, 
+#            y = stress$y) %>% 
+#     filter(degree > 1) %>% 
+#     `graph_attr<-`('layout', data.frame(x = V(.)$x, 
+#                                         y = V(.)$y)) %>% 
+#     ggraph(layout = 'nicely') +
+#     geom_edge_link(alpha = .5) +
+#     geom_node_point(aes(color = type, size = btwn)) +
+#     geom_node_text(aes(label = name), 
+#                    data = function(dataf) {
+#                        subset(dataf, type == 'ORU')
+#                    }) +
+#     geom_node_text(aes(label = name), 
+#                    size = 1,
+#                    data = function(dataf) {
+#                        subset(dataf, type == 'department')
+#                    }) +
+#     theme_graph()
+# ggsave(str_c('../plots/', '05_network.png'), 
+#        height = 10, width = 15, dpi = 300, scale = 1/2)
 
 ## ORU-dep't network
 ## NB could use dep't-dep't and ORU-ORU connections
@@ -190,7 +139,7 @@ ggsave(str_c('../plots/', '05_network.png'),
 
 
 ## Functions for scraping from API ----
-scrape_ = function (this_auid, page_idx) {
+scrape_ = function (this_auid, page_idx, print_url = FALSE) {
     ## Basically just an abstraction of the RCurl call
     base_url = 'https://api.elsevier.com/content/search/scopus?'
     query_url = str_c(base_url, 
@@ -199,19 +148,22 @@ scrape_ = function (this_auid, page_idx) {
                       '&start=', 200*(page_idx-1),
                       '&httpAccept=application/xml',
                       '&apiKey=', api_key)
-    print(query_url)
+    if (print_url) {
+        print(query_url)
+    }
     raw = getURL(query_url)
     raw
 }
 
-scrape = function (this_auid, n_docs, target_folder) {
-    ## In this data, max(n_docs) = 650, so max(total_pages) = 4
+scrape = function (this_auid, n_docs, target_folder, 
+                   force_scrape = FALSE) {
+    ## In this data, max(n_docs) = 370, so max(total_pages) = 2
     total_pages = n_docs %/% 200 + 1
     target_files = str_c(this_auid, '_', 1:total_pages, '.xml')
     for (page_idx in 1:total_pages) {
         ## Either scrape from the API + save the result OR pass
         target_file = str_c(target_folder, target_files[page_idx])
-        if (!file.exists(target_file)) {
+        if (!file.exists(target_file) | force_scrape) {
             raw = scrape_(this_auid, page_idx)
             write_file(raw, target_file)
         }
@@ -226,13 +178,14 @@ scrape = function (this_auid, n_docs, target_folder) {
 # scrape('35498339000', 205, author_folder)
 
 ## Do the scraping ----
-## 12 sec/10 -> 4085 sec = ~70 min
+## ~460 sec when force_scrape = TRUE
 tic()
 author_history_files = author_meta %>% 
-    # head(10) %>% 
+    # head(10) %>%
     # rowwise() %>% 
     future_map2(.x = .$auid, .y = .$n_docs, 
-                .f = ~scrape(.x, .y, author_folder), 
+                .f = ~scrape(.x, .y, author_folder, 
+                             force_scrape = FALSE), 
                 .progress = TRUE)
 toc()
 
@@ -288,8 +241,7 @@ parse_ = function(raw) {
 # raw = read_file(str_c(author_folder, author_history_files[1][[1]]))
 
 parse = function(files, author_folder) {
-    files = files %>% 
-        str_c(author_folder, .)
+    files = str_c(author_folder, files)
     parsed_df = files %>% 
         map(read_file) %>% 
         map_dfr(parse_)
@@ -298,7 +250,7 @@ parse = function(files, author_folder) {
 # parse(author_history_files[[9]], author_folder)
 
 ## Do the parsing ----
-## 7.4 sec / 100 -> ~250 sec = 4+ minutes
+## 14 sec / 100 -> ~1 minute
 tic()
 histories_df = author_history_files %>% 
     set_names(author_meta$auid) %>% 
@@ -307,28 +259,25 @@ histories_df = author_history_files %>%
 toc()
 
 ## Correct number of docs per author? 
-## Numbers are off for 72 authors
-## Usually the metadata results have 1 more than the search results; but not always
-## 1 case w/ difference of 6:  56323044500
-## Metadata retrieval now [sometime in January 2019] gives 39, so this may just be due to the time between API queries
+## Except for 1 case, we have a few papers in the search that aren't in the metadata
 histories_df %>% 
     count(auid) %>% 
     right_join(author_meta, by = 'auid') %>% 
     mutate(right_count = n == n_docs) %>% 
     filter(!right_count) %>% 
-    count(n - n_docs)
-    # filter(n - n_docs == 6)
+    # count(n - n_docs)
+    filter(abs(n - n_docs) >= 6) %>% view()
     # ggplot(aes(log10(n), log10(n_docs))) +
     # geom_point() +
     # stat_function(fun = identity)
 
 ## How many unique papers? 
-## 117k
+## 22.6k
 histories_df %>% 
     pull(eid) %>% 
     unique() %>% 
     length()
-## 100k using DOIs
+## 18.3k using DOIs
 histories_df %>% 
     filter(!is.na(doi)) %>% 
     pull(doi) %>% 
@@ -354,4 +303,4 @@ histories_df %>%
 #     geom_line()
 
 ## Write output ----
-write_rds(histories_df, str_c(data_dir, '05_author_histories.Rds'))
+write_rds(histories_df, str_c(data_dir, '06_author_histories.Rds'))

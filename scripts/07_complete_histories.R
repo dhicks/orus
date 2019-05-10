@@ -1,5 +1,4 @@
-## This script retrieves complete metadata for the author histories, ORU faculty only
-## It is mostly copied from script 02 (another reason why 02 should be a package)
+## This script retrieves complete metadata for the author histories, for the matched samples defined in 05
 library(tidyverse)
 library(xml2)
 
@@ -7,22 +6,33 @@ library(furrr)
 library(RCurl)
 source('api_key.R')
 
+library(assertthat)
 library(tictoc)
 
 data_dir = '../data/'
 pub_folder = str_c(data_dir, 'docs/')  ## Same folder as 02
+parsed_blocks_folder = str_c(data_dir, 'parsed_blocks/')
 
-scrape_workers = 6
+parsed_file = str_c(data_dir, '07_parsed_histories.Rds')  ## Overall output file
+
+scrape_workers = 5
 parse_workers = 2
 
-## Load author histories DF ----
-oru_df = read_rds(str_c(data_dir, '03_matched.Rds'))
 
-histories_df = read_rds(str_c(data_dir, '05_author_histories.Rds')) %>% 
-    mutate(oru = auid %in% oru_df$auid) %>% 
-    filter(oru)
+## Load data ----
+paper_meta = read_rds(str_c(data_dir, '06_author_histories.Rds')) %>% 
+    filter(!is.na(eid))
 
-eids = unique(histories_df$eid)
+eids = paper_meta %>% 
+    pull(eid) %>% 
+    unique()
+
+## How many more papers need to be downloaded?  
+to_be_downloaded = pub_folder %>%
+    dir() %>%
+    setdiff(str_c(eids, '.xml'), .) %>%
+    length()
+to_be_downloaded
 
 ## Functions for scraping from API ----
 scrape_ = function (this_eid) {
@@ -54,13 +64,19 @@ scrape = function (this_eid, target_folder) {
 # scrape(eids[1], pub_folder)
 
 ## Do the scraping ----
-plan(multiprocess, workers = scrape_workers)
-tic()
-pub_files = eids %>% 
-    # head(2e4) %>% 
-    future_map_chr(scrape, target_folder = pub_folder, 
-                   .progress = TRUE)
-toc()
+if (to_be_downloaded > 0) {
+    plan(multiprocess, workers = scrape_workers)
+    tic()
+    pub_files = eids %>% 
+        # head(2e3) %>%
+        future_map_chr(scrape, target_folder = pub_folder, 
+                       .progress = TRUE)
+    toc()
+} else {
+    pub_files = str_c(pub_folder, eids, '.xml')
+}
+
+assert_that(length(pub_files) == length(eids))
 
 ## Parse XML files ----
 parse_ = function (raw) {
@@ -179,7 +195,7 @@ parse_ = function (raw) {
                    given_name = given_names) %>% 
         transpose() %>% 
         map_dfr(as_tibble, .id = 'author_group') %>% 
-        left_join(aff_map)
+        left_join(aff_map, by = 'author_group')
     
     references = xml %>%
         xml_find_all('//bibliography/reference') %>%
@@ -193,7 +209,7 @@ parse_ = function (raw) {
 }
 
 parse = function(target_file) {
-    print(target_file)
+    # print(target_file)
     raw = read_file(target_file)
     if (raw == '' | str_length(raw) == 155) {
         ## Handle empty responses
@@ -214,12 +230,69 @@ parse = function(target_file) {
 #     unnest(authors) %>% 
 #     select(surname, aff_id, aff_name)
 
-## 36 sec/100 files -> ~1.3 hours
-plan(multiprocess, workers = parse_workers)
-tic()
-pubs = pub_files %>% 
-    # head(100) %>% 
-    future_map_dfr(parse, .progress = TRUE)
-toc()
+parse_block = function(target_files, 
+                       prefix = '08', sep = '_',
+                       target_folder = data_dir) {
+    get_eid = function (path) {
+        str_extract(path, '[^/]+(?=\\.xml)')
+    }
+    
+    start = get_eid(first(target_files))
+    end = get_eid(last(target_files))
+    
+    block_file = str_c(target_folder, 
+                       str_c(prefix, start, end, sep = sep), 
+                       '.Rds')
+    
+    if (!file.exists(block_file)) {
+        parsed_df = map_dfr(target_files, parse)
+        write_rds(parsed_df, block_file)
+    } else {
+        parsed_df = read_rds(block_file)
+    }
+    
+    return(parsed_df)
+}
 
-write_rds(pubs, str_c(data_dir, '06_oru_histories.Rds'))
+# parse_block(pub_files[1:10])
+
+if (!file.exists(parsed_file)) {
+    block_size = 300
+    n_blocks = ceiling(length(pub_files) / block_size)
+    blocks = split(pub_files, 1:n_blocks)
+    
+    options(error = recover)
+    
+    ## ~86 sec for block of 300 -> ~52 minutes
+    ## 86 * n_blocks / parse_workers / 60
+    # tic()
+    # parse_block(blocks[[1]])
+    # toc()
+    
+    plan(multiprocess, workers = parse_workers)
+    tic()
+    pubs = blocks %>% 
+        # head(300) %>% 
+        future_map_dfr(parse_block, 
+                       target_folder = parsed_blocks_folder,
+                       .progress = TRUE)
+    toc()
+    
+    ## Validation:  no NA scopus IDs
+    assert_that(sum(is.na(pubs$scopus_id)) == 0)
+    ## Validation:  no parsing errors
+    assert_that(! 'error' %in% names(pubs))
+    ## Validation:  exactly 1 row per input document ID
+    assert_that(length(eids) == nrow(pubs))
+    ## Validation:  complete coverage of paper_meta
+    assert_that(setdiff(paper_meta$scopus_id, pubs$scopus_id))
+    ## Validation:  exactly `known_na` empty rows
+    # assert_that(sum(is.na(pubs$date)) == known_na)
+    ## Validation:  no empty rows
+    assert_that(all(!is.na(pubs$date)))
+    
+    write_rds(pubs, parsed_file)
+} else {
+    pubs = read_rds(parsed_file)
+}
+

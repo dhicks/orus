@@ -7,7 +7,7 @@ library(assertthat)
 ## Load data
 data_dir = '../data/'
 
-pubs_df = read_rds(str_c(data_dir, '08_full_histories.Rds')) %>% 
+pubs_df = read_rds(str_c(data_dir, '07_parsed_histories.Rds')) %>% 
     filter(!is.na(abstract), 
            abstract != '')
 
@@ -19,12 +19,14 @@ cnlp_init_spacy()
 
 
 ## Annotate ----
-## 8.4 sec / 100 docs -> 2.3 hours
+## ~10 sec / 100 docs -> ~30-40 minutes
 tic()
 pubs_ann = pubs_df %>% 
-    # head(100) %>% 
-    select(scopus_id, abstract) %>% 
-    cnlp_annotate()
+    # head(100) %>%
+    # select(scopus_id, abstract) %>% 
+    cnlp_annotate(as_strings = TRUE, 
+                  doc_var = 'scopus_id', 
+                  text_var = 'abstract')
 toc()
 
-write_rds(pubs_ann, str_c(data_dir, '09_annotated.Rds'))
+write_rds(pubs_ann, str_c(data_dir, '08_annotated.Rds'))

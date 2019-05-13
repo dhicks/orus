@@ -160,7 +160,7 @@ nouns %>%
     stat_ecdf()
 
 ## Author-year-term matrix (long, sparse)
-aytm = nouns %>% 
+atm = nouns %>% 
     filter(lemma %in% vocab) %>% 
     count(auid, lemma)
 
@@ -168,7 +168,7 @@ aytm = nouns %>%
 ## Output ----
 list(H = H, 
      vocab = vocab, 
-     aytm = aytm) %>% 
+     atm = atm) %>% 
     write_rds(str_c(data_dir, '09_H.Rds'))
 
-write_csv(aytm, str_c(data_dir, '10_aytm.csv'))
+write_csv(atm, str_c(data_dir, '10_atm.csv'))

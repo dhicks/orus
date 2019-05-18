@@ -1,3 +1,6 @@
+## TODO:  
+## author 57203386115 is in the matches, but only has 1 pub, so isn't in the topic model
+
 library(tidyverse)
 library(broom)
 library(stm)
@@ -6,6 +9,8 @@ library(tidytext) ## for stm tidiers
 library(gghighlight)
 library(ggforce)
 theme_set(theme_minimal())
+
+library(tictoc)
 
 data_dir = '../data/'
 
@@ -34,6 +39,23 @@ author_meta %>%
                position = position_nudge(y = -.5),
                geom = 'text') +
     scale_y_sqrt()
+
+
+## Extract topic models gamma ----
+matrices = models %>% 
+    mutate(beta = map(model, tidy, 
+                      matrix = 'beta'),
+           gamma = map(model, tidy, 
+                       matrix = 'gamma', document_names = auids))
+
+gamma = unnest(matrices, gamma) %>% 
+    rename(auid = document) %>% 
+    left_join(author_meta)
+
+gamma_45 = filter(gamma, k == 45)
+gamma_sm = filter(gamma, k %in% c(15, 45, 75, 105))
+
+
 
 
 ## Number of documents ----
@@ -147,18 +169,6 @@ model_stats %>%
 
 
 ## Topic-author entropy ----
-matrices = models %>% 
-    mutate(beta = map(model, tidy, 
-                      matrix = 'beta'),
-           gamma = map(model, tidy, 
-                       matrix = 'gamma', document_names = auids))
-
-gamma = unnest(matrices, gamma) %>% 
-    rename(auid = document) %>% 
-    left_join(author_meta)
-
-gamma_45 = filter(gamma, k == 45)
-
 ## Author-level topic distributions, grouped by ORU, k = 45
 gamma_45 %>% 
     unnest(oru) %>% 
@@ -232,12 +242,18 @@ H_lm %>%
 
 
 ## Silhouette analysis ----
-## ~4 sec for gamma_45 alone
+## ~1 sec for 45 alone
+## ~4 sec for 15, 45, 75
+## ~6 sec for 15, 45, 75, 105
 ## Reaches memory limit for all k
 tic()
-crossed = gamma_45 %>% 
-    # filter(oru_lgl) %>% 
-    full_join(., ., by = c('k', 'topic')) %>% 
+crossed = gamma_sm %>% 
+    select(k, topic, auid, gamma) %>% 
+    group_by(k, topic) %>% 
+    group_split() %>% #str(max.level = 1)
+    map2_dfr(., ., tidyr::crossing) %>% 
+    rename(auid.x = auid, auid.y = auid1, 
+           gamma.x = gamma, gamma.y = gamma1) %>% 
     filter(auid.x != auid.y)
 toc()
 
@@ -250,7 +266,12 @@ hellinger = function(dataf) {
 }
 
 ## Hellinger distances for all pairs
+## ~2 sec for 45 alone
+## ~6 sec for 15, 45, 75
+## ~9 sec for 15, 45, 75, 105
+tic()
 dist = hellinger(crossed)
+toc()
 
 ## Mean distance w/in ORUs
 ## NB crossed should already eliminate self-pairs
@@ -285,46 +306,57 @@ full_join(oru_dist, comp_dist, by = c('k', 'auid')) %>%
                color = oru)) +
     geom_point() +
     stat_function(fun = identity, linetype = 'dashed', 
-                  inherit.aes = FALSE)
+                  inherit.aes = FALSE) +
+    facet_wrap(vars(k)) +
+    coord_equal()
 
 ## MDS viz of Hellinger distances
-mds_coords = crossed %>%
-    hellinger() %>%
-    select(-k) %>%
-    spread(auid.y, h_dist) %>%
-    column_to_rownames(var = 'auid.x') %>%
-    as.dist() %>%
-    cmdscale(k = 2) %>%
-    as.data.frame() %>%
-    rownames_to_column(var = 'auid') %>%
-    as_tibble()
+mds_coords = dist %>%
+    split(.$k) %>% 
+    map(select, -k) %>% 
+    map(spread, auid.y, h_dist) %>%
+    map(column_to_rownames, var = 'auid.x') %>%
+    map(as.dist) %>%
+    map(cmdscale, k = 2) %>%
+    map(as.data.frame) %>%
+    map(rownames_to_column, var = 'auid') %>%
+    map(as_tibble) %>% 
+    bind_rows(.id = 'k')
 
 ## Line segments for matched ORU-comparison pairs
 matched = read_rds(str_c(data_dir, '05_matched.Rds'))
 matched_coords = matched %>% 
     left_join(mds_coords, by = 'auid') %>% 
-    left_join(mds_coords, by = c('auid1' = 'auid'), 
+    left_join(mds_coords, by = c('auid1' = 'auid', 'k'), 
               suffix = c('.1', '.2')) %>% 
-    select(auid, auid1, starts_with('V'))
+    select(k, auid, auid1, starts_with('V')) %>% 
+    mutate(k = as.integer(k))
 
 
 left_join(author_meta,
           mds_coords) %>%
-    # filter(oru_lgl) %>%
+    mutate(k = as.integer(k), 
+           name = paste(given_name, surname)) %>% 
+    ## For the moment, filter one author who isn't in the topic model
+    filter(auid != '57203386115') %>% 
+    # filter(oru_lgl) %>% 
     unnest(oru) %>%
     ggplot(aes(V1, V2, color = oru)) +
-    geom_segment(inherit.aes = FALSE, 
-                 data = matched_coords, 
-                 aes(x = V1.1, y = V2.1, 
-                     xend = V1.2, yend = V2.2), 
+    geom_segment(inherit.aes = FALSE,
+                 data = matched_coords,
+                 aes(x = V1.1, y = V2.1,
+                     xend = V1.2, yend = V2.2),
                  alpha = .2) +
-    geom_point() +
+    geom_point(aes(label = name)) +
     geom_mark_ellipse(aes(filter = oru_lgl, 
                           label = oru), 
                       size = .8) +
     # scale_color_brewer(palette = 'Set2')
     scale_color_viridis_d(option = 'A', direction = -1) +
     # coord_equal() +
+    facet_wrap(vars(k), ncol = 2) +
     theme_void() +
     theme(panel.background = element_rect(fill = 'grey90'),
           legend.background = element_rect(fill = 'grey90'))
+
+# plotly::ggplotly()

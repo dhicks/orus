@@ -170,23 +170,33 @@ model_stats %>%
 
 ## Topic-author entropy ----
 ## Author-level topic distributions, grouped by ORU, k = 45
-gamma_45 %>% 
+at_plot = gamma_45 %>% 
     unnest(oru) %>% 
     ggplot(aes(auid, topic, fill = gamma)) +
     geom_raster() +
     scale_fill_viridis_c(option = 'A') +
     facet_wrap(vars(oru), scales = 'free') +
     coord_flip()
+at_plot
+
+## And same for 105
+gamma_sm %>% 
+    filter(k == 105) %>% 
+    unnest(oru) %>% 
+    {at_plot %+% .}
 
 ## ORU-level topic distributions
-gamma %>% 
+gamma_oru = gamma %>% 
     unnest(oru) %>% 
+    # filter(oru != 'AQRC') %>% 
     group_by(k, oru, topic) %>% 
     summarize(gamma = mean(gamma)) %>% 
-    ungroup() %>% 
-    ggplot(aes(oru, topic, fill = gamma)) +
+    ungroup()
+
+ggplot(gamma_oru, aes(oru, topic, fill = gamma)) +
     geom_raster() +
-    scale_fill_viridis_c(option = 'A') +
+    scale_fill_viridis_c(option = 'A', 
+                         trans = 'sqrt') +
     facet_wrap(vars(k), scales = 'free_x') +
     coord_flip()
 
@@ -209,6 +219,18 @@ ggplot(H_gamma, aes(oru_lgl, H, color = oru_lgl)) +
     geom_sina(alpha = .25) +
     # scale_x_discrete(breaks = NULL) +
     facet_wrap(vars(k), scales = 'free_y')
+
+## ORU-level entropies
+gamma_oru %>% 
+    group_by(k, oru) %>% 
+    mutate(H_term = -gamma * log2(gamma)) %>% 
+    summarize(H = sum(H_term)) %>% 
+    ungroup() %>% 
+    ggplot(aes(k, H, color = oru)) +
+    geom_point() +
+    geom_line() +
+    stat_function(fun = function(x) log2(x), 
+                  inherit.aes = FALSE, color = 'black')
 
 
 ## Regression model of entropy ----

@@ -13,6 +13,7 @@ theme_set(theme_minimal())
 library(tictoc)
 
 data_dir = '../data/'
+plots_dir = '../plots/'
 
 
 ## Load data ----
@@ -125,7 +126,8 @@ cites_lm %>%
 #     select(auid, .fitted) %>% 
 #     inner_join(author_meta)
 
-tidy(cites_lm, conf.int = TRUE) %>% 
+cites_lm %>% 
+    tidy(conf.int = TRUE) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
@@ -227,10 +229,39 @@ gamma_oru %>%
     summarize(H = sum(H_term)) %>% 
     ungroup() %>% 
     ggplot(aes(k, H, color = oru)) +
-    geom_point() +
-    geom_line() +
+    geom_point(show.legend = FALSE) +
+    geom_line(show.legend = FALSE) +
+    geom_dl(aes(label = oru), method = 'last.points', 
+            position = position_nudge(x = 5)) +
+    xlim(NA, 165) +
+    scale_color_viridis_d(option = 'B') +
     stat_function(fun = function(x) log2(x), 
-                  inherit.aes = FALSE, color = 'black')
+                  inherit.aes = FALSE, color = 'black') +
+    theme(panel.background = element_rect(fill = 'grey90'),
+          legend.background = element_rect(fill = 'grey90'))
+
+## Distributions within departments
+dept_topics = dept_dummies %>% 
+    gather(key = 'department', value = 'value', -auid) %>% 
+    filter(value != 0) %>% 
+    select(-value) %>% 
+    add_count(department) %>% 
+    filter(n > 10) %>% 
+    # pull(department) %>% n_distinct
+    inner_join(gamma_sm, by = 'auid') %>% 
+    ggplot(aes(topic, auid, fill = gamma)) +
+    geom_raster() +
+    scale_fill_viridis_c(option = 'A', 
+                         trans = 'sqrt') +
+    facet_wrap(vars(k, department), scales = 'free', 
+               ncol = 4) +
+    ggtitle('Author-topic distributions, grouped by department', 
+            subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_dept_topics.png'), 
+       dept_topics,
+       width = 4*2+1, height = 8*2, 
+       scale = 2)
+
 
 
 ## Regression model of entropy ----
@@ -369,12 +400,15 @@ left_join(author_meta,
                  aes(x = V1.1, y = V2.1,
                      xend = V1.2, yend = V2.2),
                  alpha = .2) +
-    geom_point(aes(label = name)) +
-    geom_mark_ellipse(aes(filter = oru_lgl, 
-                          label = oru), 
-                      size = .8) +
+    geom_point(aes(label = name), show.legend = FALSE) +
+    geom_mark_ellipse(aes(filter = oru_lgl
+                          # label = oru
+                          ), 
+                      size = .8, 
+                      show.legend = FALSE) +
+    geom_dl(aes(label = oru), method = 'top.bumptwice') +
     # scale_color_brewer(palette = 'Set2')
-    scale_color_viridis_d(option = 'A', direction = -1) +
+    scale_color_viridis_d(option = 'B', direction = -1) +
     # coord_equal() +
     facet_wrap(vars(k), ncol = 2) +
     theme_void() +

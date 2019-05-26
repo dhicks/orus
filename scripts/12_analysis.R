@@ -8,6 +8,7 @@ library(tidytext) ## for stm tidiers
 
 library(gghighlight)
 library(ggforce)
+library(directlabels)
 theme_set(theme_minimal())
 
 library(tictoc)

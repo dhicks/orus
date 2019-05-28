@@ -12,6 +12,7 @@ library(ggraph)
 library(assertthat)
 
 data_dir = '../data/'
+plots_dir = '../plots/'
 
 dept_thresh = 3 ## Threshold # of researchers required to keep a department
 
@@ -145,6 +146,7 @@ matched %>%
     scale_color_brewer(palette = 'Set1') +
     coord_equal() +
     theme_graph()
+ggsave(str_c(plots_dir, '05_matches.png'))
 
 
 ## Checking match quality ----

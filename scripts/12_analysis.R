@@ -401,19 +401,43 @@ left_join(author_meta,
                  aes(x = V1.1, y = V2.1,
                      xend = V1.2, yend = V2.2),
                  alpha = .2) +
-    geom_point(aes(label = name), show.legend = FALSE) +
+    geom_point(aes(label = name, fill = oru), 
+               color = 'black',
+               show.legend = FALSE, 
+               shape = 21L) +
     geom_mark_ellipse(aes(filter = oru_lgl
                           # label = oru
-                          ), 
-                      size = .8, 
+                          ),
+                      size = .8,
                       show.legend = FALSE) +
     geom_dl(aes(label = oru), method = 'top.bumptwice') +
-    # scale_color_brewer(palette = 'Set2')
-    scale_color_viridis_d(option = 'B', direction = -1) +
-    # coord_equal() +
-    facet_wrap(vars(k), ncol = 2) +
+    # scale_color_brewer(palette = 'Set1') +
+    # scale_fill_brewer(palette = 'Set1') +
+    scale_color_viridis_d(option = 'A', direction = -1) +
+    scale_fill_viridis_d(option = 'A', direction = -1) +
+    coord_equal() +
+    facet_wrap(vars(k), ncol = 2, scales = 'fixed') +
     theme_void() +
-    theme(panel.background = element_rect(fill = 'grey90'),
-          legend.background = element_rect(fill = 'grey90'))
+    theme(panel.border = element_rect(fill = 'transparent')) +
+    # theme(panel.background = element_rect(fill = 'grey90'),
+    #       legend.background = element_rect(fill = 'grey90'))
+    ggtitle('MDS visualization of Hellinger distances between researchers', 
+            subtitle = Sys.time())
+
+## Similarly, but faceting out by department
+# dept_dummies %>% 
+#     gather(key = department, value = dummy, -auid) %>% 
+#     filter(dummy > 0) %>% 
+#     select(-dummy) %>% 
+#     add_count(department) %>% 
+#     filter(n > 10) %>% 
+#     left_join(author_meta) %>% 
+#     left_join(mds_coords) %>% 
+#     mutate(k = as.integer(k)) %>% 
+#     filter(k == 75) %>% 
+#     ggplot(aes(V1, V2, color = oru_lgl)) +
+#     geom_point() +
+#     coord_equal() +
+#     facet_wrap(vars(k, department))
 
 # plotly::ggplotly()

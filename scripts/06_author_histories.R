@@ -26,9 +26,12 @@ plan(multiprocess, workers = 2)
 
 ## Load and filter data ----
 dropouts_03 = read_rds(str_c(data_dir, '03_dropout.Rds'))
+dropouts_04 = read_rds(str_c(data_dir, '04_dropouts.Rds'))
 dropouts_05 = read_rds(str_c(data_dir, '05_dropouts.Rds'))
 oru_df = read_rds(str_c(data_dir, '03_matched.Rds')) %>% 
+    filter(!duplicated(.)) %>% 
     anti_join(dropouts_03, by = 'auid') %>% 
+    anti_join(dropouts_04, by = 'auid') %>% 
     anti_join(dropouts_05, by = 'auid')
 departments = read_rds(str_c(data_dir, '03_codepartmentals.Rds'))
 
@@ -250,7 +253,7 @@ parse = function(files, author_folder) {
 # parse(author_history_files[[9]], author_folder)
 
 ## Do the parsing ----
-## 14 sec / 100 -> ~1 minute
+## 8.5 sec / 100 -> ~3 minutes
 tic()
 histories_df = author_history_files %>% 
     set_names(author_meta$auid) %>% 
@@ -264,20 +267,21 @@ histories_df %>%
     count(auid) %>% 
     right_join(author_meta, by = 'auid') %>% 
     mutate(right_count = n == n_docs) %>% 
-    filter(!right_count) %>% 
+    # filter(!right_count) %>% 
     # count(n - n_docs)
-    filter(abs(n - n_docs) >= 6) %>% view()
-    # ggplot(aes(log10(n), log10(n_docs))) +
-    # geom_point() +
-    # stat_function(fun = identity)
+    # filter(abs(n - n_docs) >= 6) %>% 
+    # view()
+    ggplot(aes(log10(n), log10(n_docs))) +
+    geom_point() +
+    stat_function(fun = identity)
 
 ## How many unique papers? 
-## 22.6k
+## 122k
 histories_df %>% 
     pull(eid) %>% 
     unique() %>% 
     length()
-## 18.3k using DOIs
+## 103k using DOIs
 histories_df %>% 
     filter(!is.na(doi)) %>% 
     pull(doi) %>% 

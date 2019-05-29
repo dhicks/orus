@@ -21,7 +21,8 @@ parse_workers = 2
 
 ## Load data ----
 paper_meta = read_rds(str_c(data_dir, '06_author_histories.Rds')) %>% 
-    filter(!is.na(eid))
+    ## Author 7006889518 has an entry w/ the malformed Scopus ID 64
+    filter(!is.na(eid), eid != '64')
 
 eids = paper_meta %>% 
     pull(eid) %>% 
@@ -230,13 +231,13 @@ parse = function(target_file) {
 #     unnest(authors) %>% 
 #     select(surname, aff_id, aff_name)
 
+get_eid = function (path) {
+    str_extract(path, '[^/]+(?=\\.xml)')
+}
+
 parse_block = function(target_files, 
                        prefix = '08', sep = '_',
                        target_folder = data_dir) {
-    get_eid = function (path) {
-        str_extract(path, '[^/]+(?=\\.xml)')
-    }
-    
     start = get_eid(first(target_files))
     end = get_eid(last(target_files))
     
@@ -263,8 +264,8 @@ if (!file.exists(parsed_file)) {
     
     options(error = recover)
     
-    ## ~86 sec for block of 300 -> ~52 minutes
-    ## 86 * n_blocks / parse_workers / 60
+    ## ~80 sec for block of 300 -> ~4.5 hours
+    ## 80 * n_blocks / parse_workers / 3600
     # tic()
     # parse_block(blocks[[1]])
     # toc()
@@ -272,7 +273,6 @@ if (!file.exists(parsed_file)) {
     plan(multiprocess, workers = parse_workers)
     tic()
     pubs = blocks %>% 
-        # head(300) %>% 
         future_map_dfr(parse_block, 
                        target_folder = parsed_blocks_folder,
                        .progress = TRUE)
@@ -285,11 +285,26 @@ if (!file.exists(parsed_file)) {
     ## Validation:  exactly 1 row per input document ID
     assert_that(length(eids) == nrow(pubs))
     ## Validation:  complete coverage of paper_meta
-    assert_that(setdiff(paper_meta$scopus_id, pubs$scopus_id))
+    assert_that(length(setdiff(paper_meta$scopus_id, pubs$scopus_id)) == 0L)
     ## Validation:  exactly `known_na` empty rows
     # assert_that(sum(is.na(pubs$date)) == known_na)
     ## Validation:  no empty rows
     assert_that(all(!is.na(pubs$date)))
+    
+    # ## If there are problems, the following can be used to identify and delete blockfiles with problems
+    # problems_idx = with(pubs, which(is.na(scopus_id) | is.na(date)))
+    # 
+    # ## Which blocks contain problems?  
+    # problems_block = problems_idx %% block_size
+    # ## Index of problems w/in their respective blocks
+    # problem_block_idx = problems_idx %/% block_size
+    # 
+    # problem_block_files = blocks[problems_block] %>% 
+    #     modify(get_eid) %>% 
+    #     map(~ str_c(first(.), last(.), sep = '_')) %>% 
+    #     str_c('08_', ., '.Rds')
+    # 
+    # file.remove(str_c(parsed_blocks_folder, problem_block_files))
     
     write_rds(pubs, parsed_file)
 } else {

@@ -4,10 +4,11 @@ library(tidyverse)
 library(lubridate)
 
 library(tictoc)
+library(assertthat)
 
 data_dir = '../data/'
 
-dt_ratio = 1/10  ## target ratio of unique documents:terms
+dt_ratio = 1  ## target ratio of unique documents:terms
 
 ## Load data ----
 author_meta = read_rds(str_c(data_dir, '06_author_histories.Rds'))
@@ -70,14 +71,13 @@ calculate_H = function(nouns,
 
 
 ## Vocabulary exploration ----
-## 27k distinct terms
+## 80k distinct terms
 n_distinct(nouns$lemma)
-## 32k distinct documents (author-year combinations)
+## 2k distinct documents (authors)
 n_docs = n_distinct(nouns$auid)
 
 ## How many terms to get desired doc:term ratio? 
-## 5k; top 7%
-## But this includes a lot of words with nDH = 0
+## 5k; top 2%
 n_terms = ceiling(n_docs / dt_ratio)
 quantile = n_terms / n_distinct(nouns$lemma)
 
@@ -88,17 +88,27 @@ H = calculate_H(nouns,
                     n_terms = n_terms)
 toc()
 
+## 35% of terms have ndH = 0
+H %>% 
+    count(ndH == 0) %>% 
+    mutate(share = n / sum(n))
+
 ndH_thresh = H %>% 
     filter(selected) %>% 
     pull(ndH) %>% 
     min()
 
-ggplot(H, aes(ndH)) +
+H %>% 
+    filter(ndH > 0) %>% 
+    ggplot(aes(ndH)) +
     stat_ecdf() +
     geom_hline(yintercept = 1-quantile) +
+    geom_vline(xintercept = ndH_thresh) +
     geom_rug(aes(color = selected))
 
-ggplot(H, aes(log10(n), delta_H, label = lemma)) +
+H %>% 
+    filter(ndH > 0) %>% 
+    ggplot(aes(log10(n), delta_H, label = lemma)) +
     geom_point(aes(alpha = selected, color = selected)) +
     stat_function(fun = function(x) {ndH_thresh / x}, 
                   color = 'black') +
@@ -115,11 +125,11 @@ nouns %>%
     geom_line(show.legend = FALSE) +
     geom_label(inherit.aes = FALSE,
                data = filter(H, lemma %in% focal_terms),
-               aes(x = '6701865692_2017', y = 100,
+               aes(x = '6701865692_2017', y = 300,
                    label = str_c('delta H: ', round(delta_H, digits = 2)))) +
     geom_label(inherit.aes = FALSE,
                data = filter(H, lemma %in% focal_terms),
-               aes(x = '6701865692_2017', y = 75,
+               aes(x = '6701865692_2017', y = 150,
                    label = str_c('n: ', round(n, digits = 2)))) +
     geom_label(inherit.aes = FALSE,
                data = filter(H, lemma %in% focal_terms),
@@ -159,10 +169,14 @@ nouns %>%
     ggplot(aes(share_in_vocab)) +
     stat_ecdf()
 
-## Author-year-term matrix (long, sparse)
+## Author-term matrix (long, sparse)
 atm = nouns %>% 
     filter(lemma %in% vocab) %>% 
     count(auid, lemma)
+
+assert_that(length(setdiff(author_meta$auid, atm$auid)) == 0L, 
+            msg = 'Some authors dropped in vocabulary selection')
+
 
 
 ## Output ----
@@ -171,4 +185,4 @@ list(H = H,
      atm = atm) %>% 
     write_rds(str_c(data_dir, '09_H.Rds'))
 
-write_csv(atm, str_c(data_dir, '10_atm.csv'))
+write_csv(atm, str_c(data_dir, '09_atm.csv'))

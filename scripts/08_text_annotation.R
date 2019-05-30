@@ -15,7 +15,7 @@ assert_that(n_distinct(pubs_df$scopus_id) == nrow(pubs_df))
 
 ## spaCy init
 reticulate::use_condaenv('spacy')
-cnlp_init_spacy()
+cnlp_init_spacy(entity_flag = FALSE)
 
 
 ## Annotate ----

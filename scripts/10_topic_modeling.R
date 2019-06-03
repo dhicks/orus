@@ -11,7 +11,7 @@ library(furrr)
 n_workers = 2
 seed = 2019-05-10
 
-n_topics = seq(5, 145, by = 10)
+n_topics = seq(5, 145, by = 20)
 
 data_dir = '../data/'
 
@@ -29,6 +29,10 @@ pc = atm %>%
 
 # plot(pc)
 
+#   A tibble: 1 x 4
+#   thresh_50 thresh_80 thresh_90 thresh_99
+#       <int>     <int>     <int>     <int>
+# 1        12        63       135       523
 tidy(pc, matrix = 'pcs') %>% 
     summarize(thresh_50 = sum(cumulative <= .5), 
               thresh_80 = sum(cumulative <= .8), 
@@ -38,7 +42,8 @@ tidy(pc, matrix = 'pcs') %>%
 tidy(pc, matrix = 'pcs') %>% 
     ggplot(aes(PC, cumulative)) +
     geom_line() +
-    geom_hline(yintercept = c(.5, .8, .9, .99))
+    geom_hline(yintercept = c(.5, .8, .9, .99)) +
+    xlim(0, 500)
 
 
 ## Topic modeling ----
@@ -46,17 +51,17 @@ atm_sparse = cast_sparse(atm, row = auid, col = lemma, value = n)
 
 holdout = make.heldout(atm_sparse, seed = seed)
 
-## 300 sec for k = 100
+## 500 sec for k = 100
 # tic()
-# test_model = stm(holdout$documents, 
-#                  holdout$vocab, 
-#                  K = 100, 
-#                  seed = seed*2, 
-#                  max.em.its = 150, 
+# test_model = stm(holdout$documents,
+#                  holdout$vocab,
+#                  K = 100,
+#                  seed = seed*2,
+#                  max.em.its = 150,
 #                  verbose = TRUE)
 # toc()
 
-## ~2088 sec = ~35 minutes
+## 
 print(str_c('Fitting ', length(n_topics), ' topic models'))
 plan(multiprocess, workers = n_workers)
 tic()

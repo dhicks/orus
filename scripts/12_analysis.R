@@ -31,7 +31,8 @@ auids = H$atm %>%
 
 
 author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
-    mutate(first_year_1997 = first_year - 1997)
+    mutate(first_year_1997 = first_year - 1997, 
+           gender = fct_relevel(gender, 'male'))
 
 dept_dummies = read_rds(str_c(data_dir, '05_dept_dummies.Rds')) %>% 
     filter(auid %in% author_meta$auid)
@@ -43,7 +44,10 @@ author_meta %>%
     stat_count(aes(y = ..count.., label = ..count..), 
                position = position_nudge(y = -.5),
                geom = 'text') +
-    scale_y_sqrt()
+    scale_y_sqrt() +
+    ggtitle('Count of researchers by ORU', 
+            subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_sample.png'))
 
 
 ## Extract topic models gamma ----
@@ -104,6 +108,8 @@ tidy(n_docs_lm, conf.int = TRUE) %>%
     ylab('estimate (fold change)') +
     ggtitle('Est. effect of ORU affiliation on publication counts',
             subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_pub_regression.png'), 
+       width = 7, height = 4, scale = 1.5)
 
 
 ## Citation counts ----
@@ -158,7 +164,8 @@ cites_lm %>%
     ylab('estimate (fold change)') +
     ggtitle('Est. effect of ORU affiliation on citation counts', 
             subtitle = Sys.time())
-
+ggsave(str_c(plots_dir, '12_cites_regression.png'), 
+       width = 7, height = 4, scale = 1.5)
 
 ## Topic models ----
 
@@ -256,6 +263,8 @@ gamma_oru %>%
                   inherit.aes = FALSE, color = 'black') +
     theme(panel.background = element_rect(fill = 'grey90'),
           legend.background = element_rect(fill = 'grey90'))
+ggsave(str_c(plots_dir, '12_oru_entropy.png'), 
+       width = 6, height = 4, scale = 1.5)
 
 ## Distributions within departments
 dept_topics = author_meta %>% 
@@ -309,6 +318,8 @@ H_lm %>%
     ylab('estimate (bits)') +
     ggtitle('Est. effect of ORU affiliation on topic entropy', 
             subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_entropy_regression.png'), 
+       width = 6, height = 4, scale = 1.5)
 
 
 ## Silhouette analysis ----

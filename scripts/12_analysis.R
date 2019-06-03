@@ -12,9 +12,14 @@ library(directlabels)
 theme_set(theme_minimal())
 
 library(tictoc)
+library(assertthat)
 
 data_dir = '../data/'
 plots_dir = '../plots/'
+
+## Values of k to use in gamma_sm
+selected_k = c(25, 45, 85, 125)
+# selected_k = c(85)
 
 
 ## Load data ----
@@ -28,7 +33,8 @@ auids = H$atm %>%
     pull(auid)
 
 
-author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds'))
+author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
+    mutate(first_year_1997 = first_year - 1997)
 
 dept_dummies = read_rds(str_c(data_dir, '05_dept_dummies.Rds')) %>% 
     filter(auid %in% author_meta$auid)
@@ -55,18 +61,17 @@ gamma = unnest(matrices, gamma) %>%
     left_join(author_meta)
 
 gamma_45 = filter(gamma, k == 45)
-gamma_sm = filter(gamma, k %in% c(15, 45, 75, 105))
+gamma_sm = filter(gamma, k %in% selected_k)
 
 
 
 
 ## Number of documents ----
 n_docs_lm = author_meta %>% 
-    select(n_docs, auid, oru_lgl, match_occurrences) %>% 
+    select(n_docs, auid, oru_lgl, first_year_1997, gender) %>% 
     left_join(dept_dummies) %>% 
-    lm(log10(n_docs) ~ . - auid - match_occurrences, 
-       data = ., 
-       weights = match_occurrences)
+    lm(log10(n_docs) ~ . - auid, 
+       data = .)
 
 n_docs_lm %>% 
     augment() %>% 
@@ -77,35 +82,42 @@ n_docs_lm %>%
 n_docs_lm %>% 
     augment() %>% 
     ggplot(aes(.fitted, .resid)) +
-    geom_point(aes(color = oru_lgl, size = X.weights.)) + 
-    geom_smooth(aes(weight = X.weights.))
+    geom_point(aes(color = oru_lgl)) + 
+    geom_smooth()
 
 tidy(n_docs_lm, conf.int = TRUE) %>% 
+    mutate(var_group = case_when(
+        str_detect(term, 'Department') ~ 'department', 
+        str_detect(term, 'Intercept') ~ 'intercept',
+        TRUE ~ 'other terms'
+    )) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
     mutate(term = fct_inorder(term)) %>% 
     ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
-    gghighlight(term == 'oru_lglTRUE', 
-                unhighlighted_colour = alpha('blue', .25)) +
+    ## gghighlight overrides facets
+    # gghighlight(term == 'oru_lglTRUE',
+    #             unhighlighted_colour = alpha('blue', .25)) +
     geom_hline(yintercept = 1, linetype = 'dashed') +
-    coord_flip(ylim = c(0, 5)) +
+    coord_flip() +
+    facet_wrap(vars(var_group), scales = 'free',
+               ncol = 2) +
     ylab('estimate (fold change)') +
-    ggtitle('Est. effect of ORU affiliation on publication counts', 
+    ggtitle('Est. effect of ORU affiliation on publication counts',
             subtitle = Sys.time())
 
 
 ## Citation counts ----
 cites_lm = author_meta %>% 
     mutate(log_n_docs = log10(n_docs)) %>% 
-    select(cited_by_count, auid, oru_lgl, log_n_docs,
-           match_occurrences) %>% 
+    select(cited_by_count, auid, oru_lgl, first_year_1997,
+           gender, log_n_docs) %>% 
     left_join(dept_dummies) %>% 
     # filter(cited_by_count > 0) %>% 
-    lm(log10(cited_by_count+1) ~ . - auid - match_occurrences, 
-       data = ., 
-       weights = match_occurrences)
+    lm(log10(cited_by_count+1) ~ . - auid, 
+       data = .)
 
 cites_lm %>% 
     augment() %>% 
@@ -117,8 +129,8 @@ cites_lm %>%
 cites_lm %>% 
     augment() %>% 
     ggplot(aes(.fitted, .resid)) +
-    geom_point(aes(color = oru_lgl, size = X.weights.)) + 
-    geom_smooth(aes(weight = X.weights.))
+    geom_point(aes(color = oru_lgl)) + 
+    geom_smooth()
 
 # cites_lm %>% 
 #     augment() %>% 
@@ -129,16 +141,23 @@ cites_lm %>%
 
 cites_lm %>% 
     tidy(conf.int = TRUE) %>% 
+    mutate(var_group = case_when(
+        str_detect(term, 'Department') ~ 'department', 
+        str_detect(term, 'Intercept') ~ 'intercept',
+        str_detect(term, 'docs') ~ 'total publications',
+        TRUE ~ 'other terms'
+    )) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
     mutate(term = fct_inorder(term)) %>% 
     ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
-    gghighlight(term == 'oru_lglTRUE', 
-                unhighlighted_colour = alpha('blue', .25)) +
+    # gghighlight(term == 'oru_lglTRUE', 
+    #             unhighlighted_colour = alpha('blue', .25)) +
     geom_hline(yintercept = 1, linetype = 'dashed') +
-    coord_flip(ylim = c(0, 5)) +
+    coord_flip() +
+    facet_wrap(vars(var_group), scales = 'free', ncol = 2) +
     ylab('estimate (fold change)') +
     ggtitle('Est. effect of ORU affiliation on citation counts', 
             subtitle = Sys.time())
@@ -182,9 +201,9 @@ at_plot = gamma_45 %>%
     coord_flip()
 at_plot
 
-## And same for 105
+## And same for 125
 gamma_sm %>% 
-    filter(k == 105) %>% 
+    filter(k == 125) %>% 
     unnest(oru) %>% 
     {at_plot %+% .}
 
@@ -218,8 +237,8 @@ H_45 = filter(H_gamma, k == 45)
 
 ## Distributions of topic entropies
 ggplot(H_gamma, aes(oru_lgl, H, color = oru_lgl)) +
-    geom_violin(draw_quantiles = .5) +
-    geom_sina(alpha = .25) +
+    geom_violin(draw_quantiles = .5, size = 1) +
+    geom_sina(alpha = .1) +
     # scale_x_discrete(breaks = NULL) +
     facet_wrap(vars(k), scales = 'free_y')
 
@@ -242,14 +261,15 @@ gamma_oru %>%
           legend.background = element_rect(fill = 'grey90'))
 
 ## Distributions within departments
-dept_topics = dept_dummies %>% 
-    gather(key = 'department', value = 'value', -auid) %>% 
-    filter(value != 0) %>% 
-    select(-value) %>% 
+## TODO:  gamma_sm already contains departments
+dept_topics = author_meta %>% 
+    unnest(department) %>% 
+    # count(department) %>% arrange(desc(n)) %>% filter(n > 62)
     add_count(department) %>% 
-    filter(n > 10) %>% 
-    # pull(department) %>% n_distinct
+    filter(n > 62) %>% 
+    select(auid, department) %>% 
     inner_join(gamma_sm, by = 'auid') %>% 
+    rename(department = department.x) %>% 
     ggplot(aes(topic, auid, fill = gamma)) +
     geom_raster() +
     scale_fill_viridis_c(option = 'A', 
@@ -269,13 +289,13 @@ ggsave(str_c(plots_dir, '12_dept_topics.png'),
 # summary(lm(H ~ oru_lgl + n_docs, data = H_45, weights = match_occurrences))
 
 H_lm = H_gamma %>% 
-    select(k, auid, H, oru_lgl, n_docs, match_occurrences) %>% 
+    select(k, auid, H, oru_lgl, first_year_1997, gender, 
+           n_docs) %>% 
     left_join(dept_dummies) %>% 
     group_by(k) %>% 
-    do(model = lm(H ~ . - auid - match_occurrences, 
-               data = ., 
-               weights = match_occurrences
-               )) %>% 
+    do(model = lm(H ~ . - auid, 
+                  data = .
+    )) %>% 
     ungroup() %>% 
     mutate(glance = map(model, glance), 
            coefs = map(model, tidy, conf.int = TRUE))
@@ -295,121 +315,118 @@ H_lm %>%
             subtitle = Sys.time())
 
 
-## Silhouette analysis ----
-## ~1 sec for 45 alone
-## ~4 sec for 15, 45, 75
-## ~6 sec for 15, 45, 75, 105
-## Reaches memory limit for all k
+## TODO:  currently 45 alone exhausts the memory limit
+# ## Silhouette analysis ----
+# ## ~1.5 sec
 tic()
-crossed = gamma_sm %>% 
-    select(k, topic, auid, gamma) %>% 
-    group_by(k, topic) %>% 
+crossed = gamma_sm %>%
+    filter(oru_lgl) %>% 
+    select(k, topic, auid, gamma) %>%
+    group_by(k, topic) %>%
     group_split() %>% #str(max.level = 1)
-    map2_dfr(., ., tidyr::crossing) %>% 
-    rename(auid.x = auid, auid.y = auid1, 
-           gamma.x = gamma, gamma.y = gamma1) %>% 
+    map2_dfr(., ., tidyr::crossing) %>%
+    rename(auid.x = auid, auid.y = auid1,
+           gamma.x = gamma, gamma.y = gamma1) %>%
     filter(auid.x != auid.y)
 toc()
 
 hellinger = function(dataf) {
-    dataf %>% 
-        mutate(h_dist_term = sqrt(gamma.x * gamma.y)) %>% 
+    dataf %>%
+        mutate(h_dist_term = sqrt(gamma.x * gamma.y)) %>%
         group_by(k, auid.x, auid.y) %>%
         summarize(h_dist = sqrt(1 - sum(h_dist_term))) %>%
         ungroup()
 }
 
-## Hellinger distances for all pairs
-## ~2 sec for 45 alone
-## ~6 sec for 15, 45, 75
-## ~9 sec for 15, 45, 75, 105
+
+
+# ## Hellinger distances for all pairs
+# ## ~1.4 sec for k = 5, 45, 85, 125
 tic()
 dist = hellinger(crossed)
 toc()
 
 ## Mean distance w/in ORUs
 ## NB crossed should already eliminate self-pairs
-oru_dist = dist %>% 
-    left_join(author_meta, by = c('auid.x' = 'auid')) %>% 
-    filter(oru_lgl) %>% 
-    left_join(author_meta, by = c('auid.y' = 'auid'), 
-              suffix = c('.x', '.y')) %>% 
-    unnest(oru.x, .drop = FALSE) %>% 
-    unnest(oru.y) %>% 
-    filter(oru.x == oru.y) %>% 
-    group_by(k, auid = auid.x, oru = oru.x) %>% 
-    summarize(oru_mean_dist = mean(h_dist)) %>% 
+interior_mean_dist = dist %>%
+    left_join(author_meta, by = c('auid.x' = 'auid')) %>%
+    left_join(author_meta, by = c('auid.y' = 'auid'),
+              suffix = c('.x', '.y')) %>%
+    unnest(oru.x, .drop = FALSE) %>%
+    unnest(oru.y) %>%
+    filter(oru.x == oru.y) %>%
+    group_by(k, auid = auid.x, oru = oru.x) %>%
+    summarize(int_mean_dist = mean(h_dist)) %>%
     ungroup()
 
-## Minimum distance to non-ORU author
-comp_dist = dist %>% 
-    left_join(author_meta, by = c('auid.x' = 'auid')) %>% 
-    filter(oru_lgl, 
-           ## Anthony Wexler is the only person from AQRC
-           auid.x != '7005728145') %>% 
-    left_join(author_meta, by = c('auid.y' = 'auid'), 
-              suffix = c('.x', '.y')) %>% 
-    filter(!oru_lgl.y) %>% 
-    group_by(k, auid = auid.x) %>% 
-    summarize(comp_min_dist = min(h_dist)) %>% 
+# ## Minimum distance to non-ORU author
+# comp_dist = dist %>% 
+#     left_join(author_meta, by = c('auid.x' = 'auid')) %>% 
+#     filter(oru_lgl, 
+#            ## Anthony Wexler is the only person from AQRC
+#            auid.x != '7005728145') %>% 
+#     left_join(author_meta, by = c('auid.y' = 'auid'), 
+#               suffix = c('.x', '.y')) %>% 
+#     filter(!oru_lgl.y) %>% 
+#     group_by(k, auid = auid.x) %>% 
+#     summarize(comp_min_dist = min(h_dist)) %>% 
+#     ungroup()
+
+## Exterior minimum distance
+exterior_min_dist = dist %>%
+    left_join(author_meta, by = c('auid.x' = 'auid')) %>%
+    left_join(author_meta, by = c('auid.y' = 'auid'),
+              suffix = c('.x', '.y')) %>%
+    unnest(oru.x, .drop = FALSE) %>%
+    unnest(oru.y) %>%
+    filter(oru.x != oru.y) %>%
+    group_by(k, auid = auid.x, oru = oru.x) %>%
+    summarize(ext_min_dist = min(h_dist)) %>%
     ungroup()
+
 
 ## Silhouette plot
-full_join(oru_dist, comp_dist, by = c('k', 'auid')) %>% 
-    ggplot(aes(oru_mean_dist, comp_min_dist, 
+# full_join(oru_dist, comp_dist, by = c('k', 'auid')) %>% 
+full_join(interior_mean_dist, exterior_min_dist) %>% 
+    ggplot(aes(int_mean_dist, ext_min_dist,
                color = oru)) +
     geom_point() +
-    stat_function(fun = identity, linetype = 'dashed', 
+    stat_function(fun = identity, linetype = 'dashed',
                   inherit.aes = FALSE) +
     facet_wrap(vars(k)) +
     coord_equal()
 
 ## MDS viz of Hellinger distances
 mds_coords = dist %>%
-    split(.$k) %>% 
-    map(select, -k) %>% 
+    split(.$k) %>%
+    map(select, -k) %>%
     map(spread, auid.y, h_dist) %>%
     map(column_to_rownames, var = 'auid.x') %>%
     map(as.dist) %>%
     map(cmdscale, k = 2) %>%
     map(as.data.frame) %>%
     map(rownames_to_column, var = 'auid') %>%
-    map(as_tibble) %>% 
+    map(as_tibble) %>%
     bind_rows(.id = 'k')
 
-## Line segments for matched ORU-comparison pairs
-matched = read_rds(str_c(data_dir, '05_matched.Rds'))
-matched_coords = matched %>% 
-    left_join(mds_coords, by = 'auid') %>% 
-    left_join(mds_coords, by = c('auid1' = 'auid', 'k'), 
-              suffix = c('.1', '.2')) %>% 
-    select(k, auid, auid1, starts_with('V')) %>% 
-    mutate(k = as.integer(k))
-
-
-left_join(author_meta,
+right_join(author_meta,
           mds_coords) %>%
-    mutate(k = as.integer(k), 
-           name = paste(given_name, surname)) %>% 
+    mutate(k = as.integer(k),
+           name = paste(given_name, surname)) %>%
     ## For the moment, filter one author who isn't in the topic model
-    filter(auid != '57203386115') %>% 
-    # filter(oru_lgl) %>% 
+    filter(auid != '57203386115') %>%
+    # filter(oru_lgl) %>%
     unnest(oru) %>%
     ggplot(aes(V1, V2, color = oru)) +
-    geom_segment(inherit.aes = FALSE,
-                 data = matched_coords,
-                 aes(x = V1.1, y = V2.1,
-                     xend = V1.2, yend = V2.2),
-                 alpha = .2) +
-    geom_point(aes(label = name, fill = oru), 
+    geom_point(aes(label = name, fill = oru),
                color = 'black',
-               show.legend = FALSE, 
+               show.legend = FALSE,
                shape = 21L) +
     geom_mark_ellipse(aes(filter = oru_lgl
                           # label = oru
-                          ),
-                      size = .8,
-                      show.legend = FALSE) +
+    ),
+    size = .8,
+    show.legend = FALSE) +
     geom_dl(aes(label = oru), method = 'top.bumptwice') +
     # scale_color_brewer(palette = 'Set1') +
     # scale_fill_brewer(palette = 'Set1') +
@@ -421,23 +438,28 @@ left_join(author_meta,
     theme(panel.border = element_rect(fill = 'transparent')) +
     # theme(panel.background = element_rect(fill = 'grey90'),
     #       legend.background = element_rect(fill = 'grey90'))
-    ggtitle('MDS visualization of Hellinger distances between researchers', 
+    ggtitle('MDS visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
 
-## Similarly, but faceting out by department
-# dept_dummies %>% 
-#     gather(key = department, value = dummy, -auid) %>% 
-#     filter(dummy > 0) %>% 
-#     select(-dummy) %>% 
-#     add_count(department) %>% 
-#     filter(n > 10) %>% 
-#     left_join(author_meta) %>% 
-#     left_join(mds_coords) %>% 
-#     mutate(k = as.integer(k)) %>% 
-#     filter(k == 75) %>% 
-#     ggplot(aes(V1, V2, color = oru_lgl)) +
-#     geom_point() +
-#     coord_equal() +
-#     facet_wrap(vars(k, department))
+ggsave(str_c(plots_dir, '12_mds.png'), 
+       height = 8, width = 8.5)
+
+# Similarly, but faceting out by department
+author_meta %>% 
+    filter(auid %in% mds_coords$auid) %>% 
+    unnest(department) %>% 
+    # count(department) %>% arrange(desc(n))
+    add_count(department) %>% 
+    filter(n >= 5) %>%
+    left_join(mds_coords) %>%
+    mutate(k = as.integer(k)) %>%
+    filter(k == 85) %>% 
+    ggplot(aes(V1, V2, 
+               color = oru_lgl)) +
+    geom_point() +
+    coord_equal() +
+    facet_wrap(vars(k, department)) +
+    theme_void() +
+    theme(panel.border = element_rect(fill = 'transparent'))
 
 # plotly::ggplotly()

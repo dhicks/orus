@@ -1,6 +1,3 @@
-## TODO:  
-## author 57203386115 is in the matches, but only has 1 pub, so isn't in the topic model
-
 library(tidyverse)
 library(broom)
 library(stm)
@@ -261,7 +258,6 @@ gamma_oru %>%
           legend.background = element_rect(fill = 'grey90'))
 
 ## Distributions within departments
-## TODO:  gamma_sm already contains departments
 dept_topics = author_meta %>% 
     unnest(department) %>% 
     # count(department) %>% arrange(desc(n)) %>% filter(n > 62)
@@ -315,9 +311,9 @@ H_lm %>%
             subtitle = Sys.time())
 
 
-## TODO:  currently 45 alone exhausts the memory limit
-# ## Silhouette analysis ----
-# ## ~1.5 sec
+## Silhouette analysis ----
+## See the scratch file `Hellinger_low_memory.R` for an attempt to include non-ORU authors
+## ~1.5 sec
 tic()
 crossed = gamma_sm %>%
     filter(oru_lgl) %>% 

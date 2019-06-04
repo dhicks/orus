@@ -3,6 +3,12 @@ library(broom)
 library(stm)
 library(tidytext) ## for stm tidiers
 
+library(igraph)
+library(tidygraph)
+library(ggraph)
+# devtools::install_github("schochastics/smglr")
+library(smglr)
+
 library(gghighlight)
 library(ggforce)
 library(directlabels)
@@ -37,6 +43,9 @@ author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>%
 dept_dummies = read_rds(str_c(data_dir, '05_dept_dummies.Rds')) %>% 
     filter(auid %in% author_meta$auid)
 
+
+
+## Plot showing sample ----
 author_meta %>% 
     unnest(oru) %>% 
     ggplot(aes(oru, fill = oru)) +
@@ -48,6 +57,7 @@ author_meta %>%
     ggtitle('Count of researchers by ORU', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_sample.png'))
+
 
 
 ## Extract topic models gamma ----
@@ -64,6 +74,128 @@ gamma = unnest(matrices, gamma) %>%
 gamma_45 = filter(gamma, k == 45)
 gamma_sm = filter(gamma, k %in% selected_k)
 
+
+
+## Network viz ----
+## author-department network
+dept_net = author_meta %>%
+    unnest(department) %>% 
+    select(auid, department) %>% 
+    graph_from_data_frame(directed = FALSE) %>% 
+    as_tbl_graph() %>% 
+    left_join(author_meta, by = c(name = 'auid')) %>%
+    mutate(type = case_when(is.na(oru_lgl) ~ 'department',
+                            oru_lgl ~ 'ORU faculty',
+                            !oru_lgl ~ 'other authors', 
+                            TRUE ~ 'error'))
+## author-ORU network 
+oru_net = author_meta %>% 
+    filter(oru_lgl) %>% 
+    unnest(oru) %>% 
+    select(auid, oru) %>% 
+    graph_from_data_frame(directed = FALSE) %>% 
+    as_tbl_graph() %>% 
+    left_join(author_meta, by = c(name = 'auid')) %>%
+    mutate(type = case_when(is.na(oru_lgl) ~ 'ORU',
+                            oru_lgl ~ 'ORU faculty',
+                            !oru_lgl ~ 'other authors', 
+                            TRUE ~ 'error'))
+
+## Combined
+net = graph_join(dept_net, oru_net, by = c('name', 'type')) %>%
+    as.undirected() %>%
+    as_tbl_graph() %>%
+    mutate(degree = centrality_degree(),
+           btwn = centrality_betweenness())
+
+## Degree distributions for different node types
+net %>%
+    as_tibble() %>%
+    group_by(type) %>%
+    summarize_at(vars(degree),
+                 funs(n = n(), min, mean, median, max))
+
+## 110 sec
+layout_file = str_c(data_dir, '12_layout.Rds')
+if (!file.exists(layout_file)) {
+    ## 110 sec
+    stress = layout_with_stress(net)
+    stress = stress %>%
+        as_tibble() %>%
+        rename(x = V1, y = V2)
+    write_rds(stress, str_c(data_dir, layout_file))
+} else {
+    stress = read_rds(str_c(data_dir, layout_file))
+}
+
+# # ## 105 sec
+# # tic()
+# # backbone = layout_as_backbone(net)
+# # toc()
+# 
+# graph_attr(thing, 'layout') = NULL
+# 
+net %>%
+    mutate(x = stress$x,
+           y = stress$y) %>%
+    # filter(degree > 1) %>%
+    `graph_attr<-`('layout', data.frame(x = V(.)$x,
+                                        y = V(.)$y)) %>%
+    ggraph(layout = 'nicely') +
+    geom_edge_link(alpha = .5) +
+    geom_node_point(aes(color = type, size = btwn)) +
+    geom_node_label(aes(label = name), 
+                    alpha = .5,
+                    data = function(dataf) {
+                        subset(dataf, type == 'ORU')
+                    }) +
+    geom_node_text(aes(label = name),
+                   size = 1,
+                   data = function(dataf) {
+                       subset(dataf, type == 'department')
+                   }) +
+    theme_graph()
+ggsave(str_c(plots_dir, '12_network.png'),
+       height = 10, width = 15, dpi = 300, scale = .75)
+
+## ORU-dep't network
+oru_dept_net = author_meta %>% 
+    filter(oru_lgl) %>% 
+    select(auid, oru, department) %>% 
+    unnest(oru, .drop = FALSE) %>% 
+    unnest(department) %>% 
+    select(oru, department) %>% 
+    count(oru, department) %>% 
+    graph_from_data_frame(directed = FALSE) %>% 
+    as_tbl_graph() %>% 
+    mutate(type = case_when(str_detect(name, 'Department') ~ 'department', 
+                            TRUE ~ 'ORU'))
+
+oru_dept_layout = layout_with_stress(oru_dept_net)
+
+oru_dept_net %>%
+    mutate(x = oru_dept_layout[,1],
+           y = oru_dept_layout[,2]) %>%
+    # filter(degree > 1) %>%
+    `graph_attr<-`('layout', data.frame(x = V(.)$x,
+                                        y = V(.)$y)) %>%
+    ggraph(layout = 'nicely') +
+    geom_edge_link(aes(alpha = n, width = n)) +
+    geom_node_point(aes(color = type)) +
+    geom_node_label(aes(label = name), 
+                    alpha = .5,
+                    data = function(dataf) {
+                        subset(dataf, type == 'ORU')
+                    }) +
+    geom_node_text(aes(label = name),
+                   size = 1,
+                   data = function(dataf) {
+                       subset(dataf, type == 'department')
+                   }) +
+    scale_edge_width(range = c(.5, 3)) +
+    theme_graph()
+ggsave(str_c(plots_dir, '12_oru_dept_network.png'),
+       height = 10, width = 15, dpi = 300, scale = .75)
 
 
 
@@ -470,3 +602,63 @@ author_meta %>%
     theme(panel.border = element_rect(fill = 'transparent'))
 
 # plotly::ggplotly()
+
+
+
+## Author-department divergence ----
+## Departmental-mean topic distributions
+gamma_dept = gamma %>% 
+    filter(!oru_lgl) %>% 
+    unnest(department) %>% 
+    ## Only departments w/ >= 25 people
+    add_count(k, topic, department) %>% 
+    filter(n >= 25) %>% 
+    select(-n) %>% 
+    ## Department mean topic distributions
+    group_by(k, topic, department) %>% 
+    summarize(gamma_dept = mean(gamma)) %>% 
+    ungroup()
+
+n_distinct(gamma_dept$department)
+
+divergence = gamma %>% 
+    unnest(department, .drop = FALSE) %>% 
+    inner_join(gamma_dept, by = c('k', 'topic', 
+                                  'department')) %>% 
+    mutate(div_term = gamma_dept * (-log2(gamma) + log2(gamma_dept))) %>% 
+    group_by(k, auid, department) %>% 
+    summarize(div = sum(div_term)) %>% 
+    ungroup() %>% 
+    left_join(author_meta, by = 'auid', 
+              suffix = c('', '_meta'))
+
+ggplot(divergence, aes(department, div, color = oru_lgl)) +
+    # geom_point() +
+    stat_summary() +
+    facet_wrap(vars(k))
+
+# ggplot(divergence, aes(department, div, color = gender)) +
+#     stat_summary() +
+#     facet_wrap(vars(k))
+
+div_lm = divergence %>% 
+    mutate(log_n_docs = log10(n_docs)) %>% 
+    select(k, div, auid, oru_lgl, first_year_1997, 
+           gender, log_n_docs, department) %>% 
+    group_nest(k) %>% 
+    mutate(model = map(data, ~lm(div ~ . - auid, data = .)))
+
+div_lm %>% 
+    mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    unnest(coefs) %>% 
+    filter(term == 'oru_lglTRUE') %>% 
+    ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_pointrange() +
+    gghighlight(k == 45) +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    xlab('number of topics (k)') +
+    ylab('estimate (bits)') +
+    ggtitle('Est. effect of ORU affiliation on departmental divergence', 
+            subtitle = Sys.time())
+
+

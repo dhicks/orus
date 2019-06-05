@@ -337,9 +337,9 @@ at_plot = gamma_45 %>%
     coord_flip()
 at_plot
 
-## And same for 125
+## And same for 85
 gamma_sm %>% 
-    filter(k == 125) %>% 
+    filter(k == 85) %>% 
     unnest(oru) %>% 
     {at_plot %+% .}
 
@@ -444,7 +444,7 @@ H_lm %>%
     filter(term == 'oru_lglTRUE') %>% 
     ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
-    gghighlight(k == 45) +
+    gghighlight(k == 85) +
     geom_hline(yintercept = 0, linetype = 'dashed') +
     xlab('number of topics (k)') +
     ylab('estimate (bits)') +
@@ -469,10 +469,18 @@ crossed = gamma_sm %>%
     filter(auid.x != auid.y)
 toc()
 
-hellinger = function(dataf) {
+hellinger = function(dataf, 
+                     gamma1 = gamma.x, gamma2 = gamma.y, 
+                     id1 = auid.x, id2 = auid.y) {
+    gamma1 = enquo(gamma1)
+    gamma2 = enquo(gamma2)
+    
+    id1 = enquo(id1)
+    id2 = enquo(id2)
+    
     dataf %>%
-        mutate(h_dist_term = sqrt(gamma.x * gamma.y)) %>%
-        group_by(k, auid.x, auid.y) %>%
+        mutate(h_dist_term = sqrt(!!gamma1 * !!gamma2)) %>%
+        group_by(k, !!id1, !!id2) %>%
         summarize(h_dist = sqrt(1 - sum(h_dist_term))) %>%
         ungroup()
 }
@@ -605,60 +613,123 @@ author_meta %>%
 
 
 
-## Author-department divergence ----
-## Departmental-mean topic distributions
-gamma_dept = gamma %>% 
+## Author-department distance ----
+## Departments of interest:  >= 40 non-ORU authors
+depts_of_interest = author_meta %>% 
     filter(!oru_lgl) %>% 
     unnest(department) %>% 
-    ## Only departments w/ >= 25 people
-    add_count(k, topic, department) %>% 
-    filter(n >= 25) %>% 
-    select(-n) %>% 
+    count(department) %>% 
+    filter(n >= 40) %>% 
+    pull(department)
+
+## Split non-ORU authors from these deptartments
+set.seed(2019-06-05)
+train_authors = author_meta %>% 
+    filter(!oru_lgl) %>% 
+    unnest(department) %>% 
+    filter(department %in% depts_of_interest) %>% 
+    group_by(department) %>% 
+    sample_frac(size = .5) %>% 
+    ungroup() %>% 
+    pull(auid)
+
+## Departmental-mean topic distributions
+gamma_dept = gamma %>% 
+    filter(auid %in% train_authors) %>% 
+    unnest(department) %>% 
+    filter(department %in% depts_of_interest) %>% 
     ## Department mean topic distributions
     group_by(k, topic, department) %>% 
     summarize(gamma_dept = mean(gamma)) %>% 
     ungroup()
 
-n_distinct(gamma_dept$department)
-
-divergence = gamma %>% 
+dept_dist = gamma %>% 
     unnest(department, .drop = FALSE) %>% 
     inner_join(gamma_dept, by = c('k', 'topic', 
                                   'department')) %>% 
-    mutate(div_term = gamma_dept * (-log2(gamma) + log2(gamma_dept))) %>% 
-    group_by(k, auid, department) %>% 
-    summarize(div = sum(div_term)) %>% 
-    ungroup() %>% 
+    filter(! auid %in% train_authors) %>% 
+    hellinger(gamma, gamma_dept, auid, department) %>% 
+    # mutate(h_dist_logit = qlogis(h_dist)) %>% 
     left_join(author_meta, by = 'auid', 
               suffix = c('', '_meta'))
 
-ggplot(divergence, aes(department, div, color = oru_lgl)) +
+ggplot(dept_dist, aes(h_dist)) +
+    geom_density() +
+    facet_wrap(vars(k), scales = 'free')
+
+ggplot(dept_dist, aes(department, h_dist, color = oru_lgl)) +
     # geom_point() +
     stat_summary() +
-    facet_wrap(vars(k))
+    facet_wrap(vars(k), scales = 'free_x') +
+    coord_flip()
 
 # ggplot(divergence, aes(department, div, color = gender)) +
 #     stat_summary() +
 #     facet_wrap(vars(k))
 
-div_lm = divergence %>% 
+dist_lm = dept_dist %>% 
     mutate(log_n_docs = log10(n_docs)) %>% 
-    select(k, div, auid, oru_lgl, first_year_1997, 
+    select(k, h_dist, auid, oru_lgl, first_year_1997, 
            gender, log_n_docs, department) %>% 
     group_nest(k) %>% 
-    mutate(model = map(data, ~lm(div ~ . - auid, data = .)))
+    mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
 
-div_lm %>% 
+dist_lm %>% 
+    select(-data) %>% 
+    mutate(augment = map(model, augment)) %>% 
+    unnest(augment) %>% 
+    ggplot(aes(.fitted, .resid)) +
+    geom_point(aes(color = oru_lgl)) +
+    geom_smooth() +
+    facet_wrap(vars(k), scales = 'free')
+
+dist_lm %>% 
+    mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    unnest(coefs) %>% 
+    filter(!str_detect(term, 'department')) %>% 
+    mutate(is_intercept = str_detect(term, 'Intercept')) %>% 
+    ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_pointrange() +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    facet_wrap(vars(k, is_intercept), scales = 'free') +
+    coord_flip()
+
+dist_lm %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
     unnest(coefs) %>% 
     filter(term == 'oru_lglTRUE') %>% 
     ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
-    gghighlight(k == 45) +
+    gghighlight(k == 85) +
     geom_hline(yintercept = 0, linetype = 'dashed') +
     xlab('number of topics (k)') +
     ylab('estimate (bits)') +
-    ggtitle('Est. effect of ORU affiliation on departmental divergence', 
+    ggtitle('Est. effect of ORU affiliation on departmental distance', 
+            subtitle = Sys.time())
+
+## Separate estimates for each ORU
+dist_lm_fixed = dept_dist %>% 
+    # filter(k == 45) %>% 
+    mutate(log_n_docs = log10(n_docs)) %>% 
+    unnest(oru) %>% 
+    select(k, h_dist, auid, oru, first_year_1997, 
+           gender, log_n_docs, department) %>% 
+    group_nest(k) %>% 
+    mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
+
+dist_lm_fixed %>% 
+    mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    unnest(coefs) %>% 
+    filter(str_detect(term, 'oru')) %>% 
+    mutate(term = str_remove(term, 'oru')) %>% 
+    ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_pointrange() +
+    gghighlight(k == 85) +
+    geom_hline(yintercept = 0, linetype = 'dashed') +
+    facet_wrap(vars(term)) +
+    xlab('ORU') +
+    ylab('estimate (bits)') +
+    ggtitle('Est. effect of ORU affiliation on departmental distance', 
             subtitle = Sys.time())
 
 

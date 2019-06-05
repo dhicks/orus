@@ -17,6 +17,8 @@ theme_set(theme_minimal())
 library(tictoc)
 library(assertthat)
 
+source('../R/hellinger.R')
+
 data_dir = '../data/'
 plots_dir = '../plots/'
 
@@ -45,21 +47,6 @@ dept_dummies = read_rds(str_c(data_dir, '05_dept_dummies.Rds')) %>%
 
 
 
-## Plot showing sample ----
-author_meta %>% 
-    unnest(oru) %>% 
-    ggplot(aes(oru, fill = oru)) +
-    geom_bar(show.legend = FALSE) +
-    stat_count(aes(y = ..count.., label = ..count..), 
-               position = position_nudge(y = -.5),
-               geom = 'text') +
-    scale_y_sqrt() +
-    ggtitle('Count of researchers by ORU', 
-            subtitle = Sys.time())
-ggsave(str_c(plots_dir, '12_sample.png'))
-
-
-
 ## Extract topic models gamma ----
 matrices = models %>% 
     mutate(beta = map(model, tidy, 
@@ -73,6 +60,21 @@ gamma = unnest(matrices, gamma) %>%
 
 gamma_45 = filter(gamma, k == 45)
 gamma_sm = filter(gamma, k %in% selected_k)
+
+
+
+## Plot showing sample ----
+author_meta %>% 
+    unnest(oru) %>% 
+    ggplot(aes(oru, fill = oru)) +
+    geom_bar(show.legend = FALSE) +
+    stat_count(aes(y = ..count.., label = ..count..), 
+               position = position_nudge(y = -.5),
+               geom = 'text') +
+    scale_y_sqrt() +
+    ggtitle('Count of researchers by ORU', 
+            subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_sample.png'))
 
 
 
@@ -469,26 +471,8 @@ crossed = gamma_sm %>%
     filter(auid.x != auid.y)
 toc()
 
-hellinger = function(dataf, 
-                     gamma1 = gamma.x, gamma2 = gamma.y, 
-                     id1 = auid.x, id2 = auid.y) {
-    gamma1 = enquo(gamma1)
-    gamma2 = enquo(gamma2)
-    
-    id1 = enquo(id1)
-    id2 = enquo(id2)
-    
-    dataf %>%
-        mutate(h_dist_term = sqrt(!!gamma1 * !!gamma2)) %>%
-        group_by(k, !!id1, !!id2) %>%
-        summarize(h_dist = sqrt(1 - sum(h_dist_term))) %>%
-        ungroup()
-}
-
-
-
-# ## Hellinger distances for all pairs
-# ## ~1.4 sec for k = 5, 45, 85, 125
+## Hellinger distances for all pairs
+## ~1.4 sec for k = 5, 45, 85, 125
 tic()
 dist = hellinger(crossed)
 toc()
@@ -531,7 +515,6 @@ exterior_min_dist = dist %>%
     summarize(ext_min_dist = min(h_dist)) %>%
     ungroup()
 
-
 ## Silhouette plot
 # full_join(oru_dist, comp_dist, by = c('k', 'auid')) %>% 
 full_join(interior_mean_dist, exterior_min_dist) %>% 
@@ -551,17 +534,35 @@ mds_coords = dist %>%
     map(column_to_rownames, var = 'auid.x') %>%
     map(as.dist) %>%
     map(cmdscale, k = 2) %>%
+    # map(MASS::isoMDS, k = 2) %>% map('points') %>%
+    # map(MASS::sammon, k = 2) %>% map('points') %>% 
     map(as.data.frame) %>%
     map(rownames_to_column, var = 'auid') %>%
     map(as_tibble) %>%
     bind_rows(.id = 'k')
 
-right_join(author_meta,
+## MDS check
+## On average MDS distance corresponds to Hellinger distance
+## But MDS distances can be 0 even for large Hellinger distance
+full_join(mds_coords, mds_coords, by = 'k') %>% 
+    ## Pairwise Euclidean distances
+    filter(auid.x != auid.y) %>% 
+    mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>% 
+    select(k, auid.x, auid.y, mds_dist) %>% 
+    mutate(k = as.integer(k)) %>% 
+    ## Join w/ Hellinger distances
+    inner_join(dist, by = c('k', 'auid.x', 'auid.y')) %>% 
+    ## Plot
+    filter(auid.x > auid.y) %>% 
+    ggplot(aes(h_dist, mds_dist)) +
+    geom_point() +
+    geom_smooth() +
+    facet_wrap(vars(k), scales = 'free')
+
+mds_plot = right_join(author_meta,
           mds_coords) %>%
     mutate(k = as.integer(k),
            name = paste(given_name, surname)) %>%
-    ## For the moment, filter one author who isn't in the topic model
-    filter(auid != '57203386115') %>%
     # filter(oru_lgl) %>%
     unnest(oru) %>%
     ggplot(aes(V1, V2, color = oru)) +
@@ -587,9 +588,15 @@ right_join(author_meta,
     #       legend.background = element_rect(fill = 'grey90'))
     ggtitle('MDS visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
+mds_plot
 
 ggsave(str_c(plots_dir, '12_mds.png'), 
        height = 8, width = 8.5)
+
+ggsave(str_c(plots_dir, '12_mds_wide.png'), 
+       plot = mds_plot + facet_wrap(vars(k), ncol = 4, scales = 'fixed'), 
+       height = 4, width = 12)
+
 
 # Similarly, but faceting out by department
 author_meta %>% 
@@ -703,7 +710,7 @@ dist_lm %>%
     gghighlight(k == 85) +
     geom_hline(yintercept = 0, linetype = 'dashed') +
     xlab('number of topics (k)') +
-    ylab('estimate (bits)') +
+    ylab('estimate (Hellinger scale)') +
     ggtitle('Est. effect of ORU affiliation on departmental distance', 
             subtitle = Sys.time())
 
@@ -728,8 +735,35 @@ dist_lm_fixed %>%
     geom_hline(yintercept = 0, linetype = 'dashed') +
     facet_wrap(vars(term)) +
     xlab('ORU') +
-    ylab('estimate (bits)') +
+    ylab('estimate (Hellinger scale)') +
     ggtitle('Est. effect of ORU affiliation on departmental distance', 
             subtitle = Sys.time())
+
+## Silhouette plot, minimum distance to codepartmentals vs. mean distance to co-ORUs
+## Distances between ORU faculty and their non-ORU codepartmentals
+codept_dist = gamma_sm %>% 
+    # filter(auid %in% c('35394261000', '7005725041')) %>% 
+    select(k, department, topic, oru_lgl, auid, gamma, auid) %>% 
+    unnest(department) %>% 
+    group_split(oru_lgl) %>%   ## non-ORUs are first, ORUs are second
+    reduce(full_join, 
+           by = c('k', 'topic', 'department')) %>% 
+    filter(!is.na(auid.x), !is.na(auid.y)) %>% 
+    hellinger(gamma1 = gamma.y, gamma2= gamma.x, 
+              id1 = auid.y, id2 = auid.x, 
+              department) %>% 
+    ## Codepartmental minimal distance
+    group_by(k, auid = auid.y) %>% 
+    summarize(min_codept_dist = min(h_dist), 
+              mean_codept_dist = mean(h_dist)) %>% 
+    ungroup()
+
+inner_join(interior_mean_dist, 
+           codept_dist, 
+           by = c('k', 'auid')) %>% 
+    ggplot(aes(int_mean_dist, min_codept_dist, color = oru)) +
+    geom_point() +
+    stat_function(fun = identity, linetype = 'dashed', 
+                  inherit.aes = FALSE)
 
 

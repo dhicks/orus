@@ -37,10 +37,16 @@ auids = H$atm %>%
     spread(key = lemma, value = n) %>% 
     pull(auid)
 
+coauths_df = read_rds(str_c(data_dir, '07_coauth_count.Rds'))
 
 author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
     mutate(first_year_1997 = first_year - 1997, 
-           gender = fct_relevel(gender, 'male'))
+           gender = fct_relevel(gender, 'male')) %>% 
+    left_join(coauths_df) %>% 
+    mutate(log_n_docs = log10(n_docs), 
+           log_n_coauths = log10(n_coauthors))
+
+assert_that(all(!is.na(author_meta$n_coauthors)))
 
 dept_dummies = read_rds(str_c(data_dir, '05_dept_dummies.Rds')) %>% 
     filter(auid %in% author_meta$auid)
@@ -201,11 +207,54 @@ ggsave(str_c(plots_dir, '12_oru_dept_network.png'),
 
 
 
+## Coauthor count ----
+n_coauths_lm = author_meta %>% 
+    select(log_n_coauths, auid, oru_lgl, first_year_1997, gender) %>% 
+    left_join(dept_dummies) %>% 
+    lm(log_n_coauths ~ . - auid, data = .)
+
+n_coauths_lm %>% 
+    augment() %>% 
+    ggplot(aes(.resid)) +
+    geom_density() +
+    geom_rug(aes(color = oru_lgl))
+
+n_coauths_lm %>% 
+    augment() %>% 
+    ggplot(aes(.fitted, .resid)) +
+    geom_point(aes(color = oru_lgl)) + 
+    geom_smooth()
+
+tidy(n_coauths_lm, conf.int = TRUE) %>% 
+    mutate(var_group = case_when(
+        str_detect(term, 'Department') ~ 'department', 
+        str_detect(term, 'Intercept') ~ 'intercept',
+        TRUE ~ 'other terms'
+    )) %>% 
+    mutate_at(vars(estimate, conf.low, conf.high), 
+              ~ 10^.) %>% 
+    arrange(desc(estimate)) %>% 
+    mutate(term = fct_inorder(term)) %>% 
+    ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+    geom_pointrange() +
+    ## gghighlight overrides facets
+    # gghighlight(term == 'oru_lglTRUE',
+    #             unhighlighted_colour = alpha('blue', .25)) +
+    geom_hline(yintercept = 1, linetype = 'dashed') +
+    coord_flip() +
+    facet_wrap(vars(var_group), scales = 'free',
+               ncol = 2) +
+    ylab('estimate (fold change)') +
+    ggtitle('Est. effect of ORU affiliation on publication counts',
+            subtitle = Sys.time())
+
+
 ## Number of documents ----
 n_docs_lm = author_meta %>% 
-    select(n_docs, auid, oru_lgl, first_year_1997, gender) %>% 
+    select(log_n_docs, auid, oru_lgl, first_year_1997, 
+           gender, log_n_coauths) %>% 
     left_join(dept_dummies) %>% 
-    lm(log10(n_docs) ~ . - auid, 
+    lm(log_n_docs ~ . - auid, 
        data = .)
 
 n_docs_lm %>% 
@@ -248,9 +297,8 @@ ggsave(str_c(plots_dir, '12_pub_regression.png'),
 
 ## Citation counts ----
 cites_lm = author_meta %>% 
-    mutate(log_n_docs = log10(n_docs)) %>% 
     select(cited_by_count, auid, oru_lgl, first_year_1997,
-           gender, log_n_docs) %>% 
+           gender, log_n_docs, log_n_coauths) %>% 
     left_join(dept_dummies) %>% 
     # filter(cited_by_count > 0) %>% 
     lm(log10(cited_by_count+1) ~ . - auid, 
@@ -281,7 +329,7 @@ cites_lm %>%
     mutate(var_group = case_when(
         str_detect(term, 'Department') ~ 'department', 
         str_detect(term, 'Intercept') ~ 'intercept',
-        str_detect(term, 'docs') ~ 'total publications',
+        str_detect(term, 'docs|coauths') ~ 'publications & coauthors',
         TRUE ~ 'other terms'
     )) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
@@ -429,7 +477,7 @@ ggsave(str_c(plots_dir, '12_dept_topics.png'),
 
 H_lm = H_gamma %>% 
     select(k, auid, H, oru_lgl, first_year_1997, gender, 
-           n_docs) %>% 
+           log_n_docs, log_n_coauths) %>% 
     left_join(dept_dummies) %>% 
     group_by(k) %>% 
     do(model = lm(H ~ . - auid, 
@@ -487,7 +535,8 @@ interior_mean_dist = dist %>%
     unnest(oru.y) %>%
     filter(oru.x == oru.y) %>%
     group_by(k, auid = auid.x, oru = oru.x) %>%
-    summarize(int_mean_dist = mean(h_dist)) %>%
+    summarize(int_mean_dist = mean(h_dist), 
+              int_min_dist = min(h_dist)) %>%
     ungroup()
 
 # ## Minimum distance to non-ORU author
@@ -677,7 +726,7 @@ ggplot(dept_dist, aes(department, h_dist, color = oru_lgl)) +
 dist_lm = dept_dist %>% 
     mutate(log_n_docs = log10(n_docs)) %>% 
     select(k, h_dist, auid, oru_lgl, first_year_1997, 
-           gender, log_n_docs, department) %>% 
+           gender, log_n_docs, log_n_coauths, department) %>% 
     group_nest(k) %>% 
     mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
 
@@ -714,13 +763,15 @@ dist_lm %>%
     ggtitle('Est. effect of ORU affiliation on departmental distance', 
             subtitle = Sys.time())
 
+ggsave(str_c(plots_dir, '12_dept_dist_reg.png'), 
+       width = 6, height = 4, scale = 1.5)
+
 ## Separate estimates for each ORU
 dist_lm_fixed = dept_dist %>% 
     # filter(k == 45) %>% 
-    mutate(log_n_docs = log10(n_docs)) %>% 
     unnest(oru) %>% 
     select(k, h_dist, auid, oru, first_year_1997, 
-           gender, log_n_docs, department) %>% 
+           gender, log_n_docs, log_n_coauths, department) %>% 
     group_nest(k) %>% 
     mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
 
@@ -761,9 +812,22 @@ codept_dist = gamma_sm %>%
 inner_join(interior_mean_dist, 
            codept_dist, 
            by = c('k', 'auid')) %>% 
-    ggplot(aes(int_mean_dist, min_codept_dist, color = oru)) +
-    geom_point() +
+    ggplot(aes(int_min_dist, min_codept_dist, fill = oru)) +
+    geom_point(shape = 21L) +
+    # geom_mark_ellipse(aes(color = oru),
+    #                   size = .8,
+    #                   show.legend = FALSE) +
+    geom_dl(aes(color = oru, label = oru), method = 'chull.grid') +
     stat_function(fun = identity, linetype = 'dashed', 
-                  inherit.aes = FALSE)
-
+                  inherit.aes = FALSE) +
+    scale_color_viridis_d(option = 'A', direction = -1) +
+    scale_fill_viridis_d(option = 'A', direction = -1) +
+    facet_wrap(vars(k), ncol = 4) +
+    coord_equal() +
+    xlab('Minimal distance to co-ORU members') +
+    ylab('Minimal distance to co-departmentals') +
+    ggtitle('ORU vs. co-departmental distance', 
+            subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_oru_dept_min_dist.png'), 
+       width = 4*2+1, height = 1*3, scale = 1.5)
 

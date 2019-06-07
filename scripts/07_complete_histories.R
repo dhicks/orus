@@ -311,3 +311,23 @@ if (!file.exists(parsed_file)) {
     pubs = read_rds(parsed_file)
 }
 
+## Coauthor count ----
+## ~3 min
+tic()
+coauths_df = pubs %>% 
+    # slice(1:500) %>% 
+    unnest(authors) %>% 
+    ## Data has 1 line per author-affiliation-paper combination
+    count(scopus_id, auid) %>% 
+    select(-n) %>% 
+    ## Coauthor pairs w/in articles
+    full_join(., ., by = 'scopus_id') %>% 
+    filter(auid.x != auid.y) %>% 
+    ## Count number of unique coauthors for each author
+    count(auid.x, auid.y) %>% 
+    select(-n) %>% 
+    count(auid = auid.x, name = 'n_coauthors')
+toc()
+
+write_rds(coauths_df, str_c(data_dir, '07_coauth_count.Rds'))
+

@@ -1,10 +1,10 @@
-## TODO:  fixed length of 5k words; try 300 PCs
-
 library(tidyverse)
 library(lubridate)
 
 library(tictoc)
 library(assertthat)
+
+library(knitr)
 
 data_dir = '../data/'
 
@@ -154,7 +154,7 @@ H %>%
            ndH) %>% 
     kable('latex', label = 'vocab',
           caption = 'Top 50 words in the vocabulary, by $log_{10} n \\Delta H$ (\\texttt{ndH}) score',
-          escape = FALSE,
+          escape = FALSE, longtable = TRUE,
           booktabs = TRUE, digits = 2) %>% 
     write_file(str_c(data_dir, '09_vocab.tex'))
 

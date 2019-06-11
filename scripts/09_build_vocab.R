@@ -146,6 +146,18 @@ vocab = H %>%
     # filter(ndH > 0) %>% 
     pull(lemma)
 
+H %>% 
+    slice(1:50) %>% 
+    select(term = lemma, 
+           n, 
+           H, 
+           ndH) %>% 
+    kable('latex', label = 'vocab',
+          caption = 'Top 50 words in the vocabulary, by $log_{10} n \\Delta H$ (\\texttt{ndH}) score',
+          escape = FALSE,
+          booktabs = TRUE, digits = 2) %>% 
+    write_file(str_c(data_dir, '09_vocab.tex'))
+
 ## What fraction of each authors' nouns appears in the vocabulary list?  
 ## >80% have >15% of their nouns in their vocabulary
 nouns %>% 

@@ -266,7 +266,7 @@ tidy(n_coauths_lm, conf.int = TRUE) %>%
                ncol = 2) +
     xlab('covariate') +
     ylab('estimate (fold change in coauthor count)') +
-    ggtitle('Est. effect of ORU affiliation on publication counts',
+    ggtitle('Est. effect of ORU affiliation on coauthor counts',
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_coauths_regression.png'), 
        width = 6, height = 3, scale = 1)

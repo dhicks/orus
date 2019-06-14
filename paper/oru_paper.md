@@ -12,7 +12,9 @@ analysis TODO
 - descriptive summaries
 - regression coefficient plots
 
+<!--
 ![A simplified directed acyclic graph (DAG) used to account for relationships between the productivity dependent variables. \label{fig.dag}](../plots/ORU_DAG.png)
+-->
 
 
 # (Lit review) #

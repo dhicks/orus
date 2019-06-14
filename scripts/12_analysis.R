@@ -26,6 +26,19 @@ plots_dir = '../plots/'
 selected_k = c(25, 45, 85, 125)
 # selected_k = c(85)
 
+## Nice labels for regression estimate plots
+term_labels = tribble(
+    ~ term, ~ label, 
+    '(Intercept)', 'intercept', 
+    'first_year_1997', 'first pub. year',
+    'genderfemale', 'gender: woman', 
+    'gender(Missing)', 'gender: unknown', 
+    'oru_lglTRUE', 'ORU affiliation', 
+    'log_n_coauths', 'coauthors (log count)', 
+    'log_n_docs', 'publications (log count)'
+)
+
+
 
 ## Load data ----
 models = read_rds(str_c(data_dir, '10_models.Rds'))
@@ -226,16 +239,23 @@ n_coauths_lm %>%
     geom_smooth()
 
 tidy(n_coauths_lm, conf.int = TRUE) %>% 
+    filter(term == 'oru_lglTRUE') %>% 
+    mutate_at(vars(estimate, conf.low, conf.high), 
+              ~ 10^.)
+
+tidy(n_coauths_lm, conf.int = TRUE) %>% 
     mutate(var_group = case_when(
         str_detect(term, 'Department') ~ 'department', 
         str_detect(term, 'Intercept') ~ 'intercept',
         TRUE ~ 'other terms'
     )) %>% 
+    filter(var_group != 'department') %>% 
+    left_join(term_labels) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
-    mutate(term = fct_inorder(term)) %>% 
-    ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+    mutate(label = fct_inorder(label)) %>% 
+    ggplot(aes(label, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
     ## gghighlight overrides facets
     # gghighlight(term == 'oru_lglTRUE',
@@ -244,9 +264,12 @@ tidy(n_coauths_lm, conf.int = TRUE) %>%
     coord_flip() +
     facet_wrap(vars(var_group), scales = 'free',
                ncol = 2) +
-    ylab('estimate (fold change)') +
+    xlab('covariate') +
+    ylab('estimate (fold change in coauthor count)') +
     ggtitle('Est. effect of ORU affiliation on publication counts',
             subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_coauths_regression.png'), 
+       width = 6, height = 3, scale = 1)
 
 
 ## Number of documents ----
@@ -270,16 +293,23 @@ n_docs_lm %>%
     geom_smooth()
 
 tidy(n_docs_lm, conf.int = TRUE) %>% 
+    filter(term %in% c('oru_lglTRUE', 'log_n_coauths')) %>% 
+    mutate_at(vars(estimate, conf.low, conf.high), 
+              ~ 10^.)
+
+tidy(n_docs_lm, conf.int = TRUE) %>% 
     mutate(var_group = case_when(
         str_detect(term, 'Department') ~ 'department', 
         str_detect(term, 'Intercept') ~ 'intercept',
         TRUE ~ 'other terms'
     )) %>% 
+    filter(var_group != 'department') %>% 
+    left_join(term_labels) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
-    mutate(term = fct_inorder(term)) %>% 
-    ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+    mutate(label = fct_inorder(label)) %>% 
+    ggplot(aes(label, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
     ## gghighlight overrides facets
     # gghighlight(term == 'oru_lglTRUE',
@@ -288,11 +318,12 @@ tidy(n_docs_lm, conf.int = TRUE) %>%
     coord_flip() +
     facet_wrap(vars(var_group), scales = 'free',
                ncol = 2) +
-    ylab('estimate (fold change)') +
+    xlab('covariate') +
+    ylab('estimate (fold change in publication count)') +
     ggtitle('Est. effect of ORU affiliation on publication counts',
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_pub_regression.png'), 
-       width = 7, height = 4, scale = 1.5)
+       width = 6, height = 3, scale = 1)
 
 
 ## Citation counts ----
@@ -310,7 +341,6 @@ cites_lm %>%
     geom_density() +
     geom_rug(aes(color = oru_lgl))
 
-## Should I be concerned about that left tail?  
 cites_lm %>% 
     augment() %>% 
     ggplot(aes(.fitted, .resid)) +
@@ -326,28 +356,37 @@ cites_lm %>%
 
 cites_lm %>% 
     tidy(conf.int = TRUE) %>% 
+    filter(term %in% c('oru_lglTRUE', 'log_n_coauths', 'log_n_docs')) %>% 
+    mutate_at(vars(estimate, conf.low, conf.high), 
+              ~ 10^.)
+    
+cites_lm %>% 
+    tidy(conf.int = TRUE) %>% 
     mutate(var_group = case_when(
         str_detect(term, 'Department') ~ 'department', 
         str_detect(term, 'Intercept') ~ 'intercept',
         str_detect(term, 'docs|coauths') ~ 'publications & coauthors',
         TRUE ~ 'other terms'
     )) %>% 
+    filter(var_group != 'department') %>% 
+    left_join(term_labels) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.) %>% 
     arrange(desc(estimate)) %>% 
-    mutate(term = fct_inorder(term)) %>% 
-    ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
+    mutate(label = fct_inorder(label)) %>% 
+    ggplot(aes(label, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
     # gghighlight(term == 'oru_lglTRUE', 
     #             unhighlighted_colour = alpha('blue', .25)) +
     geom_hline(yintercept = 1, linetype = 'dashed') +
     coord_flip() +
     facet_wrap(vars(var_group), scales = 'free', ncol = 2) +
-    ylab('estimate (fold change)') +
+    xlab('covariate') +
+    ylab('estimate (fold change in total citations received)') +
     ggtitle('Est. effect of ORU affiliation on citation counts', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_cites_regression.png'), 
-       width = 7, height = 4, scale = 1.5)
+       width = 6, height = 4, scale = 1)
 
 ## Topic models ----
 

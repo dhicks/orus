@@ -7,10 +7,7 @@ header-includes:
 ---
 
 analysis TODO
-- sample plot
-    - (Missing) -> Comparison
 - descriptive summaries
-- regression coefficient plots
 
 <!--
 ![A simplified directed acyclic graph (DAG) used to account for relationships between the productivity dependent variables. \label{fig.dag}](../plots/ORU_DAG.png)
@@ -76,7 +73,7 @@ To investigate the productivity impacts of ORUs, I used author-level metadata fr
 
 I fit regression models for each of these three dependent variables, using ORU affiliation as the primary independent variable of interest and incorporating controls for gender, first year of publication (centered at 1997, which is the rounded mean first year in the analysis dataset), and dummy variables for departmental affiliation.  
 
-Because of the log transformation of the dependent variables, the regression model coefficients can be exponentiated and interpreted as multiplicative associations.  For example, a coefficient of .5 can be interpreted as an association with a $10^.5 \approx 3.16$-fold or $3.16 \times 100\% - 100\% = 216\%$ increase in the dependent variable.  
+Because of the log transformation of the dependent variables, the regression model coefficients can be exponentiated and interpreted as multiplicative associations.  For example, a coefficient of .5 can be interpreted as an association with a $10^{.5} \approx 3.16$-fold or $3.16 \times 100\% - 100\% = 216\%$ increase in the dependent variable.  
 
 To account for relationships between the three dependent variables, I use the simplified directed acyclic graph (DAG) shown in figure \ref{fig.dag}.  According to this model, the number of coauthors influences the number of publications influences the number of citations.  The number of publications thus mediates between coauthors and citations, and coauthors mediates between the independent variables and publications; I also allow that coauthors might directly influence citations.  
 
@@ -85,6 +82,8 @@ To account for relationships between the three dependent variables, I use the si
 ## Discursive impacts ##
 
 I used topic models and related text analysis methods to examine the discursive impacts of ORUs.  
+
+### Topic modeling ###
 
 Specifically, I first used the Scopus API to retrieve paper-level metadata for all authors in the analysis dataset.  These metadata included the text of paper abstracts.  Abstract texts were aggregated within individual authors, treating each individual author as a single "document."  For example, suppose researcher A was an author on documents 1 and 2, and researcher B was an author on documents 2 and 3.  Researcher A, as a single "document," would be represented for text analysis as the combination of abstracts 1 and 2; while researcher B would be represented as the combination of abstracts 2 and 3.  
 
@@ -97,9 +96,9 @@ Specifically, consider the task of identifying an author (or, more generally, a 
          &= \log_2 N
 \end{align*}
 
-Now suppose we are given a term $t$ drawn from the token distribution of the selected author.  Because the uniform distribution has maximal entropy, the conditional author distribution given the term, $p(author_j | term_t)$, has a lower entropy $H_t \leq H$.  Let $\Delta H_t = \log_2 N - H_t$.   $\Delta H_t$ measures the information about the identity of the author gained when we are given the term $t$.  Insofar as we are given a high-information term, we can dramatically narrow down the range of possible authors.  Terms have higher information insofar as they are specific to a smaller group of authors.  
+Now suppose we are given a term $t$ drawn from the token distribution of the selected author.  Because the uniform distribution has maximal entropy, the conditional author distribution given the term, $p(author_j | term_t)$, has a lower entropy $H_t \leq \log_2 N$.  Let $\Delta H_t = \log_2 N - H_t$.   $\Delta H_t$ measures the information about the identity of the author gained when we are given the term $t$.  Insofar as we are given a high-information term, we can dramatically narrow down the range of possible authors.  Terms have higher information insofar as they are specific to a smaller group of authors.  
 
-However, typically the most high-information terms will be unique to a single author, such as typos or idiosyncratic terms.  To account for this, I also calculate the order-of-magnitude of the overall occurrence of a term, $log_10 n_t$.  I then take the product $log_10 n_t \Delta H_t$, which I represent in the code as `ndH`, and select the top terms according to this $log_10 n_t \Delta H_t$ statistic.  Table \ref{tab:vocab} shows the top 50 terms selected for the analysis vocabulary.  As the term list suggests, this statistic is effective at identifying terms that are clearly distinctive (in this case, to different disciplines and research fields), meaningful, and occur frequently. 
+However, typically the most high-information terms will be unique to a single author, such as typos or idiosyncratic terms.  To account for this, I also calculate the order-of-magnitude of the overall occurrence of a term, $\log_{10} n_t$.  I then take the product $\log_{10} n_t \Delta H_t$, which I represent in the code as `ndH`, and select the top terms according to this $\log_{10} n_t \Delta H_t$ statistic.  Table \ref{tab:vocab} shows the top 50 terms selected for the analysis vocabulary.  As the term list suggests, this statistic is effective at identifying terms that are clearly distinctive (in this case, to different disciplines and research fields), meaningful, and occur frequently. 
 
 \input{../data/09_vocab.tex}
 
@@ -110,16 +109,18 @@ Briefly, topic models are based on a highly simplified generative model of writi
 
 A well-known limitation of topic models is that the number of topics, $k$, is a free parameter.  Exploratory analysis of the author-term distributions using principal components found that 80% of the variance could be covered by 63 topics, and 90% of the variance could be covered by 135 topics.  Given this range, I fit models with 5, 25, 45, \ldots, 145 topics.  I calculated 5 goodness-of-fit statistics for each of these models:  semantic coherence, exclusivity, the log likehood of a holdout subset of terms (i.e., not used to fit the model), the residuals, and the number of iterations required by the algorithm to fit the model.  *[cites]*  
 
-While these goodness-of-fit statistics have been promoted for use in selecting the number of topics, they all have known limitations.  For example, semantic coherence favors a small number of "large" topics, while exclusivity favors a large number of "small" topics.  Inspecting these various statistics, I found that their values generally did not change much beyond $k=45$, and were very stable beyond $k=85%.  
+While these goodness-of-fit statistics have been promoted for use in selecting the number of topics, they all have known limitations.  For example, semantic coherence favors a small number of "large" topics, while exclusivity favors a large number of "small" topics.  Inspecting these various statistics, I found that their values generally did not change much beyond $k=45$, and were very stable beyond $k=85$.  
 
 Rather than selecting a single "best" topic model, in the analysis below I either (a) conduct and report analyses using all of the topic models, highlighting $k=85$, or (b) conduct analyses for $k = 25, 45, 85, 125$, reporting all four equally.  Approach (b) was generally used when the analysis involved a complex visualization component — to keep the number of plots manageable — or an intensive computation — such as all pairwise distances between authors.  
 
-For a given value of $k$, I focused my analysis on the conditional topic distribution $\gamma_{t,i} = p(topic_t | author_i)$.  Recall the three hypotheses for discursive impacts, introduced in §*[ref]*.  For hypothesis 1, I calculated discursive breadth for author $i$ as the entropy of the topic distribution $H_i = H(gamma_{\cdot, i})$.  
+### Analyses ###
+
+For a given value of $k$, I focused my analysis on the conditional topic distribution $\gamma_{t,i} = p(topic_t | author_i)$.  Recall the three hypotheses for discursive impacts, introduced in §*[ref]*.  For hypothesis 1, I calculated "discursive breadth" for author $i$ as the entropy of the topic distribution $H_i = H(\gamma_{\cdot, i})$.  
 
 To operationalize the "discursive distance" between any pair of topic distributions $\gamma_1, \gamma_2$, I use Hellinger distance *[cites]*:  
 \begin{align*}
-    h(\gamma_1, \gamma_2) &= \frac{1}{\sqrt 2} \sqrt{\sum_{t} (\sqrt{\gamma_{t,1}} = \sqrt{\gamma_{t,2}})}\\
-    &= \sqrt{1 - \sum_t \sqrt{\gamma_{t,1} \gamma_{t,2}}}
+    h(\gamma_1, \gamma_2) &= \frac{1}{\sqrt 2} \sqrt{\sum_{t} (\sqrt{\gamma_{t,1}} - \sqrt{\gamma_{t,2}})}\\
+    &= \sqrt{1 - \sum_t \sqrt{\gamma_{t,1} \cdot \gamma_{t,2}}}
 \end{align*}
 where $t$ indexes topics.  Hellinger distances range from 0 to 1 inclusive, where 0 indicates that two distributions are the same and 1 indicates that the two distributions have completely different support.  Hellinger distance is a scaled version of the Euclidean distance between the square root vectors $\sqrt \gamma_1, \sqrt \gamma_2$.  Note that, because the square root vectors are all unit length, the Hellinger distance is directly related to the cosine similarity between the square root vectors.  Cosine similarity is widely used in bibliometrics.  
 
@@ -163,6 +164,42 @@ However, the evidence for this causal interpretation is limited, because we do n
 
 ## Discursive space ##
 
+Before discussing the discursive impacts of ORUs, I visualize "discursive space," based on the pairwise Hellinger distance between author-topic distributions for all ORU-affiliated faculty.  (Calculating distances for all pairs of researchers in the dataset was not feasible with available computational resources.)  In figure \ref{fig.mds}, these pairwise distances are represented in 2-dimensional space using classical multidimensional scaling (MDS).  If $h(\gamma_1, \gamma_2)$ is the Hellinger distance between authors 1 and 2 and $d(m_1, m_2)$ is the Euclidean distance between their corresponding points in the visualization, classical MDS attempts to find values of $m_1, m_2$ (simultaneously across all pairs) such that $h(\gamma_1, \gamma_2) \approx d(m_1, m_2)$ *[cite]*.  That is, distance in the visualization approximates Hellinger distance.  
+
+Figure \ref{fig.mds} shows MDS visualizations across 4 values of $k$ (numbers of topics).  Because MDS solutions are not unique up to rotations and reflections, the overall structure of the visualizations are the same across the 4 values of $k$:  3 arms or axes, roughly corresponding to environmental ORUs (JMIE, ITS, BML), medical ORUs (CCC, CHPR), and CNPRC (which has a primatological-behavioral science focus).  PICN and AQRC are located near where these 3 arms meet, suggesting a mix of environmental and health work.    
+
+![Visualization of ORU "discursive space."  Panels correspond to different values of $k$ (number of topics).  Point positions are calculated using classical multidimensional scaling (MDS) on the pairwise Hellinger distance between author-topic distributions.  MDS solutions are not unique up to translations,rotations, and reflections.  Ellipses indicate bounds on the researchers affiliated with each ORU (based on the convex hull). \label{fig.mds}](../plots/12_mds.png)
+
+Besides the relative positions of ORU authors in "discursive space," figure \ref{fig.mds} also provides qualitative evidence that certain ORUs are spread "further" across this space.  For example, JMIE researchers can be found on the furthest end of the environmental arm, but also near the center of the visualization and partway down the medical and CNPRC arms.  By contrast, BML and ITS researchers are located entirely within the environmental arm.  
+
+
 
 ## Discursive impacts ##
+
+*[H1]* states that ORU interdisciplinarity may lead to increased "discursive breadth."  Above I proposed to measure this as the entropy of an author's topic distribution.  Figure \ref{fig.reg.entropy} shows the coefficient estimates for the association between topic entropy and ORU affiliation across all topic models.  Across all models, confidence intervals generally cover from -0.6 to 0.1 bits, with point estimates in the range -0.2 to -0.3 bits.  That is, these models suggest generally indicate *decreased* discursive breadth; this suggests that ORU authors may be more specialized than their departmental peers.  
+
+![Coefficient estimates for association between topic entropy and ORU affiliation across values of $k$ (number of topics).  Whiskers are 95% confidence intervals.  Regression models include as controls attributed gender, first year of publication, number of publications, number of coauthors, and departmental dummies.   $k=85% is highlighted as the single "best" model, though this should not be overinterpreted.  \label{fig.reg.entropy}](../plots/12_entropy_regression.png)  
+
+However, using 0.5 bits ("half of a coin flip") as a threshold for substantive difference (that is, treating any value between -0.5 and 0.5 as too small to be interesting), overall the models indicate that the difference in discursive breadth between ORU authors and their peers is *trivial*.  In either case (whether discursive breadth is narrower or the difference is trivial), *[H1]* does not seem to be supported.  
+
+
+*[H2]* states that ORU interdisciplinarity may lead to increased departmental distance, that is, increased Hellinger distance from the departmental mean topic distribution.  Figure \ref{fig.reg.dept_dist} shows coefficient estimates for the association between topic entropy and ORU affiliation across values of $k$ (number of topics), along with 95% confidence intervals.  Here the estimates may appear to support *[H2]*, as the estimates are generally positive.  However, most confidence intervals end well below .05, and point estimates almost all approximately .02.  Recall that Hellinger distance is on a 0-1 scale.  On this scale, distances less than .05 would seem to be trivial.  That is, there does not seem to be a meaningful difference between ORU faculty and their departmental peers, and so *[H2]* does not appear to be supported either.  
+
+![Coefficient estimates for association between distance to departmental mean distribution and ORU affiliation across values of $k$ (number of topics).  Whiskers are 95% confidence intervals.  Regression models include as controls attributed gender, first year of publication, number of publications, number of coauthors, and departmental dummies.   $k=85% is highlighted as the single "best" model, though this should not be overinterpreted.  \label{fig.reg.dept_dist}](../plots/12_dept_dist_regression.png)  
+
+Due to differences ORU and department size, as well as varying research foci, it might be suspected that departmental distance effects could vary across ORUs.  Figure \ref{fig.reg.dept_dist_fixed} reports coefficient estimates for ORU dummy variables, rather than the binary yes/no ORU affiliation used above; "no ORU affiliation" is used as the contrast value for the ORU dummies.  
+
+![Coefficient estimates for association between distance to departmental mean distribution and ORU affiliation across values of $k$ (number of topics).  Whiskers are 95% confidence intervals.  Regression models include as controls attributed gender, first year of publication, number of publications, number of coauthors, and departmental dummies. "No ORU affiliation" is used as the contrast value. Dashed lines indicate the thresholds for trivial values at ±.05.  $k=85% is highlighted as the single "best" model, though this should not be overinterpreted.   \label{fig.reg.dept_dist_fixed}](../plots/12_dept_dist_fixed_reg.png)
+
+Figure \ref{fig.reg.dept_dist_fixed} does indeed suggest that the potential effects of ORU affiliation on departmental distance do vary across ORUs, albeit still to a limited extent.  In no case do we see consistent evidence (across values of $k$) of an effect larger than ±.10.  However, there does seem to be some evidence of a *non-trivial effect for CNPRC*, with point estimates generally just above .05.  Surprisingly, there is also some evidence of a *negative effect for ITS and PICN*.  That is, there is some evidence that these researchers are *closer* to the departmental means than a randomly-selected subset of their departmental peers.  This last signal is far from clear, however; and generally figure \ref{fig.reg.dept_dist_fixed} indicates *no substantive difference* in departmental distance between ORU researchers and their peers.  
+
+*[H3]* proposes that ORU interdisciplinarity leads researchers to be closer to their ORU peers than their (non-ORU-affiliated) departmental peers in discursive space.  Figure \ref{fig.silhouette} shows scatterplots for minimal distances to both kinds of peers, for each ORU and 4 values of $k$.  In these scatterplots, the dashed line indicates $y=x$.  Points above this line are closer to ORU peers than departmental peers, supporting *[H3]*.  
+
+![Minimal distance to ORU peers vs. departmental peers.  Both x- and y-axes are on Hellinger distance scale (0-1).  The dashed line in each panel indicates $y=x$.  Points above this line are closer to ORU peers than departmental peers, supporting Hypothesis 3.  Note that comparisons to the dashed line should be made *vertically* or *horizontally*.    \label{fig.silhouette}](../plots/12_oru_dept_min_dist.png)
+
+For most ORUs, across values of $k$, most researchers are located near or somewhat below the dashed line.  This means that researchers are typically *equidistant or closer to their closest departmental peers* than their closest ORU peers.  
+
+Because distance comparisons in scatterplots can be misleading (comparing vertical distance to the dashed line, not Euclidean distance), figure \ref{fig.ridges} shows the distribution of these comparisons.  In this figure, positive x-axis values indicate that departmental distance is greater than ORU distance, supporting *[H3]*.  In this figure, modal values are all negative or near 0, and this also appears to be true for median values.  Notable exceptions to this trend are ITS and, less consistently, CNPRC.  In short, with a exceptions, ORU researchers are generally *equidistant or closer to their closest departmental peers.*  As before, these findings conflict with *[H3]*.  
+
+![Comparison of minimal ORU and departmental distances, across ORUs and values of $k$.  Positive x-axis values indicate that departmental distance is greater than ORU distance, supporting Hypothesis 3.  Dashed vertical line indicates 0; solid lines within densities indicate median values; and small vertical dashes indicated individual values.\label{fig.ridges}](../plots/12_oru_dept_min_dist_ridges.png)
 

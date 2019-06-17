@@ -54,7 +54,9 @@ coauths_df = read_rds(str_c(data_dir, '07_coauth_count.Rds'))
 
 author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
     mutate(first_year_1997 = first_year - 1997, 
-           gender = fct_relevel(gender, 'male')) %>% 
+           gender = fct_relevel(gender, 'male'), 
+           oru = map(oru, str_replace, '\\(Missing\\)', 
+                     '(comparison)')) %>% 
     left_join(coauths_df) %>% 
     mutate(log_n_docs = log10(n_docs), 
            log_n_coauths = log10(n_coauthors))
@@ -90,10 +92,12 @@ author_meta %>%
     stat_count(aes(y = ..count.., label = ..count..), 
                position = position_nudge(y = -.5),
                geom = 'text') +
+    xlab('ORU') +
     scale_y_sqrt() +
     ggtitle('Count of researchers by ORU', 
             subtitle = Sys.time())
-ggsave(str_c(plots_dir, '12_sample.png'))
+ggsave(str_c(plots_dir, '12_sample.png'), 
+       height = 4, width = 7)
 
 
 
@@ -822,12 +826,16 @@ dist_lm_fixed %>%
     ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
     gghighlight(k == 85) +
-    geom_hline(yintercept = 0, linetype = 'dashed') +
-    facet_wrap(vars(term)) +
+    geom_hline(yintercept = 0, alpha = .25) +
+    geom_hline(yintercept = c(-.05, .05), linetype = 'dashed') +
+    facet_wrap(vars(term), scales = 'free_y') +
     xlab('ORU') +
     ylab('estimate (Hellinger scale)') +
     ggtitle('Est. effect of ORU affiliation on departmental distance', 
             subtitle = Sys.time())
+
+ggsave(str_c(plots_dir, '12_dept_dist_fixed_reg.png'), 
+       width = 6, height = 4, scale = 1.5)
 
 ## Silhouette plot, minimum distance to codepartmentals vs. mean distance to co-ORUs
 ## Distances between ORU faculty and their non-ORU codepartmentals
@@ -851,22 +859,58 @@ codept_dist = gamma_sm %>%
 inner_join(interior_mean_dist, 
            codept_dist, 
            by = c('k', 'auid')) %>% 
-    ggplot(aes(int_min_dist, min_codept_dist, fill = oru)) +
-    geom_point(shape = 21L) +
+    ggplot(aes(int_min_dist, min_codept_dist, 
+               fill = oru)) +
     # geom_mark_ellipse(aes(color = oru),
     #                   size = .8,
     #                   show.legend = FALSE) +
-    geom_dl(aes(color = oru, label = oru), method = 'chull.grid') +
+    # stat_density_2d(geom = 'polygon', 
+    #                 aes(fill = oru, alpha = stat(nlevel)), 
+    #                 show.legend = FALSE,
+    #                 color = 'transparent') +
+    # geom_dl(aes(color = oru, label = oru), method = 'chull.grid') +
+    geom_point(shape = 21L) +
     stat_function(fun = identity, linetype = 'dashed', 
                   inherit.aes = FALSE) +
-    scale_color_viridis_d(option = 'A', direction = -1) +
-    scale_fill_viridis_d(option = 'A', direction = -1) +
-    facet_wrap(vars(k), ncol = 4) +
+    scale_color_viridis_d(option = 'A', direction = -1, 
+                          guide = FALSE) +
+    scale_fill_viridis_d(option = 'A', direction = -1, 
+                         guide = FALSE) +
+    facet_wrap(vars(k, oru), ncol = 7) +
     coord_equal() +
     xlab('Minimal distance to co-ORU members') +
     ylab('Minimal distance to co-departmentals') +
     ggtitle('ORU vs. co-departmental distance', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist.png'), 
-       width = 4*2+1, height = 1*3, scale = 1.5)
+       width = 7*3*.75, height = 4*3, scale = .8)
 
+
+inner_join(interior_mean_dist, 
+           codept_dist, 
+           by = c('k', 'auid')) %>% 
+    mutate(diff_min = min_codept_dist - int_min_dist) %>% 
+    ggplot(aes(diff_min, fct_rev(oru), color = oru, fill = oru)) +
+    # stat_density(aes(y = stat(scaled)), position = 'identity', 
+    #              fill = 'transparent') +
+    geom_density_ridges(rel_min_height = 0.01, 
+                        color = 'black', alpha = .7,
+                        quantile_lines = TRUE, quantiles = 2, 
+                        jittered_points = TRUE,
+                        position = position_points_jitter(width = 0.05,
+                                                          height = 0),
+                        point_shape = '|', point_size = 2, 
+                        point_alpha = 1) +
+    # geom_rug() +
+    geom_vline(xintercept = 0, linetype = 'dashed') +
+    scale_color_viridis_d(option = 'A', direction = -1, 
+                          guide = FALSE) +
+    scale_fill_viridis_d(option = 'A', direction = -1, 
+                         guide = FALSE) +
+    xlab('Minimal departmental distance - minimal ORU distance\n(Hellinger scale)') +
+    ylab('ORU') +
+    facet_wrap(vars(k), ncol = 2, scales = 'free') +
+    ggtitle('ORU vs. co-departmental distance', 
+            subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_oru_dept_min_dist_ridges.png'), 
+       width = 6, height = 4, scale = 1.5)

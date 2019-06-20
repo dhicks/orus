@@ -11,6 +11,7 @@ library(smglr)
 
 library(gghighlight)
 library(ggforce)
+library(ggridges)
 library(directlabels)
 theme_set(theme_minimal())
 

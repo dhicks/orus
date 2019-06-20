@@ -6,39 +6,101 @@ header-includes:
     - \usepackage{graphics}
 ---
 
-analysis TODO
+TODO
+- intro/background/lit review
+    - what and why are ORUs
+    - discursive space diagram
+    - statement of hypotheses for discursive impacts
+- better network viz
 - descriptive summaries
+- finish discussion/conclusion
+- check present tense
 
 <!--
 ![A simplified directed acyclic graph (DAG) used to account for relationships between the productivity dependent variables. \label{fig.dag}](../plots/ORU_DAG.png)
 -->
 
 
-# (Lit review) #
+# Introduction #
+
+
+*[couple paragraphs setting up the general topic]*
+
+
 
 
 ## Organized research units at UC Davis ##
 
 *[there are 8 of them]*
 
-| Abbreviation | Full name |
-|:-------------|:----------|
-| AQRC         | Air Quality Research Center                    |
-| BML/CMSI     | Bodega Marine Laboratory/Coastal Marine Science Institute |
-| CNPRC        | California National Primate Research Center    |
-| CCC          | Comprehensive Cancer Center                    |
-| CHPR         | Center for Healthcare Policy & Research        |
-| ITS          | Institute for Transportation Studies           |
-| JMIE         | John Muir Institute of the Environment         |
-| PICN         | Program in International & Community Nutrition |
+| Abbreviation | Full name | Founded in |
+|:-------------|:----------|:-----------|
+| AQRC         | Air Quality Research Center                    | 2005 |
+| BML/CMSI     | Bodega Marine Laboratory &                     | 1960 (BML)/2013 (CMSI) |
+|              | Coastal Marine Science Institute               ||
+| CNPRC        | California National Primate Research Center    | 1962 |
+| CCC          | Comprehensive Cancer Center                    | 2002 |
+| CHPR         | Center for Healthcare Policy & Research        | 1994 |
+| ITS          | Institute for Transportation Studies           | 1991 |
+| JMIE         | John Muir Institute of the Environment         | 1997 |
+| PICN         | Program in International & Community Nutrition | 1987 |
 
-Table:  UC Davis Organized Research Units [ORUs] examined in this study \\label{tab.orus}
+Table:  UC Davis Organized Research Units [ORUs] examined in this study \label{tab.orus}
 
-## (Topic modeling as interdisciplinarity)
 
+
+## Productivity and discursive impacts ##
+
+### Productivity impacts ###
+
+Interdisciplinary research is often evaluated in terms of standard research outputs, such as publication counts, citation counts, and perhaps patents or other indicators of economic impact.  *[cites]*  In the context of evaluating the effects of a particular (set of) programmatic interventions — namely, recruiting faculty to an ORU — I refer to these familiar kinds of outputs as *productivity impacts*.  Research evaluation might also consider productivity inputs, such as grant application success rate or quantity of external research funds received.  
+
+In this study, I examine three productivity impacts of the UC Davis ORUs.  Publication and citation counts are familiar measures of research productivity.  The third, coauthor count, is less frequently used.  *[why is coauthor count a measure of "productivity"?]*
+
+
+### Discursive impacts ###
+
+Evaluating the productivity impacts of an interdisciplinary research program or organizational unit is, methodologically and conceptually, essentially the same as evaluating a disciplinary program or organizational unit:  the same kinds of data will be collected and analyzed in the same way.  In addition, productivity impacts abstract from the content of research.  Counting publications doesn't consider what those publications say.  
+
+But interdisciplinary research is typically justified in terms of distinctive epistemic goals.  For example, an unsigned editorial in *Nature* argues that "tackl[ing] society's challenges through research requires the engagement of multiple disciplines" [@Meetchallengeinterdisciplinary2016].  Following *[Polanyi, Bush, and Conant]*, Geiger contrasts disciplinary research with "programmatic research" [@GeigerOrganizedResearchUnits1990, 8].  Geiger argues that the norms of disciplinary research are enforced by academic departments, making them "inherently [epistemically] conservative institutions."  And so ORUs (broadly understood to include museums, observatories, and extension offices) "exist to do what departments cannot do: to operate in interdisciplinary, applied, or capital-intensive areas in response to social demands for new knowledge" [@GeigerOrganizedResearchUnits1990, 17].  
+
+Insofar as interdisciplinary research is successful at pursuing these distinctive epistemic goals, we would expect the content of this research to be different from comparable disciplinary research in a number of ways.  Methodologically, interdisciplinary research will draw on a larger or more diverse set of data sources and analytical methods.  Epistemologically, interdisciplinary research will likewise draw on a larger or more diverse stock of prior research.  For example, interdisciplinary researchers might be more likely to use conceptual frameworks from other disciplines (that is, from disciplines in which they were not formally trained), or to cite empirical research in other disciplines as established facts.  Bibliometricians have developed several approaches to investigating these kinds of epistemological differences using citation data [@LeydesdorffIndicatorsinterdisciplinarityjournals2011].  
+
+In addition, some philosophers have stressed the linguistic distinctiveness of interdisciplinary research.   @HolbrookWhatinterdisciplinarycommunication2012 examines three rival accounts of cross-disciplinary communication and corresponding accounts of interdisciplinary research.  On the *Habermas-Klein* account, "interdisciplinary communication involves the integration of two or more disciplinary languages with the aim of generating a common understanding" [@HolbrookWhatinterdisciplinarycommunication2012, 4?].  Roughly, this account anticipates that interdisciplinary research would form a linguistic amalgam or synthesis, drawing terms (and so concepts) from all of the involved disciplines.  *[Brister as "integration gone wrong"?]*
+
+By contrast, the *Kuhn-MacIntyre* account stresses the incommensurability or conceptual incompatibility between rival disciplines (Kuhnian paradigms; MacIntyrean intellectual traditions) [@HolbrookWhatinterdisciplinarycommunication2012, 7ff?].  Because of this incompatibility, a straightforward linguistic synthesis is either impossible or incoherent.  Instead of integration, the Kuhn-MacIntyre account recommends a deep interaction between disciplines, facilitated by individuals who have deep lived experience in both (or all) of the involved disciplines who can act as "translators" [@HolbrookWhatinterdisciplinarycommunication2012 9-10?; compare *[diss]*].  This interaction might be difficult to detect linguistically insofar as the "translators" are adept at (necessarily very imperfectly) approximating ideas from one discipline in the language (and so conceptual schemes) of the others.  *[an alternative explanation of the data for this study]*
+
+Third, the *Bataille-Lyotard* account is based on a distinction between weak and strong communication.  *Weak communication* refers to a state in which communication appears to be easy or fluent — it seems that all of the interlocutors understand each other.  However, on the Bataille-Lyotard account this apparent shared understanding is, to a greater or lesser extent, merely apparent.  There are always differences, trivial or shallow, in the way agents understand and use the language that they use.  *Strong communication* refers to the state in which this lack of shared understanding becomes evident, "an experience of not being able to find the words" by which to communicate with another person [@HolbrookWhatinterdisciplinarycommunication2012 11?].  The challenge of strong communication is overcome gradually by "the invention of a new genre of discourse, one that is not merely an integration of the previously existing genres" [@HolbrookWhatinterdisciplinarycommunication2012 12?].  Linguistically, this means that we would expect to see the development of new terms, distinctively (or even unique) to a particular interdisciplinary collaboration.  *[maybe toolbox here?]*
+
+A fourth account of language and interdisciplinary research, not discussed by @HolbrookWhatinterdisciplinarycommunication2012, is worth mentioning.  *[Neurath]*
+
+In this study, I suggest that the linguistic predictions made by these various accounts of interdisciplinary research can be examined quantitatively using methods from text mining.  Conceptually, I begin with the idea of *discursive space*, the space of research topics and conceptual schemes as they manifest in language.  Figure *[n]* suggests how disciplinary and interdisciplinary researchers might be configured in this discursive space.  There are two groups of disciplinary researchers, "red" and "blue."  These researchers have simple primary colors and are clustered close together, indicating that they work on similar research topics, employ similar conceptual schemes, and more generally use similar language.  The circles representing these researchers are small, indicating that they work on a relatively small set of topics.  And the clusters are in distinct areas of discursive space, indicating that they differ substantially in their research topics and conceptual schemes.  (The clusters are internally homogeneous but externally heterogeneous.)
+
+Figure *[n]* also includes two interdisciplinary researchers.  These researchers are shades of purpose and are located in the space between the red and blue clusters, indicating that they use a mix of research topics, conceptual schemes, and language more generally from the two disciplines.  The ellipses representing the interdisciplinary researchers are larger, indicating that they work on a relatively large set of topics.  The shading and position of the researchers suggests that they have home departments or disciplines:  one is a bluish purple, and is closer to the blues; the other is a redish purple, and is closer to the reds.  But these interdisciplinary researchers are closer to each other than they are to their home disciplinary clusters.  
+
+This framework of discursive space corresponds to three of the four accounts of interdisciplinary research discussed above.  The exception is the Kuhn-MacIntyre account, on which interdisciplinary researchers translate ideas from one intellectual community to another.  This translation would not be expected to manifest in an obvious way in the language that they use.  On each of the other accounts, we expect the language of interdisciplinary research to exhibit the kind of patterns suggested by figure *[n]*.  In a context where we expect an intervention to promote interdisciplinary research — for example, recruiting a faculty member to an ORU — I refer to these patterns as the expected *discursive impacts* of the intervention.  
+
+In other words, the discursive space framework, and specifically the concept of discursive impacts, provide a framework for evaluating ORUs and other interdisciplinary research initiatives.  Insofar as the UC Davis ORUs have effectively promoted interdisciplinary research, they should exhibit discursive impacts.  
+
+I suggest that this conceptual framework of discursive space and discursive impacts can be operationalized using topic models.  Topic models begin with document-term frequency data; for example, the term "researcher" appears in a certain document 5 times.  The models then interpolate a probability distribution of topics "between" documents and terms.  For example, a given document may "contain" 50% topic 1, 25% topic 2, 10% topic 3, and so on.  Each topic, in turn, has a probability distribution over terms.  For example, topic 1 might have "researcher" with probability 1%, "starfish" with probability 0.5%, "cancer" with probability 0.0001%, and so on.  
+
+More formally, topic models begin with observed conditional probability distributions over terms, $p(term_k | document_i)$, and fit two probability distributions $\beta_{k,j} = p(term_k | topic_j)$ and $\gamma_{j,i} = p(topic_j | document_i)$.  *[make sure indices agree w/ below]*  These conditional probability distributions allow us to quantitative compare and relate researchers to each other in a space characterized by the language that they use.  In this study, I use authors as the "documents" for the topic model; that is, the term-author distribution describes how frequently a given researcher has used the given term over their entire publication history.  
+
+I suggest three hypotheses based on figure *[n]* and the conceptual framework of "discursive space."  
+
+*[custom numbers]*
+\begin{enumerate}
+\item *[todo]*
+\end{enumerate}
+
+All together, insofar as the UC Davis ORUs have promoted interdisciplinary research, I expect a topic model analysis to confirm the three hypotheses.  
 
 
 # Data and methods #
+
+In this study, my unit of analysis is individual researchers or authors, as individuated by the Scopus author identifiers *[cite]*, except for a few analytical moments in which I compare individual researchers to institutional entities (departments or ORUs).  My unit of observation is publications — paradigmatically, journal articles — retrieved from Scopus and aggregated as either author-level totals or concatenated blocks of text (specifically, the abstracts of an author's published work, treated as a single block of text).  
+
+Unless otherwise noted, all data used in this project was retrieved from Scopus, using either the web interface or application programming interface (API), between November 2018 and June 2019.  While the data cannot be made publicly available for confidentiality reasons, the scripts used for collecting and analyzing the data are available at *[repo]*. *[make sure this isn't repeated below]*
 
 ## Author identification ##
 
@@ -75,13 +137,13 @@ I fit regression models for each of these three dependent variables, using ORU a
 
 Because of the log transformation of the dependent variables, the regression model coefficients can be exponentiated and interpreted as multiplicative associations.  For example, a coefficient of .5 can be interpreted as an association with a $10^{.5} \approx 3.16$-fold or $3.16 \times 100\% - 100\% = 216\%$ increase in the dependent variable.  
 
-To account for relationships between the three dependent variables, I use the simplified directed acyclic graph (DAG) shown in figure \ref{fig.dag}.  According to this model, the number of coauthors influences the number of publications influences the number of citations.  The number of publications thus mediates between coauthors and citations, and coauthors mediates between the independent variables and publications; I also allow that coauthors might directly influence citations.  
+To account for relationships between the three dependent variables, I use the simplified directed acyclic graph (DAG) shown in figure \ref{fig.dag}.  According to this model, the number of coauthors influences the number of publications influences the number of citations.  The number of publications thus mediates between coauthors and citations, and coauthors mediates between the independent variables and publications; I also allow that coauthors might directly influence citations.  Both ORU affiliation and all of the included control variables (first year of publication, gender, department affiliation) might directly influence all three dependent variables.  
 
 ![A simplified directed acyclic graph (DAG) used to account for relationships between the productivity dependent variables. \label{fig.dag}](../plots/ORU_DAG.png)
 
 ## Discursive impacts ##
 
-I used topic models and related text analysis methods to examine the discursive impacts of ORUs.  
+I use topic models and related text analysis methods to examine the discursive impacts of ORUs.  
 
 ### Topic modeling ###
 
@@ -185,7 +247,7 @@ However, using 0.5 bits ("half of a coin flip") as a threshold for substantive d
 
 *[H2]* states that ORU interdisciplinarity may lead to increased departmental distance, that is, increased Hellinger distance from the departmental mean topic distribution.  Figure \ref{fig.reg.dept_dist} shows coefficient estimates for the association between topic entropy and ORU affiliation across values of $k$ (number of topics), along with 95% confidence intervals.  Here the estimates may appear to support *[H2]*, as the estimates are generally positive.  However, most confidence intervals end well below .05, and point estimates almost all approximately .02.  Recall that Hellinger distance is on a 0-1 scale.  On this scale, distances less than .05 would seem to be trivial.  That is, there does not seem to be a meaningful difference between ORU faculty and their departmental peers, and so *[H2]* does not appear to be supported either.  
 
-![Coefficient estimates for association between distance to departmental mean distribution and ORU affiliation across values of $k$ (number of topics).  Whiskers are 95% confidence intervals.  Regression models include as controls attributed gender, first year of publication, number of publications, number of coauthors, and departmental dummies.   $k=85% is highlighted as the single "best" model, though this should not be overinterpreted.  \label{fig.reg.dept_dist}](../plots/12_dept_dist_regression.png)  
+![Coefficient estimates for association between distance to departmental mean distribution and ORU affiliation across values of $k$ (number of topics).  Whiskers are 95% confidence intervals.  Regression models include as controls attributed gender, first year of publication, number of publications, number of coauthors, and departmental dummies.   $k=85% is highlighted as the single "best" model, though this should not be overinterpreted.  \label{fig.reg.dept_dist}](../plots/12_dept_dist_reg.png)  
 
 Due to differences ORU and department size, as well as varying research foci, it might be suspected that departmental distance effects could vary across ORUs.  Figure \ref{fig.reg.dept_dist_fixed} reports coefficient estimates for ORU dummy variables, rather than the binary yes/no ORU affiliation used above; "no ORU affiliation" is used as the contrast value for the ORU dummies.  
 
@@ -202,4 +264,31 @@ For most ORUs, across values of $k$, most researchers are located near or somewh
 Because distance comparisons in scatterplots can be misleading (comparing vertical distance to the dashed line, not Euclidean distance), figure \ref{fig.ridges} shows the distribution of these comparisons.  In this figure, positive x-axis values indicate that departmental distance is greater than ORU distance, supporting *[H3]*.  In this figure, modal values are all negative or near 0, and this also appears to be true for median values.  Notable exceptions to this trend are ITS and, less consistently, CNPRC.  In short, with a exceptions, ORU researchers are generally *equidistant or closer to their closest departmental peers.*  As before, these findings conflict with *[H3]*.  
 
 ![Comparison of minimal ORU and departmental distances, across ORUs and values of $k$.  Positive x-axis values indicate that departmental distance is greater than ORU distance, supporting Hypothesis 3.  Dashed vertical line indicates 0; solid lines within densities indicate median values; and small vertical dashes indicated individual values.\label{fig.ridges}](../plots/12_oru_dept_min_dist_ridges.png)
+
+
+
+# Discussion #
+
+The analysis of productivity impacts suggests that ORUs do increase the productivity of affiliated faculty.  Specifically, the sequence of regression models suggests that ORUs increase the number of coauthors that affiliated faculty have; that this increased collaboration leads to increased publications and citations; but that ORUs have at most a small direct effect on publications and citations.  
+
+However, as already noted above, due to the limitations of the study design we cannot be sure whether this relationship is indeed an effect of ORUs on productivity.  The data are also compatible with an effect of productivity on ORUs (i.e., ORUs tend to recruit faculty who already tend to be more productive), an unmeasured common cause (e.g., more extraverted faculty tend both to be more productive and to be recruited to ORUs), or indeed a complex combination of multiple causal relationships.  
+
+Bracketing these concerns about causal inference, the productivity findings of this study suggest that ORUs — and similar infrastructure for interdisciplinary research — may have a key social network formation role.  *[Hicks and Simmons]* and *[Hicks et al.]* find that interdisciplinary research funding programs were effective at supporting novel collaborations and stimulating the formation of a new research community, respectively.  
+
+*[1 more paragraph?]*
+
+
+Turning to discursive impacts, the data do not appear to be compatible with any of the three hypotheses.  In each case, the expected effects of interdisciplinarity (rather than multidisciplinarity) do not appear.  This suggests that ORUs at UC Davis have fostered multidisciplinarity rather than interdisciplinarity.  
+
+- multidisciplinary is often seen as inferior to interdisciplinarity, eg, "mere juxtaposition" (Holbrook 3)
+- o:  ID is hard (O'Rourke; Brister)
+- o:  ID is incoherent (Holbrook 14)
+- o:  discursive MD is compatible with ID interaction (Holbrook 10, on Kuhn-MacI)
+
+
+
+
+Brister, "disciplinary capture"
+- might explain the narrowness here
+- might be compatible w/ spread of departmental distances
 

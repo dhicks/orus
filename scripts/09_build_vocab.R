@@ -14,7 +14,7 @@ dt_ratio = 1  ## target ratio of unique documents:terms
 author_meta = read_rds(str_c(data_dir, '06_author_histories.Rds'))
 
 ## Annotated abstract text
-## ~20 sec
+## ~150 sec
 tic()
 ann = read_rds(str_c(data_dir, '08_annotated.Rds'))
 toc()
@@ -73,11 +73,11 @@ calculate_H = function(nouns,
 ## Vocabulary exploration ----
 ## 80k distinct terms
 n_distinct(nouns$lemma)
-## 2k distinct documents (authors)
+## 1,967 distinct documents (authors)
 n_docs = n_distinct(nouns$auid)
 
 ## How many terms to get desired doc:term ratio? 
-## 5k; top 2%
+## 1,967; top 2%
 n_terms = ceiling(n_docs / dt_ratio)
 quantile = n_terms / n_distinct(nouns$lemma)
 
@@ -93,6 +93,7 @@ H %>%
     count(ndH == 0) %>% 
     mutate(share = n / sum(n))
 
+## Threshold for selection is just under 14
 ndH_thresh = H %>% 
     filter(selected) %>% 
     pull(ndH) %>% 
@@ -159,7 +160,7 @@ H %>%
     write_file(str_c(data_dir, '09_vocab.tex'))
 
 ## What fraction of each authors' nouns appears in the vocabulary list?  
-## >80% have >15% of their nouns in their vocabulary
+## About 80% have >5% of their nouns in their vocabulary
 nouns %>% 
     mutate(in_vocab = lemma %in% vocab) %>% 
     count(auid, in_vocab) %>% 
@@ -170,7 +171,7 @@ nouns %>%
     stat_ecdf()
 
 ## What fraction of each authors' papers have at least 1 term in the vocabulary list?  
-## Basically all of them
+## About 80% have more than about 60% of their papers covered
 nouns %>%
     mutate(in_vocab = lemma %in% vocab) %>%
     group_by(auid, eid) %>%
@@ -185,6 +186,15 @@ nouns %>%
 atm = nouns %>% 
     filter(lemma %in% vocab) %>% 
     count(auid, lemma)
+
+## ~75% of authors have >100 tokens after vocabulary selection
+atm %>% 
+    group_by(auid) %>% 
+    summarize(total_tokens = sum(n)) %>% 
+    ggplot(aes(total_tokens)) +
+    stat_ecdf() +
+    geom_rug() +
+    scale_x_log10()
 
 assert_that(length(setdiff(author_meta$auid, atm$auid)) == 0L, 
             msg = 'Some authors dropped in vocabulary selection')

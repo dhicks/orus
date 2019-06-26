@@ -106,6 +106,7 @@ ggsave(str_c(plots_dir, '12_sample.png'),
 ## author-department network
 dept_net = author_meta %>%
     unnest(department) %>% 
+    mutate(department = str_remove(department, 'Department of ')) %>% 
     select(auid, department) %>% 
     graph_from_data_frame(directed = FALSE) %>% 
     as_tbl_graph() %>% 
@@ -164,22 +165,27 @@ if (!file.exists(layout_file)) {
 net %>%
     mutate(x = stress$x,
            y = stress$y) %>%
-    # filter(degree > 1) %>%
+    filter(!(degree == 1 & type == 'department')) %>%
     `graph_attr<-`('layout', data.frame(x = V(.)$x,
                                         y = V(.)$y)) %>%
     ggraph(layout = 'nicely') +
     geom_edge_link(alpha = .5) +
     geom_node_point(aes(color = type, size = btwn)) +
     geom_node_label(aes(label = name), 
-                    alpha = .5,
+                    alpha = .5, fill = 'yellow',
                     data = function(dataf) {
                         subset(dataf, type == 'ORU')
                     }) +
-    geom_node_text(aes(label = name),
-                   size = 1,
+    geom_node_label(aes(label = name),
+                   size = 1, alpha = .25,
                    data = function(dataf) {
                        subset(dataf, type == 'department')
                    }) +
+    scale_color_manual(values = c('purple', 'yellow',
+                                  'red', 'darkblue')) +
+    # scale_color_viridis_d(option = 'E', direction = -1) +
+    labs(size = 'betweenness centrality', 
+         color = 'node type') +
     theme_graph()
 ggsave(str_c(plots_dir, '12_network.png'),
        height = 10, width = 15, dpi = 300, scale = .75)
@@ -202,7 +208,6 @@ oru_dept_layout = layout_with_stress(oru_dept_net)
 oru_dept_net %>%
     mutate(x = oru_dept_layout[,1],
            y = oru_dept_layout[,2]) %>%
-    # filter(degree > 1) %>%
     `graph_attr<-`('layout', data.frame(x = V(.)$x,
                                         y = V(.)$y)) %>%
     ggraph(layout = 'nicely') +
@@ -218,6 +223,7 @@ oru_dept_net %>%
                    data = function(dataf) {
                        subset(dataf, type == 'department')
                    }) +
+    scale_color_manual(values = c('purple', 'yellow')) + 
     scale_edge_width(range = c(.5, 3)) +
     theme_graph()
 ggsave(str_c(plots_dir, '12_oru_dept_network.png'),
@@ -395,7 +401,31 @@ ggsave(str_c(plots_dir, '12_cites_regression.png'),
 
 ## Topic models ----
 
+model_stats %>% 
+    select(k, 
+           coherence = semantic_coherence, ## want *high*
+           exclusivity,        ## want *high*?
+           ho_likelihood,      ## want *high*
+           residuals,          ## want *about 1*
+           # lbound,             ## ??
+           iterations          ## want low, but less important
+    ) %>%
+    gather(key = 'statistic', value = 'value', -k) %>% 
+    ggplot(aes(k, value)) +
+    geom_point() +
+    geom_line() +
+    facet_wrap(vars(statistic), scales = 'free')
+
 ## Closer look at SC and EX ----
+## Scatterplot suggests models are spread along the SC-EX frontier
+ggplot(model_stats, aes(semantic_coherence, exclusivity)) +
+    geom_text(aes(label = k))
+
+model_stats %>% 
+    mutate(sc_ex = semantic_coherence * exclusivity) %>% 
+    select(k, sc_ex, semantic_coherence, exclusivity) %>% 
+    arrange(desc(sc_ex))
+
 ## In script 10, PCs suggested k = 45 would be reasonable
 ## Plotting just the means, it looks like there's a continuing substantial decrease past k = 45
 ## But plotting the values for each topic, the distributions don't look that different

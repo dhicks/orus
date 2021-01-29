@@ -7,7 +7,7 @@ library(igraph)
 library(tidygraph)
 library(ggraph)
 # devtools::install_github("schochastics/smglr")
-library(smglr)
+library(graphlayouts)
 
 library(gghighlight)
 library(ggforce)
@@ -82,7 +82,9 @@ matrices = models %>%
            gamma = map(model, tidy, 
                        matrix = 'gamma', document_names = auids))
 
-gamma = unnest(matrices, gamma) %>% 
+gamma = matrices %>% 
+    select(-model, -beta) %>% 
+    unnest(gamma) %>% 
     rename(auid = document) %>% 
     left_join(author_meta)
 
@@ -93,11 +95,12 @@ gamma_sm = filter(gamma, k %in% selected_k)
 
 ## Plot showing sample ----
 author_meta %>% 
+    select(oru) %>% 
     unnest(oru) %>% 
     ggplot(aes(oru, fill = oru)) +
     geom_bar(show.legend = FALSE) +
     stat_count(aes(y = ..count.., label = ..count..), 
-               position = position_nudge(y = -.5),
+               position = position_nudge(y = 1),
                geom = 'text') +
     xlab('ORU') +
     scale_y_sqrt() +
@@ -117,6 +120,7 @@ gender_coarse_plot = ggplot(author_meta,
 gender_coarse_plot
 
 gender_fine_plot = author_meta %>% 
+    select(gender, oru) %>% 
     unnest(oru) %>% 
     ggplot(aes(oru, fill = gender)) +
     geom_bar(position = position_fill()) +
@@ -137,6 +141,7 @@ ggsave(str_c(plots_dir, '12_gender.png'),
 ## Network viz ----
 ## author-department network
 dept_net = author_meta %>%
+    select(-where(is.list), department) %>% 
     unnest(department) %>% 
     mutate(department = str_remove(department, 'Department of ')) %>% 
     select(auid, department) %>% 
@@ -150,6 +155,7 @@ dept_net = author_meta %>%
 ## author-ORU network 
 oru_net = author_meta %>% 
     filter(oru_lgl) %>% 
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     select(auid, oru) %>% 
     graph_from_data_frame(directed = FALSE) %>% 
@@ -171,8 +177,8 @@ net = graph_join(dept_net, oru_net, by = c('name', 'type')) %>%
 net %>%
     as_tibble() %>%
     group_by(type) %>%
-    summarize_at(vars(degree),
-                 funs(n = n(), min, mean, median, max))
+    summarize(n = n(), 
+              across(degree, lst(min, mean, median, max)))
 
 ## 110 sec
 layout_file = str_c(data_dir, '12_layout.Rds')
@@ -209,10 +215,10 @@ net %>%
                         subset(dataf, type == 'ORU')
                     }) +
     geom_node_label(aes(label = name),
-                   size = 1, alpha = .25,
-                   data = function(dataf) {
-                       subset(dataf, type == 'department')
-                   }) +
+                    size = 1, alpha = .25,
+                    data = function(dataf) {
+                        subset(dataf, type == 'department')
+                    }) +
     scale_color_manual(values = c('purple', 'yellow',
                                   'red', 'darkblue')) +
     # scale_color_viridis_d(option = 'E', direction = -1) +
@@ -378,15 +384,17 @@ cites_lm = author_meta %>%
     lm(log10(cited_by_count+1) ~ . - auid, 
        data = .)
 
+## As of 01-2021, bug means .resid isn't reported
+## <https://github.com/tidymodels/broom/issues/937>
 cites_lm %>% 
     augment() %>% 
-    ggplot(aes(.resid)) +
+    ggplot(aes(.std.resid)) +
     geom_density() +
     geom_rug(aes(color = oru_lgl))
 
 cites_lm %>% 
     augment() %>% 
-    ggplot(aes(.fitted, .resid)) +
+    ggplot(aes(.fitted, .std.resid)) +
     geom_point(aes(color = oru_lgl)) + 
     geom_smooth()
 
@@ -402,7 +410,7 @@ cites_lm %>%
     filter(term %in% c('oru_lglTRUE', 'log_n_coauths', 'log_n_docs')) %>% 
     mutate_at(vars(estimate, conf.low, conf.high), 
               ~ 10^.)
-    
+
 cites_lm %>% 
     tidy(conf.int = TRUE) %>% 
     mutate(var_group = case_when(
@@ -462,6 +470,7 @@ model_stats %>%
 ## Plotting just the means, it looks like there's a continuing substantial decrease past k = 45
 ## But plotting the values for each topic, the distributions don't look that different
 model_stats %>% 
+    select(k, semantic_coherence_topicwise) %>% 
     unnest(semantic_coherence_topicwise) %>% 
     ggplot(aes(k, semantic_coherence_topicwise)) +
     # geom_point(aes(group = k)) +
@@ -473,6 +482,7 @@ model_stats %>%
 
 ## This is even more the case w/ exclusivity
 model_stats %>% 
+    select(k, exclusivity_topicwise) %>% 
     unnest(exclusivity_topicwise) %>% 
     ggplot(aes(k, exclusivity_topicwise)) +
     # geom_point() +
@@ -485,6 +495,7 @@ model_stats %>%
 ## Topic-author entropy ----
 ## Author-level topic distributions, grouped by ORU, k = 45
 at_plot = gamma_45 %>% 
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     ggplot(aes(auid, topic, fill = gamma)) +
     geom_raster() +
@@ -496,11 +507,13 @@ at_plot
 ## And same for 85
 gamma_sm %>% 
     filter(k == 85) %>% 
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     {at_plot %+% .}
 
 ## ORU-level topic distributions
 gamma_oru = gamma %>% 
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     # filter(oru != 'AQRC') %>% 
     group_by(k, oru, topic) %>% 
@@ -556,6 +569,7 @@ ggsave(str_c(plots_dir, '12_oru_entropy.png'),
 
 ## Distributions within departments
 dept_topics = author_meta %>% 
+    select(-where(is.list), department) %>% 
     unnest(department) %>% 
     # count(department) %>% arrange(desc(n)) %>% filter(n > 62)
     add_count(department) %>% 
@@ -593,9 +607,12 @@ H_lm = H_gamma %>%
     mutate(glance = map(model, glance), 
            coefs = map(model, tidy, conf.int = TRUE))
 
-unnest(H_lm, glance)
+H_lm %>% 
+    select(-where(is.list), glance) %>% 
+    unnest(glance)
 
 H_lm %>% 
+    select(-where(is.list), coefs) %>% 
     unnest(coefs) %>% 
     filter(term == 'oru_lglTRUE') %>% 
     ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
@@ -612,16 +629,18 @@ ggsave(str_c(plots_dir, '12_entropy_regression.png'),
 
 ## Silhouette analysis ----
 ## See the scratch file `Hellinger_low_memory.R` for an attempt to include non-ORU authors
-## ~1.5 sec
+make_cross = function(dataf, join_cols = c('k', 'topic')) {
+    full_join(dataf, dataf, by = join_cols)
+}
+
+## ~2 sec
 tic()
 crossed = gamma_sm %>%
     filter(oru_lgl) %>% 
     select(k, topic, auid, gamma) %>%
     group_by(k, topic) %>%
     group_split() %>% #str(max.level = 1)
-    map2_dfr(., ., tidyr::crossing) %>%
-    rename(auid.x = auid, auid.y = auid1,
-           gamma.x = gamma, gamma.y = gamma1) %>%
+    map_dfr(make_cross) %>% 
     filter(auid.x != auid.y)
 toc()
 
@@ -637,8 +656,8 @@ interior_mean_dist = dist %>%
     left_join(author_meta, by = c('auid.x' = 'auid')) %>%
     left_join(author_meta, by = c('auid.y' = 'auid'),
               suffix = c('.x', '.y')) %>%
-    unnest(oru.x, .drop = FALSE) %>%
-    unnest(oru.y) %>%
+    select(-where(is.list), matches('oru')) %>% 
+    unnest(c(oru.x, oru.y)) %>% 
     filter(oru.x == oru.y) %>%
     group_by(k, auid = auid.x, oru = oru.x) %>%
     summarize(int_mean_dist = mean(h_dist), 
@@ -663,8 +682,8 @@ exterior_min_dist = dist %>%
     left_join(author_meta, by = c('auid.x' = 'auid')) %>%
     left_join(author_meta, by = c('auid.y' = 'auid'),
               suffix = c('.x', '.y')) %>%
-    unnest(oru.x, .drop = FALSE) %>%
-    unnest(oru.y) %>%
+    select(-where(is.list), matches('oru')) %>% 
+    unnest(c(oru.x, oru.y)) %>% 
     filter(oru.x != oru.y) %>%
     group_by(k, auid = auid.x, oru = oru.x) %>%
     summarize(ext_min_dist = min(h_dist)) %>%
@@ -715,10 +734,10 @@ full_join(mds_coords, mds_coords, by = 'k') %>%
     facet_wrap(vars(k), scales = 'free')
 
 mds_plot = right_join(author_meta,
-          mds_coords) %>%
+                      mds_coords) %>%
     mutate(k = as.integer(k),
            name = paste(given_name, surname)) %>%
-    # filter(oru_lgl) %>%
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>%
     ggplot(aes(V1, V2, color = oru)) +
     geom_point(aes(label = name, fill = oru),
@@ -756,6 +775,7 @@ ggsave(str_c(plots_dir, '12_mds_wide.png'),
 # Similarly, but faceting out by department
 author_meta %>% 
     filter(auid %in% mds_coords$auid) %>% 
+    select(-where(is.list), department) %>% 
     unnest(department) %>% 
     # count(department) %>% arrange(desc(n))
     add_count(department) %>% 
@@ -779,6 +799,7 @@ author_meta %>%
 ## Departments of interest:  >= 40 non-ORU authors
 depts_of_interest = author_meta %>% 
     filter(!oru_lgl) %>% 
+    select(department) %>% 
     unnest(department) %>% 
     count(department) %>% 
     filter(n >= 40) %>% 
@@ -788,6 +809,7 @@ depts_of_interest = author_meta %>%
 set.seed(2019-06-05)
 train_authors = author_meta %>% 
     filter(!oru_lgl) %>% 
+    select(department, auid) %>% 
     unnest(department) %>% 
     filter(department %in% depts_of_interest) %>% 
     group_by(department) %>% 
@@ -798,6 +820,7 @@ train_authors = author_meta %>%
 ## Departmental-mean topic distributions
 gamma_dept = gamma %>% 
     filter(auid %in% train_authors) %>% 
+    select(-where(is.list), department) %>% 
     unnest(department) %>% 
     filter(department %in% depts_of_interest) %>% 
     ## Department mean topic distributions
@@ -806,7 +829,8 @@ gamma_dept = gamma %>%
     ungroup()
 
 dept_dist = gamma %>% 
-    unnest(department, .drop = FALSE) %>% 
+    select(-where(is.list), department) %>% 
+    unnest(department) %>% 
     inner_join(gamma_dept, by = c('k', 'topic', 
                                   'department')) %>% 
     filter(! auid %in% train_authors) %>% 
@@ -847,6 +871,7 @@ dist_lm %>%
 
 dist_lm %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    select(-model) %>% 
     unnest(coefs) %>% 
     filter(!str_detect(term, 'department')) %>% 
     mutate(is_intercept = str_detect(term, 'Intercept')) %>% 
@@ -858,6 +883,7 @@ dist_lm %>%
 
 dist_lm %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    select(-model) %>% 
     unnest(coefs) %>% 
     filter(term == 'oru_lglTRUE') %>% 
     ggplot(aes(k, estimate, ymin = conf.low, ymax = conf.high)) +
@@ -875,6 +901,7 @@ ggsave(str_c(plots_dir, '12_dept_dist_reg.png'),
 ## Separate estimates for each ORU
 dist_lm_fixed = dept_dist %>% 
     # filter(k == 45) %>% 
+    select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     select(k, h_dist, auid, oru, first_year_1997, 
            gender, log_n_docs, log_n_coauths, department) %>% 
@@ -883,6 +910,7 @@ dist_lm_fixed = dept_dist %>%
 
 dist_lm_fixed %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    select(-where(is.list), coefs) %>% 
     unnest(coefs) %>% 
     filter(str_detect(term, 'oru')) %>% 
     mutate(term = str_remove(term, 'oru')) %>% 

@@ -13,6 +13,7 @@ library(gghighlight)
 library(ggforce)
 library(ggridges)
 library(directlabels)
+library(patchwork)
 theme_set(theme_minimal())
 
 library(tictoc)
@@ -32,7 +33,7 @@ term_labels = tribble(
     ~ term, ~ label, 
     '(Intercept)', 'intercept', 
     'first_year_1997', 'first pub. year',
-    'genderfemale', 'gender: woman', 
+    'genderwoman', 'gender: woman', 
     'gender(Missing)', 'gender: unknown', 
     'oru_lglTRUE', 'ORU affiliation', 
     'log_n_coauths', 'coauthors (log count)', 
@@ -55,7 +56,12 @@ coauths_df = read_rds(str_c(data_dir, '07_coauth_count.Rds'))
 
 author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
     mutate(first_year_1997 = first_year - 1997, 
-           gender = fct_relevel(gender, 'male'), 
+           # sub gender terms for sex terms
+           gender = fct_recode(gender, 
+                               'man' = 'male', 
+                               'woman' = 'female'),
+           # use men as ref level in regressions
+           gender = fct_relevel(gender, 'man'),
            oru = map(oru, str_replace, '\\(Missing\\)', 
                      '(comparison)')) %>% 
     left_join(coauths_df) %>% 
@@ -99,6 +105,32 @@ author_meta %>%
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_sample.png'), 
        height = 4, width = 7)
+
+## Gender distribution ----
+gender_coarse_plot = ggplot(author_meta, 
+                            aes(oru_lgl, fill = gender)) +
+    geom_bar(position = position_fill()) +
+    scale_fill_brewer(palette = 'Set2') +
+    scale_y_continuous(labels = scales::percent_format()) +
+    labs(x = 'ORU-affiliated', 
+         y = 'share')
+gender_coarse_plot
+
+gender_fine_plot = author_meta %>% 
+    unnest(oru) %>% 
+    ggplot(aes(oru, fill = gender)) +
+    geom_bar(position = position_fill()) +
+    scale_fill_brewer(palette = 'Set2') +
+    scale_y_continuous(labels = scales::percent_format()) +
+    labs(x = 'ORU', 
+         y = 'share')
+gender_fine_plot
+
+gender_coarse_plot + labs(title = 'A') +
+    gender_fine_plot + labs(title = 'B') +
+    plot_layout(guides = 'collect')
+ggsave(str_c(plots_dir, '12_gender.png'), 
+       height = 4, width = 7, scale = 2)
 
 
 

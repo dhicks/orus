@@ -1,21 +1,24 @@
 ---
 title:  "Productivity and interdisciplinary impacts of ORUs"
-author:  "Daniel J. Hicks"
-affiliation: "Data Science Initiative, UC Davis"
+author:  |
+ | Daniel J. Hicks 
+ | Data Science Initiative, UC Davis
 email: <hicks.daniel.j@gmail.com>
-output: pdf_document
 numbersections: true
 bibliography: oru_project.yaml
 header-includes: 
     - \usepackage{graphics}
     - \usepackage{enumitem}
-abstract: "Organized Research Units (ORUs) are non-departmental units utilized by US research universities to support interdisciplinary research initiatives, among other goals.  This study examined the impacts of ORUs at one large public research university, the University of California, Davis (UCD), using a large corpus of journal article metadata and abstracts for both faculty affiliated with UCD ORUs and a comparison set of other faculty.  Using regression analysis, I find that ORUs appeared to increase the number of coauthors of affiliated faculty, but did not appear to directly effect publication or citation counts.  Next, I frame interdisciplinarity in terms of a notion of discursive space, and use a topic model approach to situate researchers within this discursive space.  I find evidence that ORUs promoted multidisciplinarity rather than interdisciplinarity.  In the conclusion, drawing on work in philosophy of science on inter- and multidisciplinarity, I argue that multidisciplinarity is not necessarily inferior to interdisciplinarity."
+    - \usepackage{lineno}
+abstract: "Organized Research Units (ORUs) are non-departmental units utilized by US research universities to support interdisciplinary research initiatives, among other goals.  This study examined the impacts of ORUs at one large public research university, the University of California, Davis (UC Davis), using a large corpus of journal article metadata and abstracts for both faculty affiliated with UCD ORUs and a comparison set of other faculty.  Using regression analysis, I find that ORUs appeared to increase the number of coauthors of affiliated faculty, but did not appear to directly effect publication or citation counts.  Next, I frame interdisciplinarity in terms of a notion of discursive space, and use a topic model approach to situate researchers within this discursive space.  I find evidence that ORUs promoted multidisciplinarity rather than interdisciplinarity.  In the conclusion, drawing on work in philosophy of science on inter- and multidisciplinarity, I argue that multidisciplinarity is not necessarily inferior to interdisciplinarity."
 ---
 
 <!-- https://www.mitpressjournals.org/journals/qss/sub -->
 
 *[TODO]*
 - cover letter
+
+\linenumbers
 
 # Introduction #
 
@@ -24,7 +27,7 @@ many researchers are university faculty; other researchers and staff are univers
 
 However, at least since @GeigerOrganizedResearchUnits1990, research policy scholars have theorized ORUs as key sites for bridging barriers between disciplines (interdisciplinarity) and between academic and social interests (extradisciplinarity) [@GeigerOrganizedResearchUnits1990; @SommerServingTwoMasters1994; @EtzkowitzRoleResearchCentres1998; @SaLocalGlobalOrganized2011].  That is, it is thought that ORUs support research not just *materially* (with resources and support staff) but also *culturally* (creating a certain kind of research community).  
 
-The aim of the current project was to examine the impact of ORUs at one large public research university — the University of California, Davis — in terms of both traditional bibliometric notions of productivity (papers written, citations received) as well as interdisciplinarity.  In other words, have the ORUs at UC Davis promoted research productivity? And have they promoted interdisciplinarity?  
+The aim of the current project was to examine the impact of ORUs at one large public research university — the University of California, Davis (UC Davis) — in terms of both traditional bibliometric notions of productivity (papers written, citations received) as well as interdisciplinarity.  In other words, have the ORUs at UC Davis promoted research productivity? And have they promoted interdisciplinarity?  
 
 To answer these questions, I link rosters of faculty affiliated with ORUs to publication metadata retrieved from Scopus.  Importantly, I include not only faculty affiliated with ORUs, but also a comparison set of researchers who are affiliated with the same departments who are not affiliated with any ORU.  I also use regression models to control for variables such as career length and gender.  This increases confidence that the associations (or non-associations) that I find are caused by ORU affiliation rather than other factors.  And I use a directed acyclic graph and a sequence of models to examine the mechanisms by which ORUs might increase productivity.  
 
@@ -310,8 +313,5 @@ Multidisciplinarity is often seen as inferior to interdisciplinarity; for exampl
 In addition, @BristerDisciplinaryCaptureEpistemological2016 notes that cross-disciplinary collaborations can exemplify the same status and power hierarchies as academia more generally, leading to a phenomenon that she calls "disciplinary capture."  For example, as a natural science biology generally has higher status than anthropology, a social science; this hierarchy appeared in a collaboration between biologists and anthropologists, with the result that "Both groups of scientists ... perceived that conservation activities are dominated by biological research" [@BristerDisciplinaryCaptureEpistemological2016 86]. @FernandezPintoEconomicsImperialismSocial2016 makes similar points in terms of "scientific imperialism" [@FernandezPintoEconomicsImperialismSocial2016].  
 
 All together, interdisciplinary research may be difficult, to the point of being highly impractical, without specific interventions or institutional designs to mitigate these logistical, conceptual, and political problems.  Even if successful interdisciplinary research can bring the epistemic and social benefits that it is supposed to, these may not be worth the costs required in particular cases.  So, all things considered, in particular cases multidisciplinarity might be preferable to interdisciplinarity.  
-
-
-# References #
 
 

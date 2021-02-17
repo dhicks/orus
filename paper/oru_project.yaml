@@ -978,6 +978,43 @@ references:
   type: chapter
   URL: https://doi.org/10.1007/978-3-319-47000-9_8
 
+- id: FernandezPintoEconomicsImperialismSocial2016
+  abstract: >-
+    Expanding on recent philosophical contributions to the conceptual and
+    normative framework of scientific imperialism, I examine whether the
+    economics approach to social epistemology can be considered a case of
+    economics imperialism and determine whether economics’ explanatory
+    expansionism appropriately contributes to this philosophical subfield or
+    not. I argue first that the economics approach to social epistemology counts
+    as a case of economics imperialism under a broad conception of the term, and
+    second that we have good reasons to doubt the appropriateness of the
+    incursion of economics into social epistemology, insofar as economics’
+    attempt at explanatory unification fails to express significant human
+    interests.
+  accessed:
+    - year: 2016
+      month: 4
+      day: 8
+  author:
+    - family: Fernández Pinto
+      given: Manuela
+  container-title: Philosophy of the Social Sciences
+  container-title-short: Philosophy of the Social Sciences
+  DOI: 10.1177/0048393115625325
+  ISSN: 0048-3931, 1552-7441
+  issue: '5'
+  issued:
+    - year: 2016
+      month: 2
+      day: 4
+  language: en
+  page: 443-472
+  source: pos.sagepub.com.proxy1.lib.uwo.ca
+  title: Economics Imperialism in Social Epistemology A Critical Assessment
+  type: article-journal
+  URL: http://pos.sagepub.com/content/early/2016/02/03/0048393115625325
+  volume: '46'
+
 - id: FrodemanOxfordHandbookInterdisciplinarity2010
   accessed:
     - year: 2019
@@ -1529,6 +1566,46 @@ references:
   type: article-journal
   URL: https://www.frontiersin.org/articles/10.3389/frma.2018.00009/full
   volume: '3'
+
+- id: HicksBibliometricsToolResearch2012
+  abstract: >-
+    Berkeley Electronic Press Selected Works, Creative use of bibliometric
+    analysis in evaluation offers an unparalleled opportunity to take advantage
+    of the rich information embedded in the written products of scientific work
+    to track the output and influence of funded scholars. Many metrics and
+    techniques have been developed: from publication and citation counts to
+    percentile rankings, h-index, impact factor, maps of the knowledge
+    landscape, maps of geographical distribution, and metrics of
+    interdisciplinarity and specialization. Analysis can demonstrate evolution
+    over long periods of time, and can draw quantitative comparisons among
+    subgroups or with others anywhere in the world. It would be dangerous to
+    consider such data and analysis as “easy” however. Careful attention to
+    detail and method are required to produce robust results.
+  accessed:
+    - year: 2017
+      month: 1
+      day: 3
+  author:
+    - family: Hicks
+      given: Diana
+    - family: Melkers
+      given: Julia
+  container-title: Handbook on the Theory and Practice of Program Evaluation
+  editor:
+    - family: Link
+      given: Albert
+    - family: Vornatas
+      given: Nicholas
+  event-place: Cheltenham, UK, and Northampton, MA
+  issued:
+    - year: 2012
+  page: 323-349
+  publisher: Edward Elgar
+  publisher-place: Cheltenham, UK, and Northampton, MA
+  source: works.bepress.com
+  title: Bibliometrics as a Tool for Research Evaluation
+  type: chapter
+  URL: https://works.bepress.com/diana_hicks/31/
 
 - id: HicksNationalRoboticsInitiative2019
   abstract: >-
@@ -2152,6 +2229,52 @@ references:
   type: article-journal
   URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/asi.22628
   volume: '63'
+
+- id: MalaterreEightJournalsEight2020
+  abstract: >-
+    As a discipline of its own, the philosophy of science can be traced back to
+    the founding of its academic journals, some of which go back to the first
+    half of the twentieth century. While the discipline has been the object of
+    many historical studies, notably focusing on specific schools (e.g., logical
+    empiricism) or major figures of the field (e.g., Carnap, Kuhn), little work
+    has focused on the journals themselves. Here, we investigate contemporary
+    philosophy of science by means of computational text-mining approaches: we
+    apply topic-modeling algorithms to eight major philosophy of science
+    journals, from the 1930s up until 2017. Based on the full-text content of
+    some 15,897 articles, we identified 25 research themes and 8 thematic
+    clusters that show how the research agenda of the philosophy of science has
+    changed in its content over the course of the last eight decades, up to the
+    philosophy of science we now know. We also show how each one of the journals
+    contributed in its own way to this thematic evolution.
+  accessed:
+    - year: 2020
+      month: 12
+      day: 17
+  author:
+    - family: Malaterre
+      given: Christophe
+    - family: Lareau
+      given: Francis
+    - family: Pulizzotto
+      given: Davide
+    - family: St-Onge
+      given: Jonathan
+  container-title: Synthese
+  container-title-short: Synthese
+  DOI: 10.1007/s11229-020-02915-6
+  ISSN: 1573-0964
+  issued:
+    - year: 2020
+      month: 12
+      day: 17
+  language: en
+  source: Springer Link
+  title: >-
+    Eight journals over eight decades: a computational topic-modeling approach
+    to contemporary philosophy of science
+  title-short: Eight journals over eight decades
+  type: article-journal
+  URL: https://doi.org/10.1007/s11229-020-02915-6
 
 - id: MardiaPropertiesClasicalMultidimesional1978
   abstract: >-

@@ -5,7 +5,7 @@ affiliation: "Data Science Initiative, UC Davis"
 email: <hicks.daniel.j@gmail.com>
 output: pdf_document
 numbersections: true
-bibliography: oru_project.bib
+bibliography: oru_project.yaml
 header-includes: 
     - \usepackage{graphics}
     - \usepackage{enumitem}

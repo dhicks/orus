@@ -1,0 +1,3533 @@
+---
+references:
+- id: AmrheinInferentialStatisticsDescriptive2018
+  abstract: >-
+    Statistical inference often fails to replicate. One reason is that many
+    results may be selected for drawing inference because some threshold of a
+    statistic like the P-value was crossed, leading to biased reported effect
+    sizes. Nonetheless, considerable non-replication is to be expected even
+    without selective reporting, and generalizations from single studies are
+    rarely if ever warranted. Honestly reported results must vary from
+    replication to replication because of varying assumption violations and
+    random variation; excessive agreement itself would suggest deeper problems,
+    such as failure to publish results in conflict with group expectations or
+    desires. A general perception of a “replication crisis” may thus reflect
+    failure to recognize that statistical tests not only test hypotheses, but
+    countless assumptions and the entire environment in which research takes
+    place. Because of all the uncertain and unknown assumptions that underpin
+    statistical inferences, we should treat inferential statistics as highly
+    unstable local descriptions of relations between assumptions and data,
+    rather than as providing generalizable inferences about hypotheses or
+    models. And that means we should treat statistical results as being much
+    more incomplete and uncertain than is currently the norm. Acknowledging this
+    uncertainty could help reduce the allure of selective reporting: Since a
+    small P-value could be large in a replication study, and a large P-value
+    could be small, there is simply no need to selectively report studies based
+    on statistical results. Rather than focusing our study reports on uncertain
+    conclusions, we should thus focus on describing accurately how the study was
+    conducted, what problems occurred, what data were obtained, what analysis
+    methods were used and why, and what output those methods produced.
+  accessed:
+    - year: 2018
+      month: 12
+      day: 9
+  author:
+    - family: Amrhein
+      given: Valentin
+    - family: Trafimow
+      given: David
+    - family: Greenland
+      given: Sander
+  container-title: The American Statistician
+  DOI: 10.1080/00031305.2018.1543137
+  ISSN: 0003-1305
+  issue: sup1
+  issued:
+    - year: 2018
+      month: 10
+      day: 25
+  language: en
+  page: 262-270
+  source: Taylor and Francis+NEJM
+  title: >-
+    Inferential Statistics as Descriptive Statistics: There Is No Replication
+    Crisis if We Don’t Expect Replication
+  title-short: Inferential statistics as descriptive statistics
+  type: article-journal
+  URL: https://doi.org/10.1080/00031305.2018.1543137
+  volume: '73'
+
+- id: AndersenConceptualDevelopmentInterdisciplinary2012
+  author:
+    - family: Andersen
+      given: Hanne
+  container-title: Scientific Concepts and Investigative Practice
+  editor:
+    - family: Feest
+      given: Uljana
+    - family: Steinle
+      given: Friedrich
+  issued:
+    - year: 2012
+  page: 3–271
+  publisher: De Gruyter
+  source: PhilPapers
+  title: Conceptual Development in Interdisciplinary Research
+  type: chapter
+
+- id: AndersenSecondEssentialTension2013
+  abstract: >-
+    In his analysis of “the essential tension between tradition and innovation”
+    Thomas S. Kuhn focused on the apparent paradox that, on the one hand, normal
+    research is a highly convergent activity based upon a settled consensus,
+    but, on the other hand, the ultimate effect of this tradition-bound work has
+    invariably been to change the tradition. Kuhn argued that, on the one hand,
+    without the possibility of divergent thought, fundamental innovation would
+    be precluded. On the other hand, without a strong emphasis on convergent
+    thought, science would become a mess created by continuous theory changes
+    and scientific progress would again be precluded. On Kuhn’s view, both
+    convergent and divergent thought are therefore equally necessary for the
+    progress of science. In this paper, I shall argue that a similar fundamental
+    tension exists between the demands we see for novel insights of an
+    interdisciplinary nature and the need for established intellectual doctrines
+    founded in the classical disciplines. First, I shall revisit Kuhn’s analysis
+    of the essential tension between tradition and innovation. Next, I shall
+    argue that the tension inherent in interdisciplinary research between, on
+    the one hand, intellectual independence and critical scrutiny and, on the
+    other hand, epistemic dependence and trust is a complement to Kuhn’s
+    essential tension within mono-disciplinary science between convergent and
+    divergent thought.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Andersen
+      given: Hanne
+  container-title: Topoi
+  container-title-short: Topoi
+  DOI: 10.1007/s11245-012-9133-z
+  ISSN: 1572-8749
+  issue: '1'
+  issued:
+    - year: 2013
+      month: 4
+      day: 1
+  language: en
+  page: 3-8
+  source: Springer Link
+  title: >-
+    The Second Essential Tension: on Tradition and Innovation in
+    Interdisciplinary Research
+  title-short: The Second Essential Tension
+  type: article-journal
+  URL: https://doi.org/10.1007/s11245-012-9133-z
+  volume: '32'
+
+- id: AyoubiImportantThingNot2019
+  abstract: >-
+    “The important thing is not to win, it is to take part,” this famous saying
+    by Pierre de Coubertin asserts that the value athletes draw from Olympic
+    games lies in their participation in the event and not in the gold they
+    collect during it. We find similar evidence for scientists involved in grant
+    competitions. Relying on unique data from a Swiss funding program, we find
+    that scientists taking part in a research grant competition boost their
+    number of publications and average impact factor while extending their
+    knowledge base and their collaboration network regardless of the result of
+    the competition. Receiving the funds increases the probability of
+    co-authoring with co-applicants but has no additional impact on the
+    individual productivity.
+  accessed:
+    - year: 2019
+      month: 3
+      day: 14
+  author:
+    - family: Ayoubi
+      given: Charles
+    - family: Pezzoni
+      given: Michele
+    - family: Visentin
+      given: Fabiana
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2018.07.021
+  ISSN: 0048-7333
+  issue: '1'
+  issued:
+    - year: 2019
+      month: 2
+      day: 1
+  page: 84-97
+  source: ScienceDirect
+  title: >-
+    The important thing is not to win, it is to take part: What if scientists
+    benefit from participating in research grant competitions?
+  title-short: The important thing is not to win, it is to take part
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0048733318301860
+  volume: '48'
+
+- id: BeaudryWhichGenderGap2016
+  abstract: >-
+    The article examines whether scientific production, research funding, Impact
+    Factor of journals and size of collaborative teams have an influence on the
+    propensity to receive more citations, and whether the influence of these
+    factors differs across genders. Using a very complete database of funding,
+    scientific papers and citations compiled at the individual researchers’
+    level, we estimate panel data regressions on the discipline-normalised
+    citation rates of individual academics in Quebec. Our results show that
+    although most of the indicators examined have a positive influence on the
+    relative citation rate, when it comes to gender differences, not having
+    enough public funding and raising private funding appear slightly
+    detrimental for women in the health sciences. In addition, when women
+    collaborate with the same number of co-authors as men, or target similar
+    Impact Factor journals, their articles are less cited then those of their
+    male colleagues. Almost no gender effect is found in the natural sciences
+    and engineering where women are still a minority. Our results worryingly
+    show that academics who publish with a larger proportion of female
+    co-authors are less cited. Furthermore, when targeting similar Impact Factor
+    journals, researchers who collaborate with a higher proportion of female
+    co-authors are consistently less cited in both the health and NSE fields
+    than if they were publishing with a male dominated group of co-authors.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Beaudry
+      given: Catherine
+    - family: Larivière
+      given: Vincent
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2016.05.009
+  ISSN: 0048-7333
+  issue: '9'
+  issued:
+    - year: 2016
+      month: 11
+      day: 1
+  language: en
+  page: 1790-1817
+  source: ScienceDirect
+  title: >-
+    Which gender gap? Factors affecting researchers’ scientific impact in
+    science and medicine
+  title-short: Which gender gap?
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S004873331630083X
+  volume: '45'
+
+- id: BiancaniSuperstarsMakingBroad2018
+  abstract: >-
+    Many universities have developed large-scale interdisciplinary research
+    centers to address societal challenges and to attract the attention of
+    private philanthropists and federal agencies. However, prior studies have
+    mostly shown that interdisciplinary centers relate to a narrow band of
+    outcomes such as publishing and grants. Therefore, we shift attention to
+    include outcomes that have been the centers mandate to influence − namely
+    outreach to the media and private industry, as well as broader research
+    endeavors and securing external funding. Using data covering Stanford
+    University between 1993 and 2014, we study if being weakly and strongly
+    affiliated with interdisciplinary centers in one year relates to and
+    increases (1) knowledge production (publications, grants and inventions),
+    (2) instruction (numbers of students taught, PhDs and postdocs advised), (3)
+    intellectual prominence (media mentions, awards won and centrality within
+    the larger collaboration network), and (4) the acquisition of various
+    sources of funding in the next year. Our results indicate that
+    interdisciplinary centers select productive faculty and increase their
+    activity on a broad range of outcomes further, and in ways greater than
+    departments and traditional interdisciplinary memberships, such as courtesy
+    and joint appointments.
+  accessed:
+    - year: 2019
+      month: 3
+      day: 14
+  author:
+    - family: Biancani
+      given: Susan
+    - family: Dahlander
+      given: Linus
+    - family: McFarland
+      given: Daniel A.
+    - family: Smith
+      given: Sanne
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2018.01.014
+  ISSN: 0048-7333
+  issue: '3'
+  issued:
+    - year: 2018
+      month: 4
+      day: 1
+  page: 543-557
+  source: ScienceDirect
+  title: Superstars in the making? The broad effects of interdisciplinary centers
+  title-short: Superstars in the making?
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0048733318300143
+  volume: '47'
+
+- id: Birnbaum-MoreInternationalResearchManagement1990
+  abstract: >-
+    This collection describes the preconditions, processes, and results of
+    well-managed interdisciplinary research projects from the United States,
+    Canada, Israel, Japan, Brazil, the German Democratic Republic, and Rumania.
+    Based on a 1986 conference at the University of Minnesota, the book is
+    divided into three sections: introductory papers establishing major themes;
+    geographically grouped papers addressing North America, South America,
+    Europe, and Asia; and papers reviewing the present state of knowledge in
+    interdisciplinary work. Throughout, the work addresses the problems and
+    approaches to successfully managing research projects in government, private
+    firms, and universities.
+  author:
+    - family: Birnbaum-More
+      given: Philip H.
+    - family: Rossini
+      given: Frederick A.
+    - family: Baldwin
+      given: Donald R.
+  ISBN: 978-0-19-506252-6
+  issued:
+    - year: 1990
+  language: en
+  number-of-pages: '232'
+  publisher: Oxford University Press
+  source: Google Books
+  title: >-
+    International Research Management: Studies in Interdisciplinary Methods from
+    Business, Government, and Academia
+  title-short: International Research Management
+  type: book
+
+- id: BoardmanRoleStrainUniversity2007
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Boardman
+      given: Craig.
+    - family: Bozeman
+      given: Barry.
+  container-title: The Journal of Higher Education
+  container-title-short: The Journal of Higher Education
+  DOI: 10.1353/jhe.2007.0020
+  ISSN: 1538-4640
+  issue: '4'
+  issued:
+    - year: 2007
+  language: en
+  page: 430-463
+  source: DOI.org (Crossref)
+  title: Role Strain in University Research Centers
+  type: article-journal
+  URL: >-
+    http://muse.jhu.edu/content/crossref/journals/journal_of_higher_education/v078/78.4boardman.html
+  volume: '78'
+
+- id: BoyackMappingBackboneScience2005
+  abstract: >-
+    SummaryThis paper presents a new map representing the structure of all of
+    science, based on journal articles, including both the natural and social
+    sciences. Similar to cartographic maps of our world, the map of science
+    provides a bird’s eye view of today’s scientific landscape. It can be used
+    to visually identify major areas of science, their size, similarity, and
+    interconnectedness. In order to be useful, the map needs to be accurate on a
+    local and on a global scale. While our recent work has focused on the former
+    aspect,1 this paper summarizes results on how to achieve structural
+    accuracy. Eight alternative measures of journal similarity were applied to a
+    data set of 7,121 journals covering over 1 million documents in the combined
+    Science Citation and Social Science Citation Indexes. For each journal
+    similarity measure we generated two-dimensional spatial layouts using the
+    force-directed graph layout tool, VxOrd. Next, mutual information values
+    were calculated for each graph at different clustering levels to give a
+    measure of structural accuracy for each map. The best co-citation and
+    inter-citation maps according to local and structural accuracy were selected
+    and are presented and characterized. These two maps are compared to
+    establish robustness. The inter-citation map is then used to examine
+    linkages between disciplines. Biochemistry appears as the most
+    interdisciplinary discipline in science.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 17
+  author:
+    - family: Boyack
+      given: Kevin W.
+    - family: Klavans
+      given: Richard
+    - family: Börner
+      given: Katy
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-005-0255-6
+  ISSN: 1588-2861
+  issue: '3'
+  issued:
+    - year: 2005
+      month: 8
+      day: 1
+  language: en
+  page: 351-374
+  source: Springer Link
+  title: Mapping the backbone of science
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-005-0255-6
+  volume: '64'
+
+- id: BozemanNSFEngineeringResearch2004
+  abstract: >-
+    The NSF engineering research centers (ERC) program served notice of a sea
+    change in university research funding and institutional designs,
+    representing a transition from department-based, principle
+    investigator-oriented university science to a new center-based model
+    encouraging universities to work with industry and to work beyond the
+    strictures of academic disciplines. In our view, the past three decades of
+    U.S. science and technology policy have not seen an institutional change of
+    greater importance. This paper begins with a brief history of the ERC
+    program, including discussion of the program’s origins, goals and research
+    foci, growth, and influence as a model for other science center programs in
+    the U.S. and abroad. Our “primary data” include an interview with Erich
+    Bloch, former NSF director who was one of the chief architects and advocates
+    for the ERC program. Because of the historical importance of this interview,
+    we present the entire interview with the original material largely
+    unaltered. We conclude with discussion of the managerial challenges that
+    ERCs face within the context of traditional university structures.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Bozeman
+      given: Barry
+    - family: Boardman
+      given: Craig
+  container-title: The Journal of Technology Transfer
+  container-title-short: The Journal of Technology Transfer
+  DOI: 10.1023/B:JOTT.0000034128.39526.6b
+  ISSN: 1573-7047
+  issue: '3'
+  issued:
+    - year: 2004
+      month: 8
+      day: 1
+  language: en
+  page: 365-375
+  source: Springer Link
+  title: >-
+    The NSF Engineering Research Centers and the University–Industry Research
+    Revolution: A Brief History Featuring an Interview with Erich Bloch
+  title-short: >-
+    The NSF Engineering Research Centers and the University–Industry Research
+    Revolution
+  type: article-journal
+  URL: https://doi.org/10.1023/B:JOTT.0000034128.39526.6b
+  volume: '29'
+
+- id: BristerDisciplinaryCaptureEpistemological2016
+  abstract: >-
+    Complex environmental problems require well-researched policies that
+    integrate knowledge from both the natural and social sciences. Epistemic
+    differences can impede interdisciplinary collaboration, as shown by debates
+    between conservation biologists and anthropologists who are working to
+    preserve biological diversity and support economic development in central
+    Africa. Disciplinary differences with regard to 1) facts, 2) rigor, 3)
+    causal explanation, and 4) research goals reinforce each other, such that
+    early decisions about how to define concepts or which methods to adopt may
+    tilt research design and data interpretation toward one discipline's
+    epistemological framework. If one of the contributing fields imposes a
+    solution to an epistemic problem, this sets the stage for what I call
+    disciplinary capture. Avoiding disciplinary capture requires clear
+    communication between collaborators, but beyond this it also requires that
+    collaborators craft research questions and innovate research designs which
+    are different from the inherited epistemological frameworks of contributing
+    disciplines.
+  accessed:
+    - year: 2015
+      month: 12
+      day: 11
+  author:
+    - family: Brister
+      given: Evelyn
+  container-title: >-
+    Studies in History and Philosophy of Science Part C: Studies in History and
+    Philosophy of Biological and Biomedical Sciences
+  container-title-short: >-
+    Studies in History and Philosophy of Science Part C: Studies in History and
+    Philosophy of Biological and Biomedical Sciences
+  DOI: 10.1016/j.shpsc.2015.11.001
+  ISSN: 1369-8486
+  issued:
+    - year: 2016
+      month: 4
+      day: 1
+  language: en
+  page: 82-91
+  source: ScienceDirect
+  title: >-
+    Disciplinary capture and epistemological obstacles to interdisciplinary
+    research: Lessons from central African conservation disputes
+  title-short: >-
+    Disciplinary capture and epistemological obstacles to interdisciplinary
+    research
+  type: article-journal
+  URL: https://www.sciencedirect.com/science/article/pii/S1369848615001624
+  volume: '56'
+
+- id: BromhamInterdisciplinaryResearchHas2016
+  abstract: >-
+    Interdisciplinary research is widely considered a hothouse for innovation,
+    and the only plausible approach to complex problems such as climate change.
+    One barrier to interdisciplinary research is the widespread perception that
+    interdisciplinary projects are less likely to be funded than those with a
+    narrower focus. However, this commonly held belief has been difficult to
+    evaluate objectively, partly because of lack of a comparable, quantitative
+    measure of degree of interdisciplinarity that can be applied to funding
+    application data. Here we compare the degree to which research proposals
+    span disparate fields by using a biodiversity metric that captures the
+    relative representation of different fields (balance) and their degree of
+    difference (disparity). The Australian Research Council’s Discovery
+    Programme provides an ideal test case, because a single annual nationwide
+    competitive grants scheme covers fundamental research in all disciplines,
+    including arts, humanities and sciences. Using data on all 18,476 proposals
+    submitted to the scheme over 5 consecutive years, including successful and
+    unsuccessful applications, we show that the greater the degree of
+    interdisciplinarity, the lower the probability of being funded. The negative
+    impact of interdisciplinarity is significant even when number of
+    collaborators, primary research field and type of institution are taken into
+    account. This is the first broad-scale quantitative assessment of success
+    rates of interdisciplinary research proposals. The interdisciplinary
+    distance metric allows efficient evaluation of trends in research funding,
+    and could be used to identify proposals that require assessment strategies
+    appropriate to interdisciplinary research.
+  accessed:
+    - year: 2016
+      month: 7
+      day: 2
+  author:
+    - family: Bromham
+      given: Lindell
+    - family: Dinnage
+      given: Russell
+    - family: Hua
+      given: Xia
+  container-title: Nature
+  container-title-short: Nature
+  DOI: 10.1038/nature18315
+  ISSN: 0028-0836
+  issue: '7609'
+  issued:
+    - year: 2016
+      month: 6
+      day: 30
+  language: en
+  page: 684-687
+  source: www.nature.com
+  title: Interdisciplinary research has consistently lower funding success
+  type: article-journal
+  URL: http://www.nature.com/nature/journal/v534/n7609/full/nature18315.html
+  volume: '534'
+
+- id: BruunPromotingInterdisciplinaryResearch2005
+  abstract: >-
+    In 2004, the International Evaluation Panel of the Academy of Finland
+    indicated that the Academy should develop its research policies, evaluation
+    systems, and organization to encourage more interdisciplinary research. One
+    consequence of the Panel’s recommendations was that the Academy commissioned
+    this study from a research group comprised of the authors of this report.
+    The objectives of the study were (1) to investigate to what extent and how
+    the Academy had promoted interdisciplinary research in its annual General
+    Research Grants in 1997, 2000, and 2004, and (2) to recommend how the
+    Academy could improve its capabilities in fostering interdisciplinary
+    research. The study is based on a qualitative analysis of research proposals
+    from the three years, a survey of researchers, interviews with the Academy’s
+    presenting officials, a literature survey linking the empirical analysis to
+    theoretical discussion concerning the concept of interdisciplinary research,
+    its role in the production of new knowledge, related issues of assessment
+    and institutional capacity, and science policy instruments on the basis of
+    international and national experiences.
+  author:
+    - family: Bruun
+      given: Henrik
+    - family: Hukkinen
+      given: Janne
+    - family: Huutoniemi
+      given: Katri
+    - family: Klein
+      given: Julie Thompson
+  event-place: Helsinki, Finland
+  issued:
+    - year: 2005
+  language: en
+  note: ISBN 951-715-558-1
+  page: '206'
+  publisher: Academy of Finland
+  publisher-place: Helsinki, Finland
+  source: Zotero
+  title: 'Promoting Interdisciplinary research: The Case of the Academy of Finland'
+  type: report
+
+- id: BuntonImpactCentersInstitutes2006
+  abstract: >-
+    Purpose To examine the impact of organized research centers on faculty
+    productivity and work life for basic science and internal medicine faculty
+    at researchintensive medical schools.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Bunton
+      given: Sarah A.
+    - family: Mallon
+      given: William T.
+  container-title: Academic Medicine
+  container-title-short: Academic Medicine
+  DOI: 10.1097/00001888-200608000-00012
+  ISSN: 1040-2446
+  issue: '8'
+  issued:
+    - year: 2006
+      month: 8
+  language: en
+  page: 734-743
+  source: DOI.org (Crossref)
+  title: >-
+    The Impact of Centers and Institutes on Faculty Life: Findings from a Study
+    of Basic Science and Internal Medicine Faculty at Research-Intensive Medical
+    Schools:
+  title-short: The Impact of Centers and Institutes on Faculty Life
+  type: article-journal
+  URL: https://insights.ovid.com/crossref?an=00001888-200608000-00012
+  volume: '81'
+
+- id: CameronSolvingProductivityImpact2016
+  abstract: >-
+    The attrition of women from science with increasing career stage continues,
+    suggesting that current strategies are unsuccessful. Research evaluation
+    using unbiased metrics could be important for the retention of women,
+    because other factors such as implicit bias are unlikely to quickly change.
+    We compare the publishing patterns of men and women within the discipline of
+    ecology and show sexual dimorphism in self-citation leading to higher
+    h-index scores for men despite lower citations per paper, which is
+    exacerbated by more career absences by women. However, if self-citations and
+    non-research active years are excluded, there are no gender differences in
+    research performance. The pattern is consistent across disciplines and may
+    contribute to current geographic disparities in research performance,
+    rewarding confident behavior and traditional career paths rather than
+    research impact. Importantly, these changes would not disadvantage anyone,
+    because self-citation does not indicate broader impact, and researchers
+    should only be judged on their research-active career.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Cameron
+      given: Elissa Z.
+    - family: White
+      given: Angela M.
+    - family: Gray
+      given: Meeghan E.
+  container-title: BioScience
+  container-title-short: BioScience
+  DOI: 10.1093/biosci/biv173
+  ISSN: 0006-3568
+  issue: '3'
+  issued:
+    - year: 2016
+      month: 3
+      day: 1
+  page: 245-252
+  source: Silverchair
+  title: >-
+    Solving the Productivity and Impact Puzzle: Do Men Outperform Women, or are
+    Metrics Biased?
+  title-short: Solving the Productivity and Impact Puzzle
+  type: article-journal
+  URL: https://doi.org/10.1093/biosci/biv173
+  volume: '66'
+
+- id: CartwrightDappledWorld1999
+  abstract: >-
+    This important and innovative collection of essays argues for a patchwork of
+    laws of nature.
+  author:
+    - family: Cartwright
+      given: Nancy
+  issued:
+    - year: 1999
+  number-of-pages: '247'
+  title: The dappled world
+  type: book
+  URL: http://books.google.com/books?id=tOFv_i9oiAgC&printsec=frontcover
+
+- id: ChauvinGenderDifferencesResearch2019
+  abstract: >-
+    Objectives: Gender inequity in academic medicine persists despite increases
+    in the number of women physicians. We sought to explore gender differences
+    in research productivity for academic psychiatrists in Canada.
+
+    Methods: In a cross-sectional study of the 3379 psychiatrists in all 17
+    university departments of psychiatry in Canada, research productivity, as
+    measured by the h-index and number of publications, was compared between
+    women and men using a negative log binomial regression model to generate
+    relative rates (RRs), adjusted for career duration (aRR). Findings were
+    stratified by academic rank, institution region, and institution size. A
+    subanalysis of those with 10 or more publications was conducted as a proxy
+    for identifying physicians on a research track.
+
+    Results: Women (43% of the sample) had a lower mean (standard deviation)
+    h-index than men (2.87 [6.49] vs. 5.31 [11.1]; aRR, 0.62; 95% confidence
+    interval [CI], 0.54 to 0.72). Differences were significant only for junior
+    faculty and not for associate and full professors. Comparison by number of
+    publications followed a similar pattern (aRR, 0.46; 95% CI, 0.39 to 0.55).
+    Among those with 10 or more publications (n ¼ 721), differences between men
+    and women were smaller than in the overall cohort for both the h-index (aRR,
+    0.77; 95% CI, 0.68 to 0.87) and number of publications (aRR, 0.62; 95% CI,
+    0.53 to 0.72).
+
+    Conclusions: Gender differences in research productivity at the national
+    level in academic psychiatry in Canada support a call to adopt a more
+    systematic approach to promoting equitable opportunities for women in
+    research, especially in early career, to improve diversity and enhance
+    future psychiatric research and discovery.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Chauvin
+      given: Sarah
+    - family: Mulsant
+      given: Benoit H.
+    - family: Sockalingam
+      given: Sanjeev
+    - family: Stergiopoulos
+      given: Vicky
+    - family: Taylor
+      given: Valerie H.
+    - family: Vigod
+      given: Simone N.
+  container-title: The Canadian Journal of Psychiatry
+  container-title-short: Can J Psychiatry
+  DOI: 10.1177/0706743718802798
+  ISSN: 0706-7437, 1497-0015
+  issue: '6'
+  issued:
+    - year: 2019
+      month: 6
+  language: en
+  page: 415-422
+  source: DOI.org (Crossref)
+  title: >-
+    Gender Differences in Research Productivity among Academic Psychiatrists in
+    Canada
+  type: article-journal
+  URL: http://journals.sagepub.com/doi/10.1177/0706743718802798
+  volume: '64'
+
+- id: ChenExplanatoryComputationalTheory2009
+  archive: Scopus
+  author:
+    - family: Chen
+      given: C.
+    - family: Chen
+      given: Y.
+    - family: Horowitz
+      given: M.
+    - family: Hou
+      given: H.
+    - family: Liu
+      given: Z.
+    - family: Pellegrino
+      given: D.
+  container-title: Journal of Informetrics
+  DOI: 10.1016/j.joi.2009.03.004
+  issue: '3'
+  issued:
+    - year: 2009
+  page: 191-209
+  title: Towards an explanatory and computational theory of scientific discovery
+  type: article-journal
+  URL: >-
+    https://www.scopus.com/inward/record.uri?eid=2-s2.0-67349205540&doi=10.1016%2fj.joi.2009.03.004&partnerID=40&md5=e8a0a7e3d437430547bde97804437350
+  volume: '3'
+
+- id: CollinsTradingZonesInteractional2007
+  abstract: >-
+    The phrase ‘trading zone’ is often used to denote any kind of
+    interdisciplinary partnership in which two or more perspectives are combined
+    and a new, shared language develops. In this paper we distinguish between
+    different types of trading zone by asking whether the collaboration is
+    co-operative or coerced and whether the end-state is a heterogeneous or
+    homogeneous culture. In so doing, we find that the voluntary development of
+    a new language community—what we call an inter-language trading
+    zone—represents only one of four possible configurations. In developing this
+    argument we show how different modes of collaboration result in different
+    kinds of trading zone, how different kinds of trading zone may be ‘nested’
+    inside each other and discuss how a single collaboration might move between
+    different kinds of trading zone over time. One implication of our analysis
+    is that interactional expertise is a central component of at least one class
+    of trading zone.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 26
+  author:
+    - family: Collins
+      given: Harry
+    - family: Evans
+      given: Robert
+    - family: Gorman
+      given: Mike
+  collection-title: Case studies of expertise and experience
+  container-title: Studies in History and Philosophy of Science Part A
+  container-title-short: Studies in History and Philosophy of Science Part A
+  DOI: 10.1016/j.shpsa.2007.09.003
+  ISSN: 0039-3681
+  issue: '4'
+  issued:
+    - year: 2007
+      month: 12
+      day: 1
+  page: 657-666
+  source: ScienceDirect
+  title: Trading zones and interactional expertise
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S003936810700060X
+  volume: '38'
+
+- id: CRANTeamRCurlGeneralNetwork2020
+  abstract: >-
+    A wrapper for 'libcurl' <http://curl.haxx.se/libcurl/> Provides functions to
+    allow one to compose general HTTP requests and provides convenient functions
+    to fetch URIs, get & post forms, etc. and process the results returned by
+    the Web server. This provides a great deal of control over the HTTP/FTP/...
+    connection and the form of the request while providing a higher-level
+    interface than is available just using R socket connections. Additionally,
+    the underlying implementation is robust and extensive, supporting
+    FTP/FTPS/TFTP (uploads and downloads), SSL/HTTPS, telnet, dict, ldap, and
+    also supports cookies, redirects, authentication, etc.
+  accessed:
+    - year: 2021
+      month: 2
+      day: 17
+  author:
+    - literal: CRAN Team
+    - family: Temple Lang
+      given: Duncan
+  issued:
+    - year: 2020
+      month: 4
+      day: 18
+  source: R-Packages
+  title: 'RCurl: General Network (HTTP/FTP/...) Client Interface for R'
+  title-short: RCurl
+  type: book
+  URL: https://CRAN.R-project.org/package=RCurl
+  version: 1.98-1.2
+
+- id: EigenbrodeEmployingPhilosophicalDialogue2007
+  author:
+    - family: Eigenbrode
+      given: Sanford D
+    - family: O’Rourke
+      given: Michael
+    - family: Wulfhorst
+      given: J D
+    - family: Althoff
+      given: David M
+    - family: Goldberg
+      given: Caren S
+    - family: Merrill
+      given: Kaylani
+    - family: Morse
+      given: Wayde
+    - family: Nielsen-Pincus
+      given: Max
+    - family: Stephens
+      given: Jennifer
+    - family: Winowiecki
+      given: Leigh
+    - family: Bosque-Pérez
+      given: Nilsa A
+  container-title: BioScience
+  container-title-short: BioScience
+  DOI: 10.1641/B570109
+  issue: '1'
+  issued:
+    - year: 2007
+  page: '55'
+  title: Employing Philosophical Dialogue in Collaborative Science
+  type: article-journal
+  URL: http://www.jstor.org/stable/4488239
+  volume: '57'
+
+- id: EtzkowitzRoleResearchCentres1998
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Etzkowitz
+      given: Henry
+    - family: Kemelgor
+      given: Carol
+  container-title: Minerva
+  container-title-short: Minerva
+  DOI: 10.1023/A:1004348123030
+  ISSN: 1573-1871
+  issue: '3'
+  issued:
+    - year: 1998
+      month: 9
+      day: 1
+  language: en
+  page: 271-288
+  source: Springer Link
+  title: The Role of Research Centres in the Collectivisation of Academic Science
+  type: article-journal
+  URL: https://doi.org/10.1023/A:1004348123030
+  volume: '36'
+
+- id: FaganFleckSocialConstitution2009
+  abstract: >-
+    Ludwik Fleck’s theory of thought-styles has been hailed as a pioneer of
+    constructivist science studies and sociology of scientific knowledge. But
+    this consensus ignores an important feature of Fleck’s epistemology. At the
+    core of his account is the ideal of ‘objective truth, clarity, and
+    accuracy’. I begin with Fleck’s account of modern natural science, locating
+    the ideal of scientific objectivity within his general social epistemology.
+    I then draw on Fleck’s view of scientific objectivity to improve upon
+    reflexive accounts of the origin and development of the theory of
+    thought-styles, and reply to objections that Fleck’s epistemological stance
+    is self-undermining or inconsistent. Explicating the role of scientific
+    objectivity in Fleck’s epistemology reveals his view to be an internally
+    consistent alternative to recent social accounts of scientific objectivity
+    by Harding, Daston and Galison. I use these contrasts to indicate the
+    strengths and weaknesses of Fleck’s innovative social epistemology, and
+    propose modifications to address the latter. The result is a renewed version
+    of Fleck’s social epistemology, which reconciles commitment to scientific
+    objectivity with integrated sociology, history and philosophy of science.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Fagan
+      given: Melinda B.
+  container-title: >-
+    Studies in History and Philosophy of Science Part C: Studies in History and
+    Philosophy of Biological and Biomedical Sciences
+  container-title-short: >-
+    Studies in History and Philosophy of Science Part C: Studies in History and
+    Philosophy of Biological and Biomedical Sciences
+  DOI: 10.1016/j.shpsc.2009.09.005
+  ISSN: 1369-8486
+  issue: '4'
+  issued:
+    - year: 2009
+      month: 12
+      day: 1
+  page: 272-285
+  source: ScienceDirect
+  title: Fleck and the social constitution of scientific objectivity
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S1369848609000545
+  volume: '40'
+
+- id: FaganInterdisciplinarityPhilosophySystems2017
+  abstract: >-
+    Teaser“One reason to be optimistic about systems biology’s prospects for
+    striking an effective balance among multiple methods is that the field is
+    highly pluralistic and diverse. The label ‘systems biology’ covers a wide
+    range of projects with diverse influences, ranging from efforts to discover
+    physical laws in biology to using mathematical models to suggest experiments
+    to identify components of molecular mechanisms. Such pluralism is
+    well-motivated, especially in these early days of systems biology. A variety
+    of different ways of integrating experimentation and mathematical modeling,
+    and diverse associated concepts, should be tried out to see what works.
+    Philosophers can play a role here, in characterizing and assessing these
+    different strategies.”
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Fagan
+      given: Melinda Bonnie
+  collection-title: History, Philosophy and Theory of the Life Sciences
+  container-title: 'Philosophy of Systems Biology: Perspectives from Scientists and Philosophers'
+  DOI: 10.1007/978-3-319-47000-9_8
+  editor:
+    - family: Green
+      given: Sara
+  event-place: Cham
+  ISBN: 978-3-319-47000-9
+  issued:
+    - year: 2017
+  language: en
+  page: 87-97
+  publisher: Springer International Publishing
+  publisher-place: Cham
+  source: Springer Link
+  title: Interdisciplinarity, Philosophy and Systems Biology
+  type: chapter
+  URL: https://doi.org/10.1007/978-3-319-47000-9_8
+
+- id: FrodemanOxfordHandbookInterdisciplinarity2010
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  editor:
+    - family: Frodeman
+      given: Robert
+    - family: Klein
+      given: Julie Thompson
+    - family: Mitcham
+      given: Carl
+    - family: Holbrook
+      given: J. Britt
+  event-place: Cary, UNITED KINGDOM
+  ISBN: 978-0-19-163333-1
+  issued:
+    - year: 2010
+  publisher: Oxford University Press
+  publisher-place: Cary, UNITED KINGDOM
+  source: ProQuest Ebook Central
+  title: Oxford Handbook of Interdisciplinarity
+  type: book
+  URL: http://ebookcentral.proquest.com/lib/ucdavis/detail.action?docID=886467
+
+- id: GalisonImageLogicMaterial1997
+  abstract: >-
+    "I want to get at the blown glass of the early cloud chambers and the oozing
+    noodles of wet nuclear emulsion; to the resounding crack of a high-voltage
+    spark arcing across a high-tension chamber and leaving the lab stinking of
+    ozone; to the silent, darkened room, with row after row of scanners sliding
+    trackballs across projected bubble-chamber images. Pictures and pulses—I
+    want to know where they came from, how pictures and counts got to be the
+    bottom-line data of physics." (from the preface)  Image and Logic is the
+    most detailed engagement to date with the impact of modern technology on
+    what it means to "do" physics and to be a physicist. At the beginning of
+    this century, physics was usually done by a lone researcher who put together
+    experimental apparatus on a benchtop. Now experiments frequently are larger
+    than a city block, and experimental physicists live very different lives:
+    programming computers, working with industry, coordinating vast teams of
+    scientists and engineers, and playing politics.  Peter L. Galison probes the
+    material culture of experimental microphysics to reveal how the
+    ever-increasing scale and complexity of apparatus have distanced physicists
+    from the very science that drew them into experimenting, and have fragmented
+    microphysics into different technical traditions much as apparatus have
+    fragmented atoms to get at the fundamental building blocks of matter. At the
+    same time, the necessity for teamwork in operating multimillion-dollar
+    machines has created dynamic "trading zones," where instrument makers,
+    theorists, and experimentalists meet, share knowledge, and coordinate the
+    extraordinarily diverse pieces of the culture of modern microphysics: work,
+    machines, evidence, and argument.
+  author:
+    - family: Galison
+      given: Peter
+  ISBN: 978-0-226-27917-6
+  issued:
+    - year: 1997
+      month: 10
+  language: en
+  number-of-pages: '1002'
+  publisher: University of Chicago Press
+  source: Google Books
+  title: 'Image and Logic: A Material Culture of Microphysics'
+  title-short: Image and Logic
+  type: book
+
+- id: GaughanUsingCurriculumVitae2002
+  abstract: >-
+    While traditional grants remain central in US federal support of academic
+    scientists and engineers, the role of multidisciplinary NSF Centers is
+    growing. Little is known about how funding through these Centers affects
+    scientific output or (as is an NSF aim) increases academic collaboration
+    with industry. This paper tests the use of CVs to examine how Center funding
+    affects researchers' publication rates and their obtaining industry
+    grants.We find that CVs are indeed usable, but some ways of collecting them
+    work much better than others, and that researchers who obtain Center grants
+    are more likely to obtain grants from industry too, suggesting that this NSF
+    aim is being met. We do not find that Centers improve publication rates.
+  accessed:
+    - year: 2018
+      month: 2
+      day: 26
+  author:
+    - family: Gaughan
+      given: Monica
+    - family: Bozeman
+      given: Barry
+  container-title: Research Evaluation
+  container-title-short: Res Eval
+  DOI: 10.3152/147154402781776952
+  ISSN: 0958-2029
+  issue: '1'
+  issued:
+    - year: 2002
+      month: 4
+      day: 1
+  language: en
+  page: 17-26
+  source: academic.oup.com
+  title: >-
+    Using curriculum vitae to compare some impacts of NSF research grants with
+    research center funding
+  type: article-journal
+  URL: https://academic.oup.com/rev/article/11/1/17/1607104
+  volume: '11'
+
+- id: GeigerOrganizedResearchUnits1990
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Geiger
+      given: Roger L.
+  container-title: The Journal of Higher Education
+  DOI: 10.1080/00221546.1990.11775088
+  ISSN: 0022-1546
+  issue: '1'
+  issued:
+    - year: 1990
+      month: 1
+      day: 1
+  page: 1-19
+  source: Taylor and Francis+NEJM
+  title: >-
+    Organized Research Units—Their Role in the Development of University
+    Research
+  type: article-journal
+  URL: https://doi.org/10.1080/00221546.1990.11775088
+  volume: '61'
+
+- id: GhiasiComplianceWomenEngineers2015
+  abstract: >-
+    There has been considerable effort in the last decade to increase the
+    participation of women in engineering through various policies. However,
+    there has been little empirical research on gender disparities in
+    engineering which help underpin the effective preparation, co-ordination,
+    and implementation of the science and technology (S&T) policies. This
+    article aims to present a comprehensive gendered analysis of engineering
+    publications across different specialties and provide a cross-gender
+    analysis of research output and scientific impact of engineering researchers
+    in academic, governmental, and industrial sectors. For this purpose, 679,338
+    engineering articles published from 2008 to 2013 are extracted from the Web
+    of Science database and 974,837 authorships are analyzed. The structures of
+    co-authorship collaboration networks in different engineering disciplines
+    are examined, highlighting the role of female scientists in the diffusion of
+    knowledge. The findings reveal that men dominate 80% of all the scientific
+    production in engineering. Women engineers publish their papers in journals
+    with higher Impact Factors than their male peers, but their work receives
+    lower recognition (fewer citations) from the scientific community.
+    Engineers—regardless of their gender—contribute to the reproduction of the
+    male-dominated scientific structures through forming and repeating their
+    collaborations predominantly with men. The results of this study call for
+    integration of data driven gender-related policies in existing S&T
+    discourse.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 9
+  author:
+    - family: Ghiasi
+      given: Gita
+    - family: Larivière
+      given: Vincent
+    - family: Sugimoto
+      given: Cassidy R.
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0145931
+  ISSN: 1932-6203
+  issue: '12'
+  issued:
+    - year: 2015
+      month: 12
+      day: 30
+  language: en
+  page: e0145931
+  source: PLoS Journals
+  title: On the Compliance of Women Engineers with a Gendered Scientific System
+  type: article-journal
+  URL: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0145931
+  volume: '10'
+
+- id: GoddiksenExpertiseInterdisciplinaryScience2014
+  abstract: >-
+    Many degree programs in science and engineering aim at enabling their
+    students to perform interdisciplinary problem solving. In this paper we
+    present three types of expertise that are involved in different ways in
+    interdisciplinary problem solving. In doing so we shall first characterise
+    two important epistemological challenges commonly faced in interdisciplinary
+    problem solving, namely the communication challenge that arises from the use
+    of different concepts within different scientific domains, and the
+    integration challenge that arises from the differences between
+    domain-specific epistemological standards. Next, drawing on recent work on
+    expertise developed within science studies, we characterize the
+    interactional expertise that is a precondition for scientists to communicate
+    across scientific domains, and the integrational expertise that is a
+    precondition for scientists to be able to integrate cognitive resources
+    originating in different domains. Finally, we shall analyse how different
+    types of interdisciplinary problem solving sets different requirements for
+    interactional and integrational expertise and discuss the implications for
+    science and engineering programs in higher education.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Goddiksen
+      given: Mads
+    - family: Andersen
+      given: Hanne
+  genre: Preprint
+  issued:
+    - year: 2014
+      month: 11
+      day: 14
+  language: en
+  title: Expertise in Interdisciplinary Science and EDucation
+  type: webpage
+  URL: http://philsci-archive.pitt.edu/11151/
+
+- id: GreenExplanatoryIntegrationChallenges2015
+  abstract: >-
+    Evolutionary systems biology (ESB) aims to integrate methods from systems
+    biology and evolutionary biology to go beyond the current limitations in
+    both fields. This article clarifies some conceptual difficulties of this
+    integration project, and shows how they can be overcome. The main challenge
+    we consider involves the integration of evolutionary biology with
+    developmental dynamics, illustrated with two examples. First, we examine
+    historical tensions between efforts to define general evolutionary
+    principles and articulation of detailed mechanistic explanations of specific
+    traits. Next, these tensions are further clarified by considering a recent
+    case from another field focused on developmental dynamics: stem cell
+    biology. In the stem cell case, incompatible explanatory aims block
+    integration. Experimental approaches aim at mechanistic explanation while
+    dynamical system models offer explanation in terms of general principles. We
+    then discuss an ESB case in which integration succeeds: search for general
+    attractors using a dynamical systems framework synergizes with the
+    experimental search for detailed mechanisms. Contrasts between the positive
+    and negative cases suggest general lessons for achieving an integrated
+    understanding of developmental and evolutionary dynamics. The key
+    integrative move is to acknowledge two complementary aims, both relevant to
+    explanation: identifying the space of possible dynamic states and
+    trajectories, and mechanistic understanding of causal interactions
+    underlying a specific phenomenon of interest. These two aims can support one
+    another in a joint project characterizing dynamic aspects of evolving
+    lineages. This more inclusive project can lead to insights that cannot be
+    reached by either approach in isolation.
+  accessed:
+    - year: 2015
+      month: 7
+      day: 8
+  author:
+    - family: Green
+      given: Sara
+    - family: Fagan
+      given: Melinda
+    - family: Jaeger
+      given: Johannes
+  container-title: Biological Theory
+  container-title-short: Biol Theory
+  DOI: 10.1007/s13752-014-0185-8
+  ISSN: 1555-5550
+  issue: '1'
+  issued:
+    - year: 2015
+      month: 3
+      day: 1
+  language: en
+  page: 18-35
+  source: link.springer.com
+  title: Explanatory Integration Challenges in Evolutionary Systems Biology
+  type: article-journal
+  URL: https://doi.org/10.1007/s13752-014-0185-8
+  volume: '10'
+
+- id: HallAssessingValueTeam2012
+  abstract: >-
+    Background
+
+    Large cross-disciplinary scientific teams are becoming increasingly
+    prominent in the conduct of research.
+
+    Purpose
+
+    This paper reports on a quasi-experimental longitudinal study conducted to
+    compare bibliometric indicators of scientific collaboration, productivity,
+    and impact of center-based transdisciplinary team science initiatives and
+    traditional investigator-initiated grants in the same field.
+
+    Methods
+
+    All grants began between 1994 and 2004 and up to 10 years of publication
+    data were collected for each grant. Publication information was compiled and
+    analyzed during the spring and summer of 2010.
+
+    Results
+
+    Following an initial lag period, the transdisciplinary research center
+    grants had higher overall publication rates than the investigator-initiated
+    R01 (NIH Research Project Grant Program) grants. There were relatively
+    uniform publication rates across the research center grants compared to
+    dramatically dispersed publication rates among the R01 grants. On average,
+    publications produced by the research center grants had greater numbers of
+    coauthors but similar journal impact factors compared with publications
+    produced by the R01 grants.
+
+    Conclusions
+
+    The lag in productivity among the transdisciplinary center grants was offset
+    by their overall higher publication rates and average number of coauthors
+    per publication, relative to investigator-initiated grants, over the 10-year
+    comparison period. The findings suggest that transdisciplinary center grants
+    create benefits for both scientific productivity and collaboration.
+  accessed:
+    - year: 2019
+      month: 3
+      day: 14
+  author:
+    - family: Hall
+      given: Kara L.
+    - family: Stokols
+      given: Daniel
+    - family: Stipelman
+      given: Brooke A.
+    - family: Vogel
+      given: Amanda L.
+    - family: Feng
+      given: Annie
+    - family: Masimore
+      given: Beth
+    - family: Morgan
+      given: Glen
+    - family: Moser
+      given: Richard P.
+    - family: Marcus
+      given: Stephen E.
+    - family: Berrigan
+      given: David
+  container-title: American Journal of Preventive Medicine
+  container-title-short: American Journal of Preventive Medicine
+  DOI: 10.1016/j.amepre.2011.10.011
+  ISSN: 0749-3797
+  issue: '2'
+  issued:
+    - year: 2012
+      month: 2
+      day: 1
+  page: 157-163
+  source: ScienceDirect
+  title: >-
+    Assessing the Value of Team Science: A Study Comparing Center- and
+    Investigator-Initiated Grants
+  title-short: Assessing the Value of Team Science
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0749379711008488
+  volume: '42'
+
+- id: HanEvolutionResearchTopics2020
+  abstract: >-
+    This study investigated the evolution of library and information science
+    (LIS) by analyzing research topics in LIS journal articles. The analysis is
+    divided into five periods covering the years 1996–2019. Latent Dirichlet
+    allocation modeling was used to identify underlying topics based on 14,035
+    documents. An improved data-selection method was devised in order to
+    generate a dynamic journal list that included influential journals for each
+    period. Results indicate that (a) library science has become less prevalent
+    over time, as there are no top topic clusters relevant to library issues
+    since the period 2000–2005; (b) bibliometrics, especially citation analysis,
+    is highly stable across periods, as reflected by the stable subclusters and
+    consistent keywords; and (c) information retrieval has consistently been the
+    dominant domain with interests gradually shifting to model-based text
+    processing. Information seeking and behavior is also a stable field that
+    tends to be dispersed among various topics rather than presented as its own
+    subject. Information systems and organizational activities have been
+    continuously discussed and have developed a closer relationship with
+    e-commerce. Topics that occurred only once have undergone a change of
+    technological context from the networks and Internet to social media and
+    mobile applications.
+  accessed:
+    - year: 2021
+      month: 2
+      day: 16
+  author:
+    - family: Han
+      given: Xiaoyao
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-020-03721-0
+  ISSN: 1588-2861
+  issue: '3'
+  issued:
+    - year: 2020
+      month: 12
+      day: 1
+  language: en
+  page: 2561-2595
+  source: Springer Link
+  title: >-
+    Evolution of research topics in LIS between 1996 and 2019: an analysis based
+    on latent Dirichlet allocation topic model
+  title-short: Evolution of research topics in LIS between 1996 and 2019
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-020-03721-0
+  volume: '125'
+
+- id: HastieElementsStatisticalLearning2009
+  accessed:
+    - year: 2015
+      month: 4
+      day: 6
+  author:
+    - family: Hastie
+      given: Trevor
+    - family: Tibshirani
+      given: Robert
+    - family: Friedman
+      given: Jerome
+  collection-number: '1'
+  issued:
+    - year: 2009
+  publisher: Springer
+  source: Google Scholar
+  title: The elements of statistical learning
+  type: book
+  URL: http://link.springer.com/content/pdf/10.1007/978-0-387-84858-7.pdf
+  volume: '2'
+
+- id: HaunschildAlgorithmicallyGeneratedSubject2018
+  abstract: >-
+    One important reason for the use of field categorization in bibliometrics is
+    the necessity to make citation impact of papers published in different
+    scientific fields comparable with each other. Raw citations are normalized
+    by using field-categorization schemes to achieve comparable citation scores.
+    There are different approaches to field categorization available. They can
+    be broadly classified as intellectual and algorithmic approaches. A
+    paper-based algorithmically constructed classification system (ACCS) was
+    proposed which is based on citation relations. Using a few ACCS
+    field-specific clusters, we investigate the discriminatory power of the
+    ACCS. The micro study focusses on the topic ‘overall water splitting’ and
+    related topics. The first part of the study investigates intellectually
+    whether the ACCS is able to identify papers on overall water splitting
+    reliably and validly. Next, we compare the ACCS with (1) a paper-based
+    intellectual (INSPEC) classification and (2) a journal-based intellectual
+    classification (Web of Science, WoS, subject categories). In the last part
+    of our case study, we compare the average number of citations in selected
+    ACCS clusters (on overall water splitting and related topics) with the
+    average citation count of publications in WoS subject categories related to
+    these clusters. The results of this micro study question the discriminatory
+    power of the ACCS. We recommend larger follow-up studies on broad datasets.
+  accessed:
+    - year: 2018
+      month: 4
+      day: 9
+  author:
+    - family: Haunschild
+      given: Robin
+    - family: Schier
+      given: Hermann
+    - family: Marx
+      given: Werner
+    - family: Bornmann
+      given: Lutz
+  container-title: Journal of Informetrics
+  container-title-short: Journal of Informetrics
+  DOI: 10.1016/j.joi.2018.03.004
+  ISSN: 1751-1577
+  issue: '2'
+  issued:
+    - year: 2018
+      month: 5
+  page: 436-447
+  source: ScienceDirect
+  title: >-
+    Algorithmically generated subject categories based on citation relations: An
+    empirical micro study using papers on overall water splitting
+  title-short: Algorithmically generated subject categories based on citation relations
+  type: article-journal
+  URL: https://www.sciencedirect.com/science/article/pii/S175115771730278X
+  volume: '12'
+
+- id: HellingerDistance2021
+  abstract: >-
+    In probability and statistics, the Hellinger distance (closely related to,
+    although different from, the Bhattacharyya distance) is used to quantify the
+    similarity between two probability distributions. It is a type of
+    f-divergence.  The Hellinger distance is defined in terms of the Hellinger
+    integral, which was introduced by Ernst Hellinger in 1909.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  container-title: Wikipedia
+  issued:
+    - year: 2021
+      month: 1
+      day: 18
+  language: en
+  note: 'Page Version ID: 1001077827'
+  source: Wikipedia
+  title: Hellinger distance
+  type: entry-encyclopedia
+  URL: >-
+    https://en.wikipedia.org/w/index.php?title=Hellinger_distance&oldid=1001077827
+
+- id: HePredictiveEffectsNovelty2018
+  abstract: >-
+    Novel scientiﬁc knowledge is constantly produced by the scientiﬁc community.
+    Understanding the level of novelty characterized by scientiﬁc literature is
+    key for modeling scientiﬁc dynamics and analyzing the growth mechanisms of
+    scientiﬁc knowledge. Metrics derived from bibliometrics and citation
+    analysis were effectively used to characterize the novelty in scientiﬁc
+    development. However, time is required before we can observe links between
+    documents such as citation links or patterns derived from the links, which
+    makes these techniques more effective for retrospective analysis than
+    predictive analysis. In this study, we present a new approach to measuring
+    the novelty of a research topic in a scientiﬁc community over a speciﬁc
+    period by tracking semantic changes of the terms and characterizing the
+    research topic in their usage context. The semantic changes are derived from
+    the text data of scientiﬁc literature by temporal embedding learning
+    techniques. We validated the effects of the proposed novelty metric on
+    predicting the future growth of scientiﬁc publications and investigated the
+    relations between novelty and growth by panel data analysis applied in a
+    large-scale publication dataset (MEDLINE/PubMed). Key ﬁndings based on the
+    statistical investigation indicate that the novelty metric has signiﬁcant
+    predictive effects on the growth of scientiﬁc literature and the predictive
+    effects may last for more than ten years. We demonstrated the effectiveness
+    and practical implications of the novelty metric in three case studies.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 16
+  author:
+    - family: He
+      given: Jiangen
+    - family: Chen
+      given: Chaomei
+  container-title: Frontiers in Research Metrics and Analytics
+  container-title-short: Front. Res. Metr. Anal.
+  DOI: 10.3389/frma.2018.00009
+  ISSN: 2504-0537
+  issued:
+    - year: 2018
+  language: English
+  source: Frontiers
+  title: >-
+    Predictive Effects of Novelty Measured by Temporal Embeddings on the Growth
+    of Scientific Literature
+  type: article-journal
+  URL: https://www.frontiersin.org/articles/10.3389/frma.2018.00009/full
+  volume: '3'
+
+- id: HicksNationalRoboticsInitiative2019
+  abstract: >-
+    The U.S. National Science Foundation (NSF), together with other federal
+    agencies, launched the National Robotics Initiative (NRI) program in 2011.
+    The aim of the NRI is to accelerate the development and use of collaborative
+    robots (corobots), which work beside or cooperatively with people. To date,
+    the NRI program has involved multiple directorates of the NSF (Computer and
+    Information Science and Engineering; Engineering; Social, Behavioral, and
+    Economic Sciences; and Education and Human Resources) and several other
+    federal research funding agencies [the U.S. Department of Agriculture
+    (USDA), the National Institutes of Health (NIH), the U.S. Department of
+    Energy (DOE), NASA, and the U.S. Department of Defense (DOD)]. As the
+    program prepared to announce its sixth round of awards in the summer of
+    2017, we took the opportunity to reflect on the impacts of the first five
+    years of NRI funding.
+  author:
+    - family: Hicks
+      given: D.
+    - family: Simmons
+      given: R.
+  container-title: IEEE Robotics Automation Magazine
+  DOI: 10.1109/MRA.2019.2912860
+  ISSN: 1070-9932
+  issue: '3'
+  issued:
+    - year: 2019
+  page: 2-9
+  source: IEEE Xplore
+  title: 'The National Robotics Initiative: A Five-Year Retrospective'
+  title-short: The National Robotics Initiative
+  type: article-journal
+  volume: '26'
+
+- id: HicksNetworkAnalysisEvaluate2019
+  abstract: >-
+    In 2004, the Alfred P. Sloan Foundation launched a new program focused on
+    incubating a new field, “Microbiology of the Built Environment” (MoBE). By
+    the end of 2017, the program had supported the publication of hundreds of
+    scholarly works, but it was unclear to what extent it had stimulated the
+    development of a new research community. We identified 307 works funded by
+    the MoBE program, as well as a comparison set of 698 authors who published
+    in the same journals during the same period of time but were not part of the
+    Sloan Foundation-funded collaboration. Our analysis of collaboration
+    networks for both groups of authors suggests that the Sloan Foundation’s
+    program resulted in a more consolidated community of researchers,
+    specifically in terms of number of components, diameter, density, and
+    transitivity of the coauthor networks. In addition to highlighting the
+    success of this particular program, our method could be applied to other
+    fields to examine the impact of funding programs and other large-scale
+    initiatives on the formation of research communities.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 18
+  author:
+    - family: Hicks
+      given: Daniel J.
+    - family: Coil
+      given: David A.
+    - family: Stahmer
+      given: Carl G.
+    - family: Eisen
+      given: Jonathan A.
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0218273
+  ISSN: 1932-6203
+  issue: '6'
+  issued:
+    - year: 2019
+      month: 6
+      day: 18
+  language: en
+  page: e0218273
+  source: PLoS Journals
+  title: >-
+    Network analysis to evaluate the impact of research funding on research
+    community consolidation
+  type: article-journal
+  URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0218273
+  volume: '14'
+
+- id: HolbrookWhatInterdisciplinaryCommunication2013
+  abstract: >-
+    In this paper I attempt to answer the question: What is interdisciplinary
+    communication? I attempt to answer this question, rather than what some
+    might consider the ontologically prior question—what is interdisciplinarity
+    (ID)?—for two reasons: (1) there is no generally agreed-upon definition of
+    ID; and (2) one’s views regarding interdisciplinary communication have a
+    normative relationship with one’s other views of ID, including one’s views
+    of its very essence. I support these claims with reference to the growing
+    literature on ID, which has a marked tendency to favor the idea that
+    interdisciplinary communication entails some kind of ‘integration’. The
+    literature on ID does not yet include very many philosophers, but we have
+    something valuable to offer in addressing the question of interdisciplinary
+    communication. Playing somewhat fast-and-loose with traditional categories
+    of the subdisciplines of philosophy, I group some philosophers—mostly from
+    the philosophy of science, social–political philosophy, and moral theory—and
+    some non-philosophers together to provide three different, but related,
+    answers to the question of interdisciplinary communication. The groups are
+    as follows: (1) Habermas–Klein, (2) Kuhn–MacIntyre, and (3)
+    Bataille–Lyotard. These groups can also be thought of in terms of the types
+    of answers they give to the question of interdisciplinary communication,
+    especially in terms of the following key words (where the numbers correspond
+    to the groups from the previous sentence): (1) consensus, (2)
+    incommensurability, and (3) invention.
+  author:
+    - family: Holbrook
+      given: J Britt
+  container-title: Synthese
+  container-title-short: Synthese
+  DOI: 10.1007/s11229-012-0179-7
+  ISSN: 1573-0964
+  issue: '11'
+  issued:
+    - year: 2013
+      month: 7
+      day: 1
+  language: en
+  page: 1865-1879
+  source: Springer Link
+  title: >-
+    What is interdisciplinary communication? Reflections on the very idea of
+    disciplinary integration
+  title-short: What is interdisciplinary communication?
+  type: article-journal
+  URL: https://doi.org/10.1007/s11229-012-0179-7
+  volume: '190'
+
+- id: HutchinsonAcademicCapitalismOrganizational2005
+  abstract: >-
+    This multi-layered case study examines the evolution and operations of one
+    long-lived organized research unit (ORU), the Office of Arid Lands Studies
+    (OALS), at the University of Arizona (UA). The first part includes a history
+    of arid lands research at the UA and the beginning of OALS, a review of the
+    Office's extramural and internal funding since 1964, and a comparison of
+    that data and other performance indicators with other ORUs and, to some
+    extent, with departments. The results are examined in relation to U.S.
+    science policy and the theory of academic capitalism. The second part
+    explores the causes of OALS' 1981 administrative move from the Vice
+    President for Research Office to the College of Agriculture in the context
+    of the University's multiple cultures and institutional and resource
+    dependence theories of organizational change. The final part considers the
+    influence of student workers on faculty supervisors who work as technicians
+    in an OALS lab, and the role of funding agencies in the lab's operations.
+    Theories of power and technology in the workplace provide a frame for the
+    discussion. Findings suggest the placement of this ORU in a college has been
+    beneficial in clarifying research turf, minimizing conflicts, supporting
+    instruction, and in terms of funding. OALS' extramural support has averaged
+    more than four dollars to every one dollar received internally, and OALS
+    faculty compare favorably with other faculty in numbers of publications, and
+    to a certain extent with teaching and advising. While the OALS remote
+    sensing lab does utilize students as sources of cheap labor, the students do
+    have considerable influence over how the lab operates. The only areas of
+    conflict occurred over linking thesis topics to research projects and in
+    meeting funding agency deadlines.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Hutchinson
+      given: Barbara Swing
+  issued:
+    - year: 2005
+  language: EN
+  source: repository.arizona.edu
+  title: >-
+    Academic Capitalism, Organizational Change, and Student Workers: A Case
+    Study of an Organized Research Unit in a Public Research University
+  title-short: Academic Capitalism, Organizational Change, and Student Workers
+  type: thesis
+  URL: https://repository.arizona.edu/handle/10150/196127
+
+- id: HuutoniemiAnalyzingInterdisciplinarityTypology2010
+  abstract: >-
+    Both funding agencies and scholars in science studies have become
+    increasingly concerned with how to define and identify interdisciplinarity
+    in research. The task is tricky, since the complexity of interdisciplinary
+    research defies a single definition. Our study tackles this challenge by
+    demonstrating a new typology and qualitative indicators for analyzing
+    interdisciplinarity in research documents. The proposed conceptual framework
+    attempts to fulfill the need for a robust and nuanced approach that is
+    grounded in deeper knowledge of interdisciplinarity. As an example of using
+    the framework, we discuss our empirical investigation of research proposals
+    funded by a national funding agency in Finland.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Huutoniemi
+      given: Katri
+    - family: Klein
+      given: Julie Thompson
+    - family: Bruun
+      given: Henrik
+    - family: Hukkinen
+      given: Janne
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2009.09.011
+  ISSN: 0048-7333
+  issue: '1'
+  issued:
+    - year: 2010
+      month: 2
+      day: 1
+  page: 79-88
+  source: ScienceDirect
+  title: 'Analyzing interdisciplinarity: Typology and indicators'
+  title-short: Analyzing interdisciplinarity
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0048733309001875
+  volume: '39'
+
+- id: JamesIntroductionStatisticalLearning2013
+  accessed:
+    - year: 2015
+      month: 4
+      day: 11
+  author:
+    - family: James
+      given: Gareth
+    - family: Witten
+      given: Daniela
+    - family: Hastie
+      given: Trevor
+    - family: Tibshirani
+      given: Robert
+  collection-title: Springer Texts in Statistics
+  event-place: New York, NY
+  ISBN: 978-1-4614-7137-0 978-1-4614-7138-7
+  issued:
+    - year: 2013
+  publisher: Springer New York
+  publisher-place: New York, NY
+  source: CrossRef
+  title: An Introduction to Statistical Learning
+  type: book
+  URL: http://link.springer.com/10.1007/978-1-4614-7138-7
+
+- id: KlavansResearchPortfolioAnalysis2017
+  abstract: >-
+    Stakeholders in the science system need to decide where to place their bets.
+    Example questions include: Which areas of research should get more funding?
+    Who should we hire? Which projects should we abandon and which new projects
+    should we start? Making informed choices requires knowledge about these
+    research options. Unfortunately, to date research portfolio options have not
+    been defined in a consistent, transparent and relevant manner. Furthermore,
+    we don’t know how to define demand for these options. In this article, we
+    address the issues of consistency, transparency, relevance and demand by
+    using a model of science consisting of 91,726 topics (or research options)
+    that contain over 58 million documents. We present a new indicator of topic
+    prominence – a measure of visibility, momentum and, ultimately, demand. We
+    assign over $203 billion of project-level funding data from STAR METRICS® to
+    individual topics in science, and show that the indicator of topic
+    prominence, explains over one-third of the variance in current (or future)
+    funding by topic. We also show that highly prominent topics receive far more
+    funding per researcher than topics that are not prominent. Implications of
+    these results for research planning and portfolio analysis by institutions
+    and researchers are emphasized.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 5
+  author:
+    - family: Klavans
+      given: Richard
+    - family: Boyack
+      given: Kevin W.
+  container-title: Journal of Informetrics
+  container-title-short: Journal of Informetrics
+  DOI: 10.1016/j.joi.2017.10.002
+  ISSN: 1751-1577
+  issue: '4'
+  issued:
+    - year: 2017
+      month: 11
+      day: 1
+  page: 1158-1174
+  source: ScienceDirect
+  title: Research portfolio analysis and topic prominence
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S1751157717302110
+  volume: '11'
+
+- id: KongExploringDynamicResearch2017
+  abstract: >-
+    In many cases, it is time-consuming for researchers to find proper
+    collaborators who can provide researching guidance besides simply
+    collaborating. The Most Beneficial Collaborators (MBCs), who have h
+  accessed:
+    - year: 2017
+      month: 10
+      day: 5
+  author:
+    - family: Kong
+      given: Xiangjie
+    - family: Jiang
+      given: Huizhen
+    - family: Wang
+      given: Wei
+    - family: Bekele
+      given: Teshome Megersa
+    - family: Xu
+      given: Zhenzhen
+    - family: Wang
+      given: Meng
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-017-2485-9
+  ISSN: 0138-9130, 1588-2861
+  issue: '1'
+  issued:
+    - year: 2017
+      month: 10
+      day: 1
+  language: en
+  page: 369-385
+  source: rd.springer.com
+  title: >-
+    Exploring dynamic research interest and academic influence for scientific
+    collaborator recommendation
+  type: article-journal
+  URL: https://link.springer.com/article/10.1007/s11192-017-2485-9
+  volume: '113'
+
+- id: KuhnStructureScientificRevolutions1996
+  author:
+    - family: Kuhn
+      given: Thomas S.
+  call-number: Q175 .K95 1996
+  edition: 3rd ed
+  event-place: Chicago, IL
+  ISBN: 978-0-226-45807-6 978-0-226-45808-3
+  issued:
+    - year: 1996
+  number-of-pages: '212'
+  publisher: University of Chicago Press
+  publisher-place: Chicago, IL
+  source: Library of Congress ISBN
+  title: The structure of scientific revolutions
+  type: book
+
+- id: LariviereBibliometricsGlobalGender2013
+  author:
+    - family: Larivière
+      given: Vincent
+    - family: Ni
+      given: Chaoqun
+    - family: Gingras
+      given: Yves
+    - family: Cronin
+      given: Blaise
+    - family: Sugimoto
+      given: Cassidy R
+  container-title: Nature News
+  container-title-short: Nature News
+  DOI: 10.1038/504211a
+  issue: '7479'
+  issued:
+    - year: 2013
+  page: 211-213
+  title: 'Bibliometrics: Global gender disparities in science'
+  type: article-journal
+  URL: http://www.nature.com/doifinder/10.1038/504211a
+  volume: '504'
+
+- id: LaursenWhatCollaborativeInterdisciplinary2018
+  abstract: "Aim/Purpose: Collaborative, interdisciplinary research is growing rapidly, but we still have limited and fragmented understanding of what is arguably the heart of such research—collaborative, interdisciplinary reasoning (CIR). \n\nBackground: This article integrates neo-Pragmatist theories of reasoning with insights from literature on interdisciplinary research to develop a working definition of collaborative, interdisciplinary reasoning. The article then applies this definition to an empirical example to demonstrate its utility.\n\nMethodology: The empirical example is an excerpt from a Toolbox workshop transcript. The article reconstructs a cogent, inductive, interdisciplinary argument from the excerpt to show how CIR can proceed in an actual team.\n\nContribution: The study contributes operational definitions of ‘reasoning together’ and ‘collaborative, interdisciplinary reasoning’ to existing literature. It also demonstrates empirical methods for operationalizing these definitions, with the argument reconstruction providing a brief case study in how teams reason together.\n\nFindings: 1.\tCollaborative, interdisciplinary reasoning is the attempted integration of disciplinary contributions to exchange, evaluate, and assert claims that enable shared understanding and eventually action in a local context.\n2.\tPragma-dialectic argument reconstruction with conversation analysis is a method for observing such reasoning from a transcript.\n3.\tThe example team developed a strong inductive argument to integrate their disciplinary contributions about modeling.\n\nRecommendations for Practitioners: 1.\tInterdisciplinary work requires agreeing with teammates about what is assertible and why.\n2.\tTo assert something together legitimately requires making a cogent, integrated argument.\n\nRecommendation for Researchers: 1.\tAn argument is the basic unit of analysis for interdisciplinary integration.\n2.\tTo assess the argument’s cogency, it is helpful to reconstruct it using pragma-dialectic principles and conversation analysis tools. \n3.\tTo assess the argument’s interdisciplinary integration and participant roles in the integration, it is helpful to graph the flow of words as a Sankey chart from participant-disciplines to the argument conclusion.\n\n\nFuture Research: How does this definition of CIR relate to other interdisciplinary ‘cognition’ or ‘learning’ type theories? How can practitioners and theorists tell the difference between true intersubjectivity and superficial agreeableness in these dialogues? What makes an instance of CIR ‘good’ or ‘bad’? How does collaborative, transdisciplinary reasoning differ from CIR, if at all?"
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - family: Laursen
+      given: Bethany K.
+  container-title: 'Informing Science: The International Journal of an Emerging Transdiscipline'
+  container-title-short: InformingSciJ
+  DOI: 10.28945/4010
+  ISSN: 1547-9684, 1521-4672
+  issued:
+    - year: 2018
+  language: en
+  page: 075-106
+  source: DOI.org (Crossref)
+  title: >-
+    What is Collaborative, Interdisciplinary Reasoning? The Heart of
+    Interdisciplinary Team Science
+  title-short: What is Collaborative, Interdisciplinary Reasoning?
+  type: article-journal
+  URL: https://www.informingscience.org/Publications/4010
+  volume: '21'
+
+- id: LeeReferenceClassProblem2020
+  abstract: >-
+    Scholars belong to multiple communities of credit simultaneously. When these
+    communities disagree about a scholarly achievement’s credit assignment, this
+    raises a puzzle for decision and game theoretic models of credit seeking in
+    science. The reference class problem for credit valuation in science is the
+    problem of determining to which of an agent’s communities—which reference
+    class—credit determinations should be indexed for an act under some state of
+    nature. Solving this problem requires developing rich, mutually informed
+    theories of community and credit that are sensitive to the structure and
+    status systems of complex, heterogeneous scholarly networks.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 27
+  author:
+    - family: Lee
+      given: Carole J.
+  container-title: Philosophy of Science
+  container-title-short: Philosophy of Science
+  DOI: 10.1086/710615
+  ISSN: 0031-8248
+  issue: '5'
+  issued:
+    - year: 2020
+      month: 7
+      day: 10
+  page: 1026-1036
+  publisher: The University of Chicago Press
+  source: journals.uchicago.edu (Atypon)
+  title: The Reference Class Problem for Credit Valuation in Science
+  type: article-journal
+  URL: https://www.journals.uchicago.edu/doi/full/10.1086/710615
+  volume: '87'
+
+- id: LeydesdorffIndicatorsInterdisciplinarityJournals2011
+  archive: Scopus
+  author:
+    - family: Leydesdorff
+      given: L.
+    - family: Rafols
+      given: I.
+  container-title: Journal of Informetrics
+  DOI: 10.1016/j.joi.2010.09.002
+  issue: '1'
+  issued:
+    - year: 2011
+  page: 87-100
+  title: >-
+    Indicators of the interdisciplinarity of journals: Diversity, centrality,
+    and citations
+  type: article-journal
+  URL: >-
+    https://www.scopus.com/inward/record.uri?eid=2-s2.0-78650521748&doi=10.1016%2fj.joi.2010.09.002&partnerID=40&md5=6f89b7dc0f0d968e03d5e903a6fd316a
+  volume: '5'
+
+- id: LeydesdorffInterdisciplinarityDiversityCitation2019
+  abstract: >-
+    Questions of definition and measurement continue to constrain a consensus on
+    the measurement of interdisciplinarity. Using Rao-Stirling (RS) Diversity
+    sometimes produces anomalous results. We argue that these unexpected
+    outcomes can be related to the use of “dual-concept diversity” which
+    combines “variety” and “balance” in the definitions (ex ante). We propose to
+    modify RS Diversity into a new indicator (DIV) which operationalizes
+    “variety,” “balance,” and “disparity” independently and then combines them
+    ex post. “Balance” can be measured using the Gini coefficient. We apply DIV
+    to the aggregated citation patterns of 11,487 journals covered by the
+    Journal Citation Reports 2016 of the Science Citation Index and the Social
+    Sciences Citation Index as an empirical domain and, in more detail, to the
+    citation patterns of 85 journals assigned to the Web-of-Science category
+    “information science & library science” in both the cited and citing
+    directions. We compare the results of the indicators and show that DIV
+    provides improved results in terms of distinguishing between
+    interdisciplinary knowledge integration (citing references) versus knowledge
+    diffusion (cited impact). The new diversity indicator and RS diversity
+    measure different features. A routine for the measurement of the various
+    operationalization of diversity (in any data matrix) is made available
+    online.
+  accessed:
+    - year: 2019
+      month: 1
+      day: 26
+  author:
+    - family: Leydesdorff
+      given: Loet
+    - family: Wagner
+      given: Caroline S.
+    - family: Bornmann
+      given: Lutz
+  container-title: Journal of Informetrics
+  container-title-short: Journal of Informetrics
+  DOI: 10.1016/j.joi.2018.12.006
+  ISSN: 1751-1577
+  issue: '1'
+  issued:
+    - year: 2019
+      month: 2
+      day: 1
+  page: 255-269
+  source: ScienceDirect
+  title: >-
+    Interdisciplinarity as diversity in citation patterns among journals:
+    Rao-Stirling diversity, relative variety, and the Gini coefficient
+  title-short: Interdisciplinarity as diversity in citation patterns among journals
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S1751157718303535
+  volume: '13'
+
+- id: LindseyProductionCitationMeasures1980
+  abstract: >-
+    Previous studies in the sociology of science have relied on measures of
+    production and citations which have failed to take account of multiple
+    authorship. This study indicates that these previous (and still currently
+    used) measures introduce intolerable error and often profoundly influence
+    substantive interpretation. To address the problem of multiple authorship in
+    the measurement of publications and citations, a revision of current indices
+    is presented. Previous measurement error may well require a re-analysis and
+    rethinking of previous reported studies in the sociology of science.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 21
+  author:
+    - family: Lindsey
+      given: Duncan
+  container-title: Social Studies of Science
+  container-title-short: Soc Stud Sci
+  DOI: 10.1177/030631278001000202
+  ISSN: 0306-3127
+  issue: '2'
+  issued:
+    - year: 1980
+      month: 5
+      day: 1
+  language: en
+  page: 145-162
+  source: SAGE Journals
+  title: >-
+    Production and Citation Measures in the Sociology of Science: The Problem of
+    Multiple Authorship
+  title-short: Production and Citation Measures in the Sociology of Science
+  type: article-journal
+  URL: https://doi.org/10.1177/030631278001000202
+  volume: '10'
+
+- id: LonginoStudyingHumanBehavior2013
+  abstract: >-
+    In Studying Human Behavior, Helen E. Longino enters into the complexities of
+    human behavioral research, a domain still dominated by the age-old debate of
+    “nature versus nurture.” Rather than supporting one side or another or
+    attempting to replace that dichotomy with a different framework for
+    understanding behavior, Longino focuses on how scientists study it,
+    specifically sexual behavior and aggression, and asks what can be known
+    about human behavior through empirical investigation. She dissects five
+    approaches to the study of behavior—quantitative behavioral genetics,
+    molecular behavior genetics, developmental psychology, neurophysiology and
+    anatomy, and social/environmental methods—highlighting the underlying
+    assumptions of these disciplines, as well as the different questions and
+    mechanisms each addresses. She also analyzes efforts to integrate different
+    approaches. Longino concludes that there is no single “correct” approach but
+    that each contributes to our overall understanding of human behavior. In
+    addition, Longino reflects on the reception and transmission of this
+    behavioral research in scientific, social, clinical, and political spheres.
+    A highly significant and innovative study that bears on crucial scientific
+    questions, Studying Human Behavior will be essential reading not only for
+    scientists and philosophers but also for science journalists and anyone
+    interested in the engrossing challenges of understanding human behavior.
+  author:
+    - family: Longino
+      given: Helen E.
+  ISBN: 978-0-226-92182-2
+  issued:
+    - year: 2013
+      month: 1
+      day: 18
+  language: en
+  number-of-pages: '263'
+  publisher: University of Chicago Press
+  source: Google Books
+  title: 'Studying Human Behavior: How Scientists Investigate Aggression and Sexuality'
+  title-short: Studying Human Behavior
+  type: book
+
+- id: LuMeasuringAuthorResearch2012
+  abstract: >-
+    Relationships between authors based on characteristics of published
+    literature have been studied for decades. Author cocitation analysis using
+    mapping techniques has been most frequently used to study how closely two
+    authors are thought to be in intellectual space based on how members of the
+    research community co-cite their works. Other approaches exist to study
+    author relatedness based more directly on the text of their published works.
+    In this study we present static and dynamic word-based approaches using
+    vector space modeling, as well as a topic-based approach based on latent
+    Dirichlet allocation for mapping author research relatedness. Vector space
+    modeling is used to define an author space consisting of works by a given
+    author. Outcomes for the two word-based approaches and a topic-based
+    approach for 50 prolific authors in library and information science are
+    compared with more traditional author cocitation analysis using
+    multidimensional scaling and hierarchical cluster analysis. The two
+    word-based approaches produced similar outcomes except where two authors
+    were frequent co-authors for the majority of their articles. The topic-based
+    approach produced the most distinctive map.
+  accessed:
+    - year: 2019
+      month: 5
+      day: 14
+  author:
+    - family: Lu
+      given: Kun
+    - family: Wolfram
+      given: Dietmar
+  container-title: Journal of the American Society for Information Science and Technology
+  DOI: 10.1002/asi.22628
+  ISSN: 1532-2890
+  issue: '10'
+  issued:
+    - year: 2012
+  language: en
+  page: 1973-1986
+  source: Wiley Online Library
+  title: >-
+    Measuring author research relatedness: A comparison of word-based,
+    topic-based, and author cocitation approaches
+  title-short: Measuring author research relatedness
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/asi.22628
+  volume: '63'
+
+- id: MardiaPropertiesClasicalMultidimesional1978
+  abstract: >-
+    The paper gives a new optimal property of the classical method of
+    multi-dimensional scaling when the distance matrix is non-Euclidean. We also
+    examine robustness of the method under a linear model. A technique to
+    estimate missing values is also given.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Mardia
+      given: K. V.
+  container-title: Communications in Statistics - Theory and Methods
+  DOI: 10.1080/03610927808827707
+  ISSN: 0361-0926
+  issue: '13'
+  issued:
+    - year: 1978
+      month: 1
+      day: 1
+  note: '_eprint: https://doi.org/10.1080/03610927808827707'
+  page: 1233-1241
+  publisher: Taylor & Francis
+  source: Taylor and Francis+NEJM
+  title: Some properties of clasical multi-dimesional scaling
+  type: article-journal
+  URL: https://doi.org/10.1080/03610927808827707
+  volume: '7'
+
+- id: MeetChallengeInterdisciplinary2016
+  accessed:
+    - year: 2016
+      month: 6
+      day: 30
+  container-title: Nature
+  DOI: 10.1038/534589b
+  ISSN: 0028-0836, 1476-4687
+  issue: '7609'
+  issued:
+    - year: 2016
+      month: 6
+      day: 29
+  page: 589-590
+  source: CrossRef
+  title: Meet the challenge of interdisciplinary science
+  type: article-journal
+  URL: http://www.nature.com/doifinder/10.1038/534589b
+  volume: '534'
+
+- id: MingersReviewTheoryPractice2015
+  accessed:
+    - year: 2016
+      month: 2
+      day: 9
+  author:
+    - family: Mingers
+      given: John
+    - family: Leydesdorff
+      given: Loet
+  container-title: European Journal of Operational Research
+  DOI: 10.1016/j.ejor.2015.04.002
+  ISSN: '03772217'
+  issue: '1'
+  issued:
+    - year: 2015
+      month: 10
+  language: en
+  page: 1-19
+  source: CrossRef
+  title: A review of theory and practice in scientometrics
+  type: article-journal
+  URL: http://linkinghub.elsevier.com/retrieve/pii/S037722171500274X
+  volume: '246'
+
+- id: NationalAcademyofSciencesFacilitatingInterdisciplinaryResearch2004
+  abstract: >-
+    Download a PDF of "Facilitating Interdisciplinary Research" by the National
+    Academy of Sciences, National Academy of Engineering, and Institute of
+    Medicine for free.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 20
+  author:
+    - literal: National Academy of Sciences
+    - literal: National Academy of Engineering
+    - family: Medicine
+      given: and Institute
+      dropping-particle: of
+  DOI: 10.17226/11153
+  ISBN: 978-0-309-09435-1
+  issued:
+    - year: 2004
+      month: 11
+      day: 19
+  language: en
+  source: www.nap.edu
+  title: Facilitating Interdisciplinary Research
+  type: book
+  URL: https://www.nap.edu/catalog/11153/facilitating-interdisciplinary-research
+
+- id: NeurathOrchestrationSciencesEncyclopedism1946
+  author:
+    - family: Neurath
+      given: Otto
+  container-title: Philosophy and Phenomenological Research
+  container-title-short: Phil Phenom Res
+  issue: '4'
+  issued:
+    - year: 1946
+  page: 496-508
+  title: The Orchestration of the Sciences by the Encyclopedism of Logical Empiricism
+  type: article-journal
+  URL: http://www.jstor.org/pss/2103098
+  volume: '6'
+
+- id: NeurathUniversalJargonTerminology1983
+  author:
+    - family: Neurath
+      given: Otto
+  container-title: Philosophical papers, 1913-1946‎
+  event-place: Dordrecht-Holland
+  issued:
+    - year: 1983
+  number-of-volumes: '21'
+  page: 213-229
+  publisher: D. Reidl Publishing Company
+  publisher-place: Dordrecht-Holland
+  title: Universal jargon and terminology
+  type: chapter
+
+- id: NicholsTopicModelApproach2014
+  abstract: >-
+    As the National Science Foundation (NSF) implements new cross-cutting
+    initiatives and programs, interest in assessing the success of these
+    experiments in fostering interdisciplinarity grows. A primary challenge in
+    measuring interdisciplinarity is identifying and bounding the discrete
+    disciplines that comprise interdisciplinary work. Using statistical
+    text-mining techniques to extract topic bins, the NSF recently developed a
+    topic map of all of their awards issued between 2000 and 2011. These new
+    data provide a novel means for measuring interdisciplinarity by assessing
+    the language or content of award proposals. Using the Directorate for
+    Social, Behavioral, and Economic Sciences as a case study and drawing on the
+    new topic model of the NSF’s awards, this paper explores new methods for
+    quantifying interdisciplinarity in the NSF portfolio.
+  accessed:
+    - year: 2019
+      month: 5
+      day: 14
+  author:
+    - family: Nichols
+      given: Leah G.
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-014-1319-2
+  ISSN: 1588-2861
+  issue: '3'
+  issued:
+    - year: 2014
+      month: 9
+      day: 1
+  language: en
+  page: 741-754
+  source: Springer Link
+  title: >-
+    A topic model approach to measuring interdisciplinarity at the National
+    Science Foundation
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-014-1319-2
+  volume: '100'
+
+- id: ORourkePhilosophicalInterventionCrossdisciplinary2012
+  author:
+    - family: O'Rourke
+      given: Michael
+    - family: Crowley
+      given: StephenJ
+  container-title: Synthese
+  container-title-short: Synthese
+  DOI: 10.1007/s11229-012-0175-y
+  issued:
+    - year: 2012
+  page: 1-18
+  title: >-
+    Philosophical intervention and cross-disciplinary science: the story of the
+    Toolbox Project
+  type: article-journal
+  URL: http://dx.doi.org/10.1007/s11229-012-0175-y
+
+- id: PaulTopicModelingResearch2009
+  accessed:
+    - year: 2019
+      month: 5
+      day: 14
+  author:
+    - family: Paul
+      given: Michael
+    - family: Girju
+      given: Roxana
+  container-title: Proceedings of the International Conference RANLP-2009
+  event-place: Borovets, Bulgaria
+  issued:
+    - year: 2009
+      month: 9
+  page: 337–342
+  publisher: Association for Computational Linguistics
+  publisher-place: Borovets, Bulgaria
+  source: ACLWeb
+  title: 'Topic Modeling of Research Fields: An Interdisciplinary Perspective'
+  title-short: Topic Modeling of Research Fields
+  type: paper-conference
+  URL: https://www.aclweb.org/anthology/R09-1061
+
+- id: PolyakovDoesAcademicCollaboration2017
+  abstract: >-
+    In this paper, we analyse the effects of different types of formal
+    collaboration and research topics on research impact of academic articles in
+    the area of agricultural, resource, environmental, and ecological economics.
+    The research impact is measured by the number of times an article has been
+    cited each year since publication. The topics within the area of research
+    are modelled using latent semantic analysis. We distinguish between the
+    effect of institutional, national, and international collaboration. We use
+    statistical models for count data and control for the impacts of journals,
+    publication year, and years since publication. We find that, holding other
+    factors constant, collaboration in the form of co-authorship increases
+    research impact. The effect of inter-institutional collaboration within same
+    country is similar to the effect of collaboration within same institution.
+    However, international collaboration results in additional increase in
+    impact. We find that the topic of a paper substantially influences number of
+    citations and identified which topics are associated with greater impact.
+    The effects of different types of collaboration on citations also vary
+    across topics.
+  accessed:
+    - year: 2017
+      month: 11
+      day: 6
+  author:
+    - family: Polyakov
+      given: Maksym
+    - family: Polyakov
+      given: Serhiy
+    - family: Iftekhar
+      given: Md Sayed
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-017-2523-7
+  ISSN: 0138-9130, 1588-2861
+  issued:
+    - year: 2017
+      month: 11
+      day: 6
+  language: en
+  page: 1-21
+  source: link-springer-com.proxy1.lib.uwo.ca
+  title: >-
+    Does academic collaboration equally benefit impact of research across
+    topics? The case of agricultural, resource, environmental and ecological
+    economics
+  title-short: >-
+    Does academic collaboration equally benefit impact of research across
+    topics?
+  type: article-journal
+  URL: >-
+    https://link-springer-com.proxy1.lib.uwo.ca/article/10.1007/s11192-017-2523-7
+
+- id: PonomariovInfluencingScientistsCollaboration2010
+  abstract: >-
+    This paper analyzes the effect of university research centers on the
+    productivity and collaboration patterns of university faculty. University
+    research centers are an important subject for policy analysis insofar that
+    they have become the predominant policy response to scientific and technical
+    demands that have not been met by extant institutions, including academic
+    departments, private firms, and government laboratories. Specifically, these
+    centers aim to organize researchers from across the disciplines and sectors
+    which, collectively as a research unit, possess the scientific and technical
+    capacity relevant to scientific and technical goals of the sponsoring
+    agencies. In this paper, we measure the productivity and collaboration
+    patterns of university researchers affiliated with a relatively large-scale
+    and “mature” university research center to discern the effects, if any, of
+    the center mechanism on individual scientists and engineers. Based on an
+    analysis of longitudinal bibliometric data, the results from this case study
+    demonstrate affiliation with the center to be effective at enhancing overall
+    productivity as well as at facilitating cross-discipline, cross-sector, and
+    inter-institutional productivity and collaborations.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Ponomariov
+      given: Branco L.
+    - family: Boardman
+      given: P. Craig
+  collection-title: Special Section on Government as Entrepreneur
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2010.02.013
+  ISSN: 0048-7333
+  issue: '5'
+  issued:
+    - year: 2010
+      month: 6
+      day: 1
+  page: 613-624
+  source: ScienceDirect
+  title: >-
+    Influencing scientists’ collaboration and productivity patterns through new
+    institutions: University research centers and scientific and technical human
+    capital
+  title-short: >-
+    Influencing scientists’ collaboration and productivity patterns through new
+    institutions
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0048733310000612
+  volume: '39'
+
+- id: PorterInterdisciplinaryResearchMeaning2006
+  abstract: >-
+    Abstract.  Recognizing prior research and reflection, we offer a definition
+    of interdisciplinary research (IDR) that focuses on integration of concepts,
+    techniq
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Porter
+      given: Alan L.
+    - family: Roessner
+      given: J. David
+    - family: Cohen
+      given: Alex S.
+    - family: Perreault
+      given: Marty
+  container-title: Research Evaluation
+  container-title-short: Res Eval
+  DOI: 10.3152/147154406781775841
+  ISSN: 0958-2029
+  issue: '3'
+  issued:
+    - year: 2006
+      month: 12
+      day: 1
+  language: en
+  page: 187-195
+  source: academic.oup.com
+  title: 'Interdisciplinary research: meaning, metrics and nurture'
+  title-short: Interdisciplinary research
+  type: article-journal
+  URL: https://academic.oup.com/rev/article/15/3/187/1584304
+  volume: '15'
+
+- id: PorterMeasuringResearcherInterdisciplinarity2007
+  abstract: >-
+    We offer two metrics that together help gauge how interdisciplinary a body
+    of research is. Both draw upon Web of Knowledge Subject Categories (SCs) as
+    key units of analysis. We have assembled two substantial Web of Knowledge
+    samples from which to determine how closely individual SCs relate to each
+    other. “Integration” measures the extent to which a research article cites
+    diverse SCs. “Specialization” considers the spread of SCs in which the body
+    of research (e.g., the work of a given author in a specified time period) is
+    published. Pilot results for a sample of researchers show a surprising
+    degree of interdisciplinarity.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 21
+  author:
+    - family: Porter
+      given: Alan L.
+    - family: Cohen
+      given: Alex S.
+    - family: Roessner
+      given: J. David
+    - family: Perreault
+      given: Marty
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-007-1700-5
+  ISSN: 0138-9130, 1588-2861
+  issue: '1'
+  issued:
+    - year: 2007
+      month: 7
+      day: 1
+  language: en
+  page: 117-147
+  source: link.springer.com
+  title: Measuring researcher interdisciplinarity
+  type: article-journal
+  URL: https://link.springer.com/article/10.1007/s11192-007-1700-5
+  volume: '72'
+
+- id: PorterScienceBecomingMore2009
+  abstract: >-
+    In the last two decades there have been studies claiming that science is
+    becoming ever more interdisciplinary. However, the evidence has been
+    anecdotal or partial. Here we investigate how the degree of
+    interdisciplinarity has changed between 1975 and 2005 over six research
+    domains. To do so, we compute well-established bibliometric indicators
+    alongside a new index of interdisciplinarity (Integration score, aka
+    Rao-Stirling diversity) and a science mapping visualization method. The
+    results attest to notable changes in research practices over this 30 year
+    period, namely major increases in number of cited disciplines and references
+    per article (both show about 50% growth), and co-authors per article (about
+    75% growth). However, the new index of interdisciplinarity only shows a
+    modest increase (mostly around 5% growth). Science maps hint that this is
+    because the distribution of citations of an article remains mainly within
+    neighboring disciplinary areas. These findings suggest that science is
+    indeed becoming more interdisciplinary, but in small steps — drawing mainly
+    from neighboring fields and only modestly increasing the connections to
+    distant cognitive areas. The combination of metrics and overlay science maps
+    provides general benchmarks for future studies of interdisciplinary research
+    characteristics.
+  accessed:
+    - year: 2018
+      month: 2
+      day: 8
+  author:
+    - family: Porter
+      given: Alan L.
+    - family: Rafols
+      given: Ismael
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-008-2197-2
+  ISSN: 0138-9130, 1588-2861
+  issue: '3'
+  issued:
+    - year: 2009
+      month: 12
+      day: 1
+  language: en
+  page: '719'
+  source: link.springer.com
+  title: >-
+    Is science becoming more interdisciplinary? Measuring and mapping six
+    research fields over time
+  title-short: Is science becoming more interdisciplinary?
+  type: article-journal
+  URL: https://link.springer.com/article/10.1007/s11192-008-2197-2
+  volume: '81'
+
+- id: PotochnikIdealizationAimsScience2017
+  abstract: >-
+    Science is the study of our world, as it is in its messy reality.
+    Nonetheless, science requires idealization to function—if we are to attempt
+    to understand the world, we have to find ways to reduce its complexity. 
+    Idealization and the Aims of Science shows just how crucial idealization is
+    to science and why it matters. Beginning with the acknowledgment of our
+    status as limited human agents trying to make sense of an exceedingly
+    complex world, Angela Potochnik moves on to explain how science aims to
+    depict and make use of causal patterns—a project that makes essential use of
+    idealization. She offers case studies from a number of branches of science
+    to demonstrate the ubiquity of idealization, shows how causal patterns are
+    used to develop scientific explanations, and describes how the necessarily
+    imperfect connection between science and truth leads to researchers’ values
+    influencing their findings. The resulting book is a tour de force, a
+    synthesis of the study of idealization that also offers countless new
+    insights and avenues for future exploration.
+  author:
+    - family: Potochnik
+      given: Angela
+  ISBN: 978-0-226-50719-4
+  issued:
+    - year: 2017
+      month: 11
+      day: 17
+  language: en
+  number-of-pages: '263'
+  publisher: University of Chicago Press
+  source: Google Books
+  title: Idealization and the Aims of Science
+  type: book
+
+- id: RCoreTeamLanguageEnvironmentStatistical2018
+  accessed:
+    - year: 2018
+      month: 8
+      day: 27
+  author:
+    - literal: R Core Team
+  issued:
+    - year: 2018
+  publisher: R Foundation for Statistical Computing
+  title: 'R: A Language and Environment for Statistical                   Computing'
+  type: article
+  URL: https://www.r-project.org/
+
+- id: RehsStructuralTopicModel2020
+  abstract: >-
+    The detection of differences or similarities in large numbers of scientific
+    publications is an open problem in scientometric research. In this paper we
+    therefore develop and apply a machine learning approach based on structural
+    topic modelling in combination with cosine similarity and a linear
+    regression framework in order to identify differences in dissertation titles
+    written at East and West German universities before and after German
+    reunification. German reunification and its surrounding time period is used
+    because it provides a structure with both minor and major differences in
+    research topics that could be detected by our approach. Our dataset is based
+    on dissertation titles in economics and business administration and
+    chemistry from 1980 to 2010. We use university affiliation and year of the
+    dissertation to train a structural topic model and then test the model on a
+    set of unseen dissertation titles. Subsequently, we compare the resulting
+    topic distribution of each title to every other title with cosine
+    similarity. The cosine similarities and the regional and temporal origin of
+    the dissertation titles they come from are then used in a linear regression
+    approach. Our results on research topics in economics and business
+    administration suggest substantial differences between East and West Germany
+    before the reunification and a rapid conformation thereafter. In chemistry
+    we observe minor differences between East and West before the reunification
+    and a slightly increased similarity thereafter.
+  accessed:
+    - year: 2021
+      month: 2
+      day: 16
+  author:
+    - family: Rehs
+      given: Andreas
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-020-03640-0
+  ISSN: 1588-2861
+  issue: '2'
+  issued:
+    - year: 2020
+      month: 11
+      day: 1
+  language: en
+  page: 1229-1251
+  source: Springer Link
+  title: >-
+    A structural topic model approach to scientific reorientation of economics
+    and chemistry after German reunification
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-020-03640-0
+  volume: '125'
+
+- id: RobertsStmEstimationStructural2018
+  abstract: >-
+    The Structural Topic Model (STM) allows researchers to estimate topic models
+    with document-level covariates. The package also includes tools for model
+    selection, visualization, and estimation of topic-covariate regressions.
+    Methods developed in Roberts et al (2014) <doi:10.1111/ajps.12103> and
+    Roberts et al (2016) <doi:10.1080/01621459.2016.1141684>.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 26
+  author:
+    - family: Roberts
+      given: Margaret
+    - family: Stewart
+      given: Brandon
+    - family: Tingley
+      given: Dustin
+    - family: Benoit
+      given: Kenneth
+  issued:
+    - year: 2018
+      month: 1
+      day: 28
+  source: R-Packages
+  title: 'stm: Estimation of the Structural Topic Model'
+  title-short: stm
+  type: book
+  URL: https://CRAN.R-project.org/package=stm
+  version: 1.3.3
+
+- id: RobertsStmPackageStructural
+  abstract: >-
+    This paper demonstrates how to use the Structural Topic Model stm R package.
+    The Structural Topic Model allows researchers to ﬂexibly estimate a topic
+    model that includes document-level metadata. Estimation is accomplished
+    through a fast variational approximation. The stm package provides many
+    useful features, including rich ways to explore topics, estimate
+    uncertainty, and visualize quantities of interest.
+  author:
+    - family: Roberts
+      given: Margaret E
+    - family: Stewart
+      given: Brandon M
+    - family: Tingley
+      given: Dustin
+  container-title: Journal of Statistical Software
+  language: en
+  page: '41'
+  source: Zotero
+  title: 'stm: R Package for Structural Topic Models'
+  type: article-journal
+
+- id: RobertsStructuralTopicModels2014
+  accessed:
+    - year: 2018
+      month: 10
+      day: 17
+  author:
+    - family: Roberts
+      given: Margaret E.
+    - family: Stewart
+      given: Brandon M.
+    - family: Tingley
+      given: Dustin
+    - family: Lucas
+      given: Christopher
+    - family: Leder-Luis
+      given: Jetson
+    - family: Gadarian
+      given: Shana Kushner
+    - family: Albertson
+      given: Bethany
+    - family: Rand
+      given: David G.
+  container-title: American Journal of Political Science
+  DOI: 10.1111/ajps.12103
+  ISSN: '00925853'
+  issue: '4'
+  issued:
+    - year: 2014
+      month: 10
+  language: en
+  page: 1064-1082
+  source: Crossref
+  title: Structural Topic Models for Open-Ended Survey Responses
+  title-short: Structural Topic Models for Open-Ended Survey Responses
+  type: article-journal
+  URL: http://doi.wiley.com/10.1111/ajps.12103
+  volume: '58'
+
+- id: SaCharacteristicsOrganizationAdministrative2008
+  abstract: >-
+    This paper examines the characteristics and organizational issues associated
+    with university-based research centers. The first section sketches general
+    characteristics and functions of centers. The second section examines major
+    issues concerning the organization of centers, including funding and
+    sustainability, center autonomy, and relations with academic units.
+    Implications for central administration are considered.
+  author:
+    - family: Sá
+      given: Creso M
+  container-title: Journal of Research Administration
+  issue: '1'
+  issued:
+    - year: 2008
+  language: en
+  page: 32-40
+  source: Zotero
+  title: Characteristics, Organization, and Administrative Implications
+  type: article-journal
+  volume: '39'
+
+- id: SaInterdisciplinaryStrategiesResearch2008
+  abstract: >-
+    In the context of increasing support for interdisciplinary modes of
+    research, many in the policy, scientific, and academic communities propose
+    that universities should change structurally to reduce the barriers to
+    investigation that involves researchers from multiple disciplines. This
+    paper examines ‘interdisciplinary strategies’ in U.S. research
+    universities—deliberate efforts to spur collaborative research across
+    traditional departmental and disciplinary boundaries, including the creation
+    and adaptation of university policies, practices, and structures. It
+    identifies and analyzes the use of incentive grants to initiate new
+    interdisciplinary units, the establishment of ‘campus-wide institutes’ that
+    steer campus investments in interdisciplinary areas, and new modes of
+    faculty hiring and evaluation. Illustrative examples are provided, and the
+    implications of these strategies are discussed.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Sá
+      given: Creso M.
+  container-title: Higher Education
+  container-title-short: High Educ
+  DOI: 10.1007/s10734-007-9073-5
+  ISSN: 1573-174X
+  issue: '5'
+  issued:
+    - year: 2008
+      month: 5
+      day: 1
+  language: en
+  page: 537-552
+  source: Springer Link
+  title: ‘Interdisciplinary strategies’ in U.S. research universities
+  type: article-journal
+  URL: https://doi.org/10.1007/s10734-007-9073-5
+  volume: '55'
+
+- id: SaLocalGlobalOrganized2011
+  abstract: >-
+    Organized research units—also known as centers, institutes, and
+    laboratories—are increasingly prominent in the university. This paper
+    examines how ORUs emerge to promote global agendas and international
+    collaborations in an academic health center in North America. The roles
+    these units play in helping researchers work across institutional and
+    national boundaries are identified and analyzed. The concept of boundary
+    organizations is employed to explain the features of ORUs and the challenges
+    they face. Findings provide insight into how such units operate between
+    local and global mandates, interest groups, and sources of influence,
+    helping to extend university research into the global space.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Sá
+      given: Creso M.
+    - family: Oleksiyenko
+      given: Anatoly
+  container-title: Higher Education
+  container-title-short: High Educ
+  DOI: 10.1007/s10734-010-9393-8
+  ISSN: 1573-174X
+  issue: '3'
+  issued:
+    - year: 2011
+      month: 9
+      day: 1
+  language: en
+  page: 367-382
+  source: Springer Link
+  title: >-
+    Between the local and the global: organized research units and international
+    collaborations in the health sciences
+  title-short: Between the local and the global
+  type: article-journal
+  URL: https://doi.org/10.1007/s10734-010-9393-8
+  volume: '62'
+
+- id: SommerServingTwoMasters1994
+  abstract: >-
+    Faculty at research universities face the challenge of doing research that
+    both interests consumer agencies and possesses academic credibility. The
+    Center for Consumer Research at the University of California, Davis, evolved
+    an approach for doing this based on ecological methodology, an action
+    research model, multi-channel dissemination, and post-research evaluation.
+    The lessons learned during the 16-year history of this nondepartmental
+    center should be of interest to consumer researchers.
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Sommer
+      given: Robert
+  container-title: Journal of Consumer Affairs
+  DOI: 10.1111/j.1745-6606.1994.tb00821.x
+  ISSN: 1745-6606
+  issue: '1'
+  issued:
+    - year: 1994
+  language: en
+  page: 170-186
+  source: Wiley Online Library
+  title: >-
+    Serving Two Masters: Center for Consumer Research at the University of
+    California, Davis, 1976-1992
+  title-short: Serving Two Masters
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1111/j.1745-6606.1994.tb00821.x
+  volume: '28'
+
+- id: SpaCyIndustrialstrengthNatural2018
+  accessed:
+    - year: 2018
+      month: 3
+      day: 14
+  genre: Python
+  issued:
+    - year: 2018
+      month: 3
+      day: 14
+  original-date:
+    - year: 2014
+      month: 7
+      day: 3
+  publisher: Explosion AI
+  source: GitHub
+  title: >-
+    spaCy: 💫 Industrial-strength Natural Language Processing (NLP) with Python
+    and Cython
+  title-short: spaCy
+  type: book
+  URL: https://github.com/explosion/spaCy
+  version: 2.0.3
+
+- id: StahlerCentersInstitutesResearch1994
+  accessed:
+    - year: 2019
+      month: 6
+      day: 19
+  author:
+    - family: Stahler
+      given: Gerald J.
+    - family: Tash
+      given: William R.
+  container-title: The Journal of Higher Education
+  container-title-short: The Journal of Higher Education
+  DOI: 10.1080/00221546.1994.11778519
+  ISSN: 0022-1546, 1538-4640
+  issue: '5'
+  issued:
+    - year: 1994
+      month: 9
+  language: en
+  page: 540-554
+  source: DOI.org (Crossref)
+  title: >-
+    Centers and Institutes in the Research University: Issues, Problems, and
+    Prospects
+  title-short: Centers and Institutes in the Research University
+  type: article-journal
+  URL: https://www.tandfonline.com/doi/full/10.1080/00221546.1994.11778519
+  volume: '65'
+
+- id: StarInstitutionalEcologyTranslations1989
+  abstract: >-
+    Scientific work is heterogeneous, requiring many different actors and
+    viewpoints. It also requires cooperation. The two create tension between
+    divergent viewpoints and the need for generalizable findings. We present a
+    model of how one group of actors managed this tension. It draws on the work
+    of amateurs, professionals, administrators and others connected to the
+    Museum of Vertebrate Zoology at the University of California, Berkeley,
+    during its early years. Extending the Latour-Callon model of interessement,
+    two major activities are central for translating between viewpoints:
+    standardization of methods, and the development of `boundary objects'.
+    Boundary objects are both adaptable to different viewpoints and robust
+    enough to maintain identity across them. We distinguish four types of
+    boundary objects: repositories, ideal types, coincident boundaries and
+    standardized forms.
+  accessed:
+    - year: 2015
+      month: 12
+      day: 7
+  author:
+    - family: Star
+      given: Susan Leigh
+    - family: Griesemer
+      given: James R.
+  container-title: Social Studies of Science
+  container-title-short: Social Studies of Science
+  DOI: 10.1177/030631289019003001
+  ISSN: 0306-3127, 1460-3659
+  issue: '3'
+  issued:
+    - year: 1989
+      month: 8
+      day: 1
+  language: en
+  page: 387-420
+  source: sss.sagepub.com
+  title: >-
+    Institutional Ecology, `Translations' and Boundary Objects: Amateurs and
+    Professionals in Berkeley's Museum of Vertebrate Zoology, 1907-39
+  title-short: Institutional Ecology, `Translations' and Boundary Objects
+  type: article-journal
+  URL: http://sss.sagepub.com/content/19/3/387
+  volume: '19'
+
+- id: SymondsGenderDifferencesPublication2006
+  abstract: >-
+    We examined the publication records of a cohort of 168 life scientists in
+    the field of ecology and evolutionary biology to assess gender differences
+    in research performance. Clear discrepancies in publication rate between men
+    and women appear very early in their careers and this has consequences for
+    the subsequent citation of their work. We show that a recently proposed
+    index designed to rank scientists fairly is in fact strongly biased against
+    female researchers, and advocate a modified index to assess men and women on
+    a more equitable basis.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Symonds
+      given: Matthew R. E.
+    - family: Gemmell
+      given: Neil J.
+    - family: Braisher
+      given: Tamsin L.
+    - family: Gorringe
+      given: Kylie L.
+    - family: Elgar
+      given: Mark A.
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0000127
+  ISSN: 1932-6203
+  issue: '1'
+  issued:
+    - year: 2006
+      month: 12
+      day: 27
+  language: en
+  page: e127
+  publisher: Public Library of Science
+  source: PLoS Journals
+  title: >-
+    Gender Differences in Publication Output: Towards an Unbiased Metric of
+    Research Performance
+  title-short: Gender Differences in Publication Output
+  type: article-journal
+  URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0000127
+  volume: '1'
+
+- id: TaddyEstimationSelectionTopic2012
+  abstract: >-
+    This article describes posterior maximization for topic models, identifying
+    computational and conceptual gains from inference under a non-standard
+    parametrization. We then show that ﬁtted parameters can be used as the basis
+    for a novel approach to marginal likelihood estimation, via block-diagonal
+    approximation to the information matrix, that facilitates choosing the
+    number of latent topics. This likelihood-based model selection is
+    complemented with a goodness-of-ﬁt analysis built around estimated residual
+    dispersion. Examples are provided to illustrate model selection as well as
+    to compare our estimation against standard alternative techniques.
+  author:
+    - family: Taddy
+      given: Matthew A
+  container-title: >-
+    Proceedings of the 15th International Conference on Artificial Intelligence
+    and Statistics (AISTATS)
+  event-place: La Palma, Canary Islands
+  issued:
+    - year: 2012
+  language: en
+  page: '10'
+  publisher-place: La Palma, Canary Islands
+  source: Zotero
+  title: On Estimation and Selection for Topic Models
+  type: paper-conference
+
+- id: TaskinCollaborativeInterdisciplinaryAstrobiology2015
+  abstract: >-
+    This study aims to undertake a bibliometric investigation of the NASA
+    Astrobiology Institute (NAI) funded research that was published between 2008
+    and 2012 (by teams of Cooperative Agreement Notice Four and Five). For this
+    purpose, the study creates an inventory of publications co-authored through
+    NAI funding and investigates journal preferences, international and
+    institutional collaboration, and citation behaviors of researchers to reach
+    a better understanding of interdisciplinary and collaborative astrobiology
+    research funded by the NAI. Using the NAI annual reports, 1210 peer-reviewed
+    publications are analyzed. The following conclusions are drawn: (1) NAI
+    researchers prefer publishing in high-impact multidisciplinary journals. (2)
+    Astronomy and astrophysics are the most preferred categories to publish
+    based on Web of Science subject categories. (3) NAI is indeed a virtual
+    institution; researchers collaborate with other researchers outside their
+    organization and in some cases outside the U.S. (4) There are prominent
+    scholars in the NAI co-author network but none of them dominates
+    astrobiology.
+  accessed:
+    - year: 2019
+      month: 3
+      day: 14
+  author:
+    - family: Taşkın
+      given: Zehra
+    - family: Aydinoglu
+      given: Arsev U.
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-015-1576-8
+  ISSN: 1588-2861
+  issue: '3'
+  issued:
+    - year: 2015
+      month: 6
+      day: 1
+  language: en
+  page: 1003-1022
+  source: Springer Link
+  title: >-
+    Collaborative interdisciplinary astrobiology research: a bibliometric study
+    of the NASA Astrobiology Institute
+  title-short: Collaborative interdisciplinary astrobiology research
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-015-1576-8
+  volume: '103'
+
+- id: UzziAtypicalCombinationsScientific2013
+  abstract: >-
+    Making an Impact
+
+    How big a role do unconventional combinations of existing knowledge play in
+    the impact of a scientific paper? To examine this question, Uzzi et al. (p.
+    468) studied 17.9 million research articles across five decades of the Web
+    of Science, the largest repository of scientific research. Scientific work
+    typically appeared to draw on highly conventional, familiar mixtures of
+    knowledge. The highest-impact papers were not the ones that had the greatest
+    novelty, but had a combination of novelty and otherwise conventional
+    combinations of prior work.
+
+    Novelty is an essential feature of creative ideas, yet the building blocks
+    of new ideas are often embodied in existing knowledge. From this
+    perspective, balancing atypical knowledge with conventional knowledge may be
+    critical to the link between innovativeness and impact. Our analysis of 17.9
+    million papers spanning all scientific fields suggests that science follows
+    a nearly universal pattern: The highest-impact science is primarily grounded
+    in exceptionally conventional combinations of prior work yet simultaneously
+    features an intrusion of unusual combinations. Papers of this type were
+    twice as likely to be highly cited works. Novel combinations of prior work
+    are rare, yet teams are 37.7% more likely than solo authors to insert novel
+    combinations into familiar knowledge domains.
+
+    Highly cited work is simultaneously conventional and unconventional.
+
+    Highly cited work is simultaneously conventional and unconventional.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 7
+  author:
+    - family: Uzzi
+      given: Brian
+    - family: Mukherjee
+      given: Satyam
+    - family: Stringer
+      given: Michael
+    - family: Jones
+      given: Ben
+  container-title: Science
+  DOI: 10.1126/science.1240474
+  ISSN: 0036-8075, 1095-9203
+  issue: '6157'
+  issued:
+    - year: 2013
+      month: 10
+      day: 25
+  language: en
+  page: 468-472
+  PMID: '24159044'
+  source: science.sciencemag.org
+  title: Atypical Combinations and Scientific Impact
+  type: article-journal
+  URL: http://science.sciencemag.org/content/342/6157/468
+  volume: '342'
+
+- id: vanArensbergenGenderDifferencesScientific2012
+  abstract: >-
+    There is substantial literature on research performance differences between
+    male and female researchers, and its explanation. Using publication records
+    of 852 social scientists, we show that performance differences indeed exist.
+    However, our case study suggests that in the younger generation of
+    researchers these have disappeared. If performance differences exist at all
+    in our case, young female researchers outperform young male researchers. The
+    trend in developed societies, that women increasingly outperform men in all
+    levels of education, is also becoming effective in the science system.
+  accessed:
+    - year: 2021
+      month: 1
+      day: 29
+  author:
+    - family: Arensbergen
+      given: Pleun
+      non-dropping-particle: van
+    - family: Weijden
+      given: Inge
+      non-dropping-particle: van der
+    - family: Besselaar
+      given: Peter
+      non-dropping-particle: van den
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-012-0712-y
+  ISSN: 1588-2861
+  issue: '3'
+  issued:
+    - year: 2012
+      month: 12
+      day: 1
+  language: en
+  page: 857-868
+  source: Springer Link
+  title: 'Gender differences in scientific productivity: a persisting phenomenon?'
+  title-short: Gender differences in scientific productivity
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-012-0712-y
+  volume: '93'
+
+- id: VeldenComparisonTopicExtraction2017
+  abstract: >-
+    This is the last paper in the Synthesis section of this special issue on
+    ‘Same Data, Different Results’. We first provide a framework of how to
+    describe and distinguish approaches to topic extraction
+  accessed:
+    - year: 2017
+      month: 3
+      day: 8
+  author:
+    - family: Velden
+      given: Theresa
+    - family: Boyack
+      given: Kevin W.
+    - family: Gläser
+      given: Jochen
+    - family: Koopman
+      given: Rob
+    - family: Scharnhorst
+      given: Andrea
+    - family: Wang
+      given: Shenghui
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-017-2306-1
+  ISSN: 0138-9130, 1588-2861
+  issued:
+    - year: 2017
+      month: 3
+      day: 7
+  language: en
+  page: 1-53
+  source: link-springer-com.proxy1.lib.uwo.ca
+  title: Comparison of topic extraction approaches and their results
+  type: article-journal
+  URL: >-
+    https://link-springer-com.proxy1.lib.uwo.ca/article/10.1007/s11192-017-2306-1
+
+- id: WagnerApproachesUnderstandingMeasuring2011
+  archive: Scopus
+  author:
+    - family: Wagner
+      given: C.S.
+    - family: Roessner
+      given: J.D.
+    - family: Bobb
+      given: K.
+    - family: Klein
+      given: J.T.
+    - family: Boyack
+      given: K.W.
+    - family: Keyton
+      given: J.
+    - family: Rafols
+      given: I.
+    - family: Börner
+      given: K.
+  container-title: Journal of Informetrics
+  DOI: 10.1016/j.joi.2010.06.004
+  issue: '1'
+  issued:
+    - year: 2011
+  page: 14-26
+  title: >-
+    Approaches to understanding and measuring interdisciplinary scientific
+    research (IDR): A review of the literature
+  type: article-journal
+  URL: >-
+    https://www.scopus.com/inward/record.uri?eid=2-s2.0-78650518256&doi=10.1016%2fj.joi.2010.06.004&partnerID=40&md5=c4fb5f3ab68b2dbd01f9723259b0c053
+  volume: '5'
+
+- id: WaltmanNewMethodologyConstructing2012
+  abstract: >-
+    Classifying journals or publications into research areas is an essential
+    element of many bibliometric analyses. Classification usually takes place at
+    the level of journals, where the Web of Science subject categories are the
+    most popular classification system. However, journal?level classification
+    systems have two important limitations: They offer only a limited amount of
+    detail, and they have difficulties with multidisciplinary journals. To avoid
+    these limitations, we introduce a new methodology for constructing
+    classification systems at the level of individual publications. In the
+    proposed methodology, publications are clustered into research areas based
+    on citation relations. The methodology is able to deal with very large
+    numbers of publications. We present an application in which a classification
+    system is produced that includes almost 10 million publications. Based on an
+    extensive analysis of this classification system, we discuss the strengths
+    and the limitations of the proposed methodology. Important strengths are the
+    transparency and relative simplicity of the methodology and its fairly
+    modest computing and memory requirements. The main limitation of the
+    methodology is its exclusive reliance on direct citation relations between
+    publications. The accuracy of the methodology can probably be increased by
+    also taking into account other types of relations?for instance, based on
+    bibliographic coupling.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 23
+  author:
+    - family: Waltman
+      given: Ludo
+    - family: Eck
+      given: Nees Jan
+      non-dropping-particle: van
+  container-title: Journal of the American Society for Information Science and Technology
+  container-title-short: Journal of the American Society for Information Science and Technology
+  DOI: 10.1002/asi.22748
+  ISSN: 1532-2882
+  issue: '12'
+  issued:
+    - year: 2012
+      month: 11
+      day: 20
+  page: 2378-2392
+  source: onlinelibrary.wiley.com (Atypon)
+  title: >-
+    A new methodology for constructing a publication‐level classification system
+    of science
+  type: article-journal
+  URL: https://onlinelibrary.wiley.com/doi/abs/10.1002/asi.22748
+  volume: '63'
+
+- id: WaltmanSmartLocalMoving2013
+  abstract: >-
+    We introduce a new algorithm for modularity-based community detection in
+    large networks. The algorithm, which we refer to as a smart local moving
+    algorithm, takes advantage of a well-known local moving heuristic that is
+    also used by other algorithms. Compared with these other algorithms, our
+    proposed algorithm uses the local moving heuristic in a more sophisticated
+    way. Based on an analysis of a diverse set of networks, we show that our
+    smart local moving algorithm identifies community structures with higher
+    modularity values than other algorithms for large-scale modularity
+    optimization, among which the popular “Louvain algorithm”. The computational
+    efficiency of our algorithm makes it possible to perform community detection
+    in networks with tens of millions of nodes and hundreds of millions of
+    edges. Our smart local moving algorithm also performs well in small and
+    medium-sized networks. In short computing times, it identifies community
+    structures with modularity values equally high as, or almost as high as, the
+    highest values reported in the literature, and sometimes even higher than
+    the highest values found in the literature.
+  accessed:
+    - year: 2018
+      month: 3
+      day: 23
+  author:
+    - family: Waltman
+      given: Ludo
+    - family: Eck
+      given: Nees Jan
+      non-dropping-particle: van
+  container-title: The European Physical Journal B
+  container-title-short: Eur. Phys. J. B
+  DOI: 10.1140/epjb/e2013-40829-0
+  ISSN: 1434-6028, 1434-6036
+  issue: '11'
+  issued:
+    - year: 2013
+      month: 11
+      day: 1
+  language: en
+  page: '471'
+  source: link.springer.com
+  title: >-
+    A smart local moving algorithm for large-scale modularity-based community
+    detection
+  type: article-journal
+  URL: https://link.springer.com/article/10.1140/epjb/e2013-40829-0
+  volume: '86'
+
+- id: WangBiasNoveltyScience2017
+  abstract: >-
+    Research which explores unchartered waters has a high potential for major
+    impact but also carries a higher uncertainty of having impact. Such
+    explorative research is often described as taking a novel approach. This
+    study examines the complex relationship between pursuing a novel approach
+    and impact. Viewing scientific research as a combinatorial process, we
+    measure novelty in science by examining whether a published paper makes
+    first-time-ever combinations of referenced journals, taking into account the
+    difficulty of making such combinations. We apply this newly developed
+    measure of novelty to all Web of Science research articles published in 2001
+    across all scientific disciplines. We find that highly novel papers, defined
+    to be those that make more (distant) new combinations, deliver high gains to
+    science: they are more likely to be a top 1% highly cited paper in the long
+    run, to inspire follow-on highly cited research, and to be cited in a
+    broader set of disciplines and in disciplines that are more distant from
+    their “home” field. At the same time, novel research is also more risky,
+    reflected by a higher variance in its citation performance. We also find
+    strong evidence of delayed recognition of novel papers as novel papers are
+    less likely to be top cited when using short time-windows. In addition, we
+    find that novel research is significantly more highly cited in “foreign”
+    fields but not in their “home” field. Finally, novel papers are published in
+    journals with a lower Impact Factor, compared with non-novel papers, ceteris
+    paribus. These findings suggest that science policy, in particular funding
+    decisions which rely on bibliometric indicators based on short-term citation
+    counts and Journal Impact Factors, may be biased against “high risk/high
+    gain” novel research. The findings also caution against a mono-disciplinary
+    approach in peer review to assess the true value of novel research.
+  author:
+    - family: Wang
+      given: Jian
+    - family: Veugelers
+      given: Reinhilde
+    - family: Stephan
+      given: Paula
+  container-title: Research Policy
+  container-title-short: Research Policy
+  DOI: 10.1016/j.respol.2017.06.006
+  ISSN: 0048-7333
+  issue: '8'
+  issued:
+    - year: 2017
+      month: 10
+  page: 1416-1436
+  source: ScienceDirect
+  title: >-
+    Bias against novelty in science: A cautionary tale for users of bibliometric
+    indicators
+  title-short: Bias against novelty in science
+  type: article-journal
+  URL: http://www.sciencedirect.com/science/article/pii/S0048733317301038
+  volume: '46'
+
+- id: WickhamTidyverseEasilyInstall2017
+  abstract: >-
+    The 'tidyverse' is a set of packages that work in harmony because they share
+    common data representations and 'API' design. This package is designed to
+    make it easy to install and load multiple 'tidyverse' packages in a single
+    step. Learn more about the 'tidyverse' at <https://tidyverse.org>.
+  accessed:
+    - year: 2018
+      month: 8
+      day: 14
+  author:
+    - family: Wickham
+      given: Hadley
+    - family: RStudio
+      given: ''
+  issued:
+    - year: 2017
+      month: 11
+      day: 14
+  source: R-Packages
+  title: 'tidyverse: Easily Install and Load the ''Tidyverse'''
+  title-short: tidyverse
+  type: book
+  URL: https://CRAN.R-project.org/package=tidyverse
+  version: 1.2.1
+
+- id: ZossMappingInteractionsEvolving2012
+  abstract: >-
+    The Science of Science and Innovation Policy (SciSIP) program at the
+    National Science Foundation (NSF) supports research designed to advance the
+    scientific basis of science and innovation policy. The program was
+    established at NSF in 2005 in response to a call from Dr. John Marburger
+    III, then science advisor to the U.S. President, for a “science” of science
+    policy. As of January 2011, it has co-funded 162 awards that aim to develop,
+    improve, and expand data, analytical tools, and models that can be directly
+    applied in the science policy decision making process. The long-term goals
+    of the SciSIP program are to provide a scientifically rigorous and
+    quantitative basis for science policy and to establish an international
+    community of practice. The program has an active listserv that, as of
+    January 2011, has almost 700 members from academia, government, and
+    industry. This study analyzed all SciSIP awards (through January 2011) to
+    identify existing collaboration networks and co-funding relations between
+    SciSIP and other areas of science. In addition, listserv data was downloaded
+    and analyzed to derive complementary discourse information. Key results
+    include evidence of rich diversity in communication and funding networks and
+    effective strategies for interlinking researcher and science policy makers,
+    prompting discussion, and resource sharing.
+  accessed:
+    - year: 2019
+      month: 3
+      day: 14
+  author:
+    - family: Zoss
+      given: Angela M.
+    - family: Börner
+      given: Katy
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-011-0574-8
+  ISSN: 1588-2861
+  issue: '2'
+  issued:
+    - year: 2012
+      month: 5
+      day: 1
+  language: en
+  page: 631-644
+  source: Springer Link
+  title: >-
+    Mapping interactions within the evolving science of science and innovation
+    policy community
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-011-0574-8
+  volume: '91'
+...

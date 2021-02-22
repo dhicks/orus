@@ -1,9 +1,10 @@
 ---
-title:  "Productivity and interdisciplinary impacts of ORUs"
+title:  "Productivity and interdisciplinary impacts of Organized Research Units"
 author:  |
  | Daniel J. Hicks 
  | Data Science Initiative, UC Davis
-email: <hicks.daniel.j@gmail.com>
+ | Cognitive and Information Sciences, UC Merced
+ | <hicks.daniel.j@gmail.com>
 numbersections: true
 bibliography: oru_project.yaml
 header-includes: 
@@ -15,10 +16,9 @@ abstract: "Organized Research Units (ORUs) are non-departmental units utilized b
 
 <!-- https://www.mitpressjournals.org/journals/qss/sub -->
 
-*[TODO]*
-- cover letter
-
 \linenumbers
+
+keywords: Organized Research Unit; research evaluation; productivity impacts; interdisciplinarity; topic models
 
 # Introduction #
 
@@ -75,7 +75,8 @@ Research evaluation often focuses on measures such as publication counts, citati
 In this study, I examine three productivity impacts of the UC Davis ORUs.  Publication and citation counts are familiar measures of research productivity.  The third, coauthor count, is not usually used as a primary measure of productivity.  However, it is highly plausible that increased collaboration — and so an increased number of coauthors — leads at least to increased publication.  Treating this as a "problem," bibliometricians and sociologists of science have for at least 70 years deployed various "fractional" schemes for discounting individual authors' contributions to coauthored papers [@LindseyProductionCitationMeasures1980].  In this study, I do not view coauthorship as a "problem" to be solved with fractional counting, but instead as one potential mechanism by which ORUs might increase productivity.  That is, along with providing (or facilitating the provision of) research funds and other material resources, ORUs might serve an important network function, encouraging researchers to work together more than they would have otherwise.  I therefore include coauthor count as a potentially significant productivity impact.  
 
 
-### Discursive impacts ### \label{sec.discursive}
+### Discursive impacts ### 
+\label{sec.discursive}
 
 Evaluating the productivity impacts of an interdisciplinary research program or organizational unit is, methodologically and conceptually, essentially the same as evaluating a disciplinary program or organizational unit:  the same kinds of data will be collected and analyzed in the same way.  In addition, productivity impacts abstract from the content of research.  Counting publications doesn't consider what those publications are about.  
 
@@ -315,3 +316,6 @@ In addition, @BristerDisciplinaryCaptureEpistemological2016 notes that cross-dis
 All together, interdisciplinary research may be difficult, to the point of being highly impractical, without specific interventions or institutional designs to mitigate these logistical, conceptual, and political problems.  Even if successful interdisciplinary research can bring the epistemic and social benefits that it is supposed to, these may not be worth the costs required in particular cases.  So, all things considered, in particular cases multidisciplinarity might be preferable to interdisciplinarity.  
 
 
+# Acknowledgments #
+
+DJH's postdoctoral fellowship at UC Davis was funded by a gift to the university from Elsevier.  The funder had no influence on the design, data collection, analysis, or interpretation of this study. 

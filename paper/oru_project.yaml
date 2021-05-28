@@ -1010,7 +1010,7 @@ references:
   language: en
   page: 443-472
   source: pos.sagepub.com.proxy1.lib.uwo.ca
-  title: Economics Imperialism in Social Epistemology A Critical Assessment
+  title: 'Economics Imperialism in Social Epistemology: A Critical Assessment'
   type: article-journal
   URL: http://pos.sagepub.com/content/early/2016/02/03/0048393115625325
   volume: '46'
@@ -1638,6 +1638,7 @@ references:
   title: 'The National Robotics Initiative: A Five-Year Retrospective'
   title-short: The National Robotics Initiative
   type: article-journal
+  URL: https://ieeexplore.ieee.org/document/8762223
   volume: '26'
 
 - id: HicksNetworkAnalysisEvaluate2019
@@ -2751,6 +2752,56 @@ references:
   source: Google Books
   title: Idealization and the Aims of Science
   type: book
+
+- id: RafolsDiversityNetworkCoherence2010
+  abstract: >-
+    The multidimensional character and inherent conflict with categorisation of
+    interdisciplinarity makes its mapping and evaluation a challenging task. We
+    propose a conceptual framework that aims to capture interdisciplinarity in
+    the wider sense of knowledge integration, by exploring the concepts of
+    diversity and coherence. Disciplinary diversity indicators are developed to
+    describe the heterogeneity of a bibliometric set viewed from predefined
+    categories, i.e. using a top-down approach that locates the set on the
+    global map of science. Network coherence indicators are constructed to
+    measure the intensity of similarity relations within a bibliometric set,
+    i.e. using a bottom-up approach, which reveals the structural consistency of
+    the publications network. We carry out case studies on individual articles
+    in bionanoscience to illustrate how these two perspectives identify
+    different aspects of interdisciplinarity: disciplinary diversity indicates
+    the large-scale breadth of the knowledge base of a publication; network
+    coherence reflects the novelty of its knowledge integration. We suggest that
+    the combination of these two approaches may be useful for comparative
+    studies of emergent scientific and technological fields, where new and
+    controversial categorisations are accompanied by equally contested claims of
+    novelty and interdisciplinarity.
+  accessed:
+    - year: 2021
+      month: 5
+      day: 28
+  author:
+    - family: Rafols
+      given: Ismael
+    - family: Meyer
+      given: Martin
+  container-title: Scientometrics
+  container-title-short: Scientometrics
+  DOI: 10.1007/s11192-009-0041-y
+  ISSN: 1588-2861
+  issue: '2'
+  issued:
+    - year: 2010
+      month: 2
+      day: 1
+  language: en
+  page: 263-287
+  source: Springer Link
+  title: >-
+    Diversity and network coherence as indicators of interdisciplinarity: case
+    studies in bionanoscience
+  title-short: Diversity and network coherence as indicators of interdisciplinarity
+  type: article-journal
+  URL: https://doi.org/10.1007/s11192-009-0041-y
+  volume: '82'
 
 - id: RCoreTeamLanguageEnvironmentStatistical2018
   accessed:

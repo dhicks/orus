@@ -1,32 +1,52 @@
 library(tidyverse)
-library(cleanNLP)
+library(spacyr)
+# spacy_install(version = "latest_v1")
 
 library(tictoc)
 library(assertthat)
 
+
 ## Load data
 data_dir = '../data/'
 
-pubs_df = read_rds(str_c(data_dir, '07_parsed_histories.Rds')) %>% 
+pubs_df = read_rds(str_c(data_dir, 
+                         '07_parsed_histories.Rds')) %>% 
     filter(!is.na(abstract), 
            abstract != '')
 
 assert_that(n_distinct(pubs_df$scopus_id) == nrow(pubs_df))
 
 ## spaCy init
-reticulate::use_condaenv('spacy')
-cnlp_init_spacy(entity_flag = FALSE)
+spacy_initialize()
 
+clean_phrases = function(phrase) {
+    phrase %>% 
+        tolower() %>% 
+        str_replace_all('[^[:word:]]', ' ') %>% 
+        str_replace_all('^(the|a|this) ', '') %>% 
+        str_squish() %>% 
+        str_replace_all(' ', '_')
+}
 
-## Annotate ----
-## ~10 sec / 100 docs -> ~30-40 minutes
+# foo = head(pubs_df, 2000)
+## 22.524 sec/2000 -> 1216 sec
 tic()
-pubs_ann = pubs_df %>% 
-    # head(100) %>%
-    # select(scopus_id, abstract) %>% 
-    cnlp_annotate(as_strings = TRUE, 
-                  doc_var = 'scopus_id', 
-                  text_var = 'abstract')
+phrases_df = pubs_df %>% 
+    # head(5) %>%
+    select(doc_id = scopus_id, 
+           text = abstract) %>% 
+    spacy_extract_nounphrases(multithread = TRUE) %>% 
+    mutate(clean_text = clean_phrases(text)) %>% 
+    as_tibble()
 toc()
 
-write_rds(pubs_ann, str_c(data_dir, '08_annotated.Rds'))
+spacy_finalize()
+
+keep_phrases = phrases_df %>% 
+    count(clean_text) %>% 
+    filter(n != 1L) %>% 
+    pull(clean_text)
+
+phrases_df %>% 
+    filter(clean_text %in% keep_phrases) %>% 
+    write_rds(str_c(data_dir, '08_phrases.Rds'))

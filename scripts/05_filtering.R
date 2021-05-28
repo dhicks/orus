@@ -58,11 +58,21 @@ assert_that(length(setdiff(oru_df$auid, author_meta$auid)) == 0L,
 
 
 ## Plots to examine impact of filtering conditions ----
+author_meta %>% 
+    group_by(oru_lgl) %>% 
+    summarize(ten = quantile(n_docs, probs = .6, na.rm = TRUE), 
+              year = ecdf(n_docs)(15))
+
 ggplot(author_meta, aes(n_docs, color = oru_lgl)) +
     # geom_density() +
     stat_ecdf() +
     geom_vline(xintercept = 15) +
     scale_x_sqrt()
+
+author_meta %>% 
+    group_by(oru_lgl) %>% 
+    summarize(ninety = quantile(first_year, probs = c(.9)), 
+              year = ecdf(first_year)(2009))
 
 ggplot(author_meta, aes(first_year, color = oru_lgl)) +
     stat_ecdf() +

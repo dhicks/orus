@@ -2,56 +2,62 @@ library(tidyverse)
 library(broom)
 
 library(tidytext)
+library(irlba)
 library(stm)
 
 library(assertthat)
 library(tictoc)
 library(furrr)
 
-n_workers = 2
-seed = 2019-05-10
+n_workers = 6
+seed = 2021-05-25
 
-n_topics = seq(5, 145, by = 20)
+n_topics = c(5, seq(25, 150, by = 25))
+# n_topics = 5
 
 data_dir = '../data/'
 
 ## Load data ----
 H = read_rds(str_c(data_dir, '09_H.Rds'))
-atm = H$atm
+atm_sparse = cast_sparse(H$atm, row = auid, column = text, 
+                         value = n)
 
-n_authors = n_distinct(atm$auid)
+n_authors = nrow(atm_sparse)
 
 ## Principal components ----
-pc = atm %>% 
-    spread(key = lemma, value = n, fill = 0) %>% 
-    column_to_rownames(var = 'auid') %>% 
-    prcomp()
-
-# plot(pc)
-
-#   A tibble: 1 x 4
-#   thresh_50 thresh_80 thresh_90 thresh_99
-#       <int>     <int>     <int>     <int>
-# 1        12        63       135       523
-tidy(pc, matrix = 'pcs') %>% 
-    summarize(thresh_50 = sum(cumulative <= .5), 
-              thresh_80 = sum(cumulative <= .8), 
-              thresh_90 = sum(cumulative <= .9),
-              thresh_99 = sum(cumulative <= .99))
-
-tidy(pc, matrix = 'pcs') %>% 
-    ggplot(aes(PC, cumulative)) +
-    geom_line() +
-    geom_hline(yintercept = c(.5, .8, .9, .99)) +
-    xlim(0, 500)
-
+if (interactive()){
+    # pc = atm %>% 
+    #     spread(key = text, value = n, fill = 0) %>% 
+    #     column_to_rownames(var = 'auid') %>% 
+    #     prcomp()
+    ## ~105 sec
+    tic()
+    pc = prcomp_irlba(atm_sparse, n = 300)
+    toc()
+    
+    # plot(pc)
+    
+    #   A tibble: 1 x 4
+    #   thresh_50 thresh_80 thresh_90 thresh_99
+    #       <int>     <int>     <int>     <int>
+    # 1        12        63       135       523
+    tidy(pc, matrix = 'pcs') %>% 
+        summarize(thresh_50 = sum(cumulative <= .5), 
+                  thresh_80 = sum(cumulative <= .8), 
+                  thresh_90 = sum(cumulative <= .9),
+                  thresh_99 = sum(cumulative <= .99))
+    
+    tidy(pc, matrix = 'pcs') %>% 
+        ggplot(aes(PC, cumulative)) +
+        geom_line() +
+        geom_hline(yintercept = c(.5, .8, .9, .99)) +
+        xlim(0, 500)
+}
 
 ## Topic modeling ----
-atm_sparse = cast_sparse(atm, row = auid, col = lemma, value = n)
-
 holdout = make.heldout(atm_sparse, seed = seed)
 
-## 500 sec for k = 100
+## 872 sec for k = 100
 # tic()
 # test_model = stm(holdout$documents,
 #                  holdout$vocab,
@@ -61,9 +67,11 @@ holdout = make.heldout(atm_sparse, seed = seed)
 #                  verbose = TRUE)
 # toc()
 
-## 
 print(str_c('Fitting ', length(n_topics), ' topic models'))
-plan(multiprocess, workers = n_workers)
+if (parallelly::supportsMulticore()) {
+    message('Supports multicore')
+}
+plan(multisession, workers = n_workers)
 tic()
 models = tibble(k = n_topics) %>%
     arrange(desc(k)) %>% 
@@ -74,13 +82,15 @@ models = tibble(k = n_topics) %>%
                                     seed = seed,
                                     max.em.its = 150,
                                     verbose = FALSE), 
+                              .options = furrr_options(
+                                  seed = TRUE),
                               .progress = TRUE)) %>%
     arrange(k)
 toc()
 
 
 ## Topic model quality statistics ----
-plan(multiprocess, workers = n_workers)
+plan(multisession, workers = n_workers)
 ## ~5 sec
 tic()
 k_result = models %>%
@@ -88,7 +98,7 @@ k_result = models %>%
                                                      semanticCoherence,
                                                      holdout$documents),
            semantic_coherence = map_dbl(semantic_coherence_topicwise, 
-                                    mean),
+                                        mean),
            ## Exclusivity is supposed to "complement" semantic coherence
            ## But interpretation isn't explained in docs
            exclusivity_topicwise = future_map(model, exclusivity), 
@@ -119,23 +129,26 @@ k_result = models %>%
     select(-model)
 toc()
 
-k_result %>% 
-    select(k, 
-           semantic_coherence, ## want *high*
-           exclusivity,        ## want *high*?
-           ho_likelihood,      ## want *high*
-           residuals,          ## want *low*
-           lbound,             ## ??
-           iterations          ## want low, but less important
-           ) %>%
-    gather(key = 'statistic', value = 'value', -k) %>% 
-    ggplot(aes(k, value)) +
-    geom_point() +
-    geom_line() +
-    facet_wrap(vars(statistic), scales = 'free')
-
+if (interactive()) {
+    k_result %>% 
+        select(k, 
+               semantic_coherence, ## want *high*
+               exclusivity,        ## want *high*?
+               ho_likelihood,      ## want *high*
+               residuals,          ## want *low*
+               lbound,             ## ??
+               iterations          ## want low, but less important
+        ) %>%
+        gather(key = 'statistic', value = 'value', -k) %>% 
+        ggplot(aes(k, value)) +
+        geom_point() +
+        geom_line() +
+        facet_wrap(vars(statistic), scales = 'free')
+}
 
 ## Output ----
-write_rds(pc, str_c(data_dir, '10_atm_pc.Rds'))
+if (interactive()) {
+    write_rds(pc, str_c(data_dir, '10_atm_pc.Rds'))
+}
 write_rds(models, str_c(data_dir, '10_models.Rds'))
 write_rds(k_result, str_c(data_dir, '10_model_stats.Rds'))

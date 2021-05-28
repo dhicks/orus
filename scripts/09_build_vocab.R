@@ -8,33 +8,42 @@ library(knitr)
 
 data_dir = '../data/'
 
-dt_ratio = 1  ## target ratio of unique documents:terms
+dt_ratio = 1/5  ## target ratio of unique documents:terms
 
 ## Load data ----
 author_meta = read_rds(str_c(data_dir, '06_author_histories.Rds'))
 
 ## Annotated abstract text
-## ~150 sec
+## ~15 sec
 tic()
-ann = read_rds(str_c(data_dir, '08_annotated.Rds'))
+ann = read_rds(str_c(data_dir, '08_phrases.Rds'))
+toc()
+
+## Join to construct author-term (phrase) matrix
+## ~95 sec
+tic()
+atm = ann %>% 
+    select(scopus_id = doc_id, text = clean_text) %>% 
+    inner_join(author_meta, by = 'scopus_id') %>% 
+    count(auid, text) %>% 
+    as_tibble()
 toc()
 
 ## Get nouns ----
-get_nouns = function (meta_df, annotated = ann) {
-    annotated %>% 
-    {.$token} %>% 
-        filter(upos == 'NOUN', 
-               !str_detect(lemma, '[0-9]+')) %>% 
-        inner_join(meta_df, by = c('id' = 'scopus_id'))
-}
-
-nouns = get_nouns(author_meta)
+# get_nouns = function (meta_df, annotated = ann) {
+#     annotated %>% 
+#     {.$token} %>% 
+#         filter(upos == 'NOUN', 
+#                !str_detect(lemma, '[0-9]+')) %>% 
+#         inner_join(meta_df, by = c('id' = 'scopus_id'))
+# }
+# 
+# nouns = get_nouns(author_meta)
 
 # rm(ann)
 
-
 ## Functions ----
-calculate_H = function(nouns, 
+calculate_H = function(dtm, 
                        term = lemma, 
                        doc = auid,
                        arrange = TRUE, 
@@ -47,8 +56,7 @@ calculate_H = function(nouns,
     term = enquo(term)
     doc = enquo(doc)
     
-    H = nouns %>% 
-        count(!!term, !!doc) %>% 
+    H = dtm %>% 
         group_by(!!term) %>% 
         mutate(p = n / sum(n), 
                H_term = -p*log2(p)) %>% 
@@ -71,36 +79,36 @@ calculate_H = function(nouns,
 
 
 ## Vocabulary exploration ----
-## 80k distinct terms
-n_distinct(nouns$lemma)
-## 1,967 distinct documents (authors)
-n_docs = n_distinct(nouns$auid)
+## 394k distinct phrases
+n_terms = n_distinct(atm$text)
+## 1967 distinct authors
+n_docs = n_distinct(atm$auid)
 
 ## How many terms to get desired doc:term ratio? 
-## 1,967; top 2%
-n_terms = ceiling(n_docs / dt_ratio)
-quantile = n_terms / n_distinct(nouns$lemma)
+## 9,835; top 2.5%
+n_terms_target = ceiling(n_docs / dt_ratio)
+quantile = n_terms_target / n_terms
 
+## 8 sec
 tic()
-H = calculate_H(nouns, 
-                    term = lemma, 
+H = calculate_H(atm, 
+                    term = text, 
                     doc = auid,
-                    n_terms = n_terms)
+                    n_terms = n_terms_target)
 toc()
 
-## 35% of terms have ndH = 0
+## Only 1 term with ndH = 0
 H %>% 
     count(ndH == 0) %>% 
     mutate(share = n / sum(n))
 
-## Threshold for selection is just under 14
+## Threshold for selection is just under 11
 ndH_thresh = H %>% 
     filter(selected) %>% 
     pull(ndH) %>% 
     min()
 
 H %>% 
-    filter(ndH > 0) %>% 
     ggplot(aes(ndH)) +
     stat_ecdf() +
     geom_hline(yintercept = 1-quantile) +
@@ -109,60 +117,63 @@ H %>%
 
 H %>% 
     filter(ndH > 0) %>% 
-    ggplot(aes(log10(n), delta_H, label = lemma)) +
+    ggplot(aes(log10(n), delta_H, label = text)) +
     geom_point(aes(alpha = selected, color = selected)) +
     stat_function(fun = function(x) {ndH_thresh / x}, 
                   color = 'black') +
     ylim(0, ndH_thresh)
 
 ## Plot to illustrate how ndH works
-focal_terms = c('study', 'poleward', 'ligation', 'pavement')
+focal_terms = c('fxtas', 'cuttlefish', 
+                'galectin_3', 'marijuana_use')
 
-nouns %>%
-    filter(lemma %in% focal_terms) %>%
-    count(lemma, auid) %>%
-    complete(lemma, auid, fill = list(n = 0)) %>%
-    ggplot(aes(auid, n, color = lemma, group = lemma)) +
-    geom_line(show.legend = FALSE) +
-    geom_label(inherit.aes = FALSE,
-               data = filter(H, lemma %in% focal_terms),
-               aes(x = '6701865692_2017', y = 300,
-                   label = str_c('delta H: ', round(delta_H, digits = 2)))) +
-    geom_label(inherit.aes = FALSE,
-               data = filter(H, lemma %in% focal_terms),
-               aes(x = '6701865692_2017', y = 150,
-                   label = str_c('n: ', round(n, digits = 2)))) +
-    geom_label(inherit.aes = FALSE,
-               data = filter(H, lemma %in% focal_terms),
-               aes(x = '6701865692_2017', y = 50,
-                   label = str_c('ndH: ', round(ndH, digits = 2)))) +
+atm %>%
+    filter(text %in% focal_terms) %>%
+    # count(lemma, auid) %>%
+    complete(text, auid, fill = list(n = 0)) %>%
+    ggplot(aes(auid, n, color = text, group = text)) +
+    # geom_line(show.legend = FALSE) +
+    # geom_point(show.legend = FALSE) +
+    geom_segment(aes(xend = auid, yend = 0), show.legend = FALSE) +
+    # geom_label(inherit.aes = FALSE,
+    #            data = filter(H, text %in% focal_terms),
+    #            aes(x = '6701865692_2017', y = 300,
+    #                label = str_c('delta H: ', round(delta_H, digits = 2)))) +
+    # geom_label(inherit.aes = FALSE,
+    #            data = filter(H, text %in% focal_terms),
+    #            aes(x = '6701865692_2017', y = 150,
+    #                label = str_c('n: ', round(n, digits = 2)))) +
+    # geom_label(inherit.aes = FALSE,
+    #            data = filter(H, text %in% focal_terms),
+    #            aes(x = '6701865692_2017', y = 50,
+    #                label = str_c('ndH: ', round(ndH, digits = 2)))) +
     scale_x_discrete(breaks = NULL) +
     scale_y_sqrt() +
-    facet_wrap(~ lemma, ncol = 2)
+    facet_wrap(~ text, ncol = 2)
 
 
 ## Actually pull out the vocabulary
 vocab = H %>% 
     filter(selected) %>%
     # filter(ndH > 0) %>% 
-    pull(lemma)
+    pull(text)
 
 H %>% 
     slice(1:50) %>% 
-    select(term = lemma, 
+    select(term = text, 
            n, 
            H, 
            ndH) %>% 
     kable('latex', label = 'vocab',
           caption = 'Top 50 words in the vocabulary, by $log_{10} n \\Delta H$ (\\texttt{ndH}) score',
-          escape = FALSE, longtable = TRUE,
+          escape = TRUE, longtable = TRUE,
           booktabs = TRUE, digits = 2) %>% 
     write_file(str_c(data_dir, '09_vocab.tex'))
 
 ## What fraction of each authors' nouns appears in the vocabulary list?  
 ## About 80% have >5% of their nouns in their vocabulary
-nouns %>% 
-    mutate(in_vocab = lemma %in% vocab) %>% 
+atm %>% 
+    mutate(in_vocab = text %in% vocab) %>% 
     count(auid, in_vocab) %>% 
     group_by(auid) %>% 
     mutate(share = n / sum(n)) %>% 
@@ -170,25 +181,27 @@ nouns %>%
     ggplot(aes(share)) +
     stat_ecdf()
 
+## NB Can't do this easily with the current format
 ## What fraction of each authors' papers have at least 1 term in the vocabulary list?  
 ## About 80% have more than about 60% of their papers covered
-nouns %>%
-    mutate(in_vocab = lemma %in% vocab) %>%
-    group_by(auid, eid) %>%
-    summarize(in_vocab = any(in_vocab)) %>%
-    summarize(tot_papers = n(),
-              in_vocab = sum(in_vocab)) %>%
-    mutate(share_in_vocab = in_vocab / tot_papers) %>%
-    ggplot(aes(share_in_vocab)) +
-    stat_ecdf()
+# nouns %>%
+#     mutate(in_vocab = lemma %in% vocab) %>%
+#     group_by(auid, eid) %>%
+#     summarize(in_vocab = any(in_vocab)) %>%
+#     summarize(tot_papers = n(),
+#               in_vocab = sum(in_vocab)) %>%
+#     mutate(share_in_vocab = in_vocab / tot_papers) %>%
+#     ggplot(aes(share_in_vocab)) +
+#     stat_ecdf()
 
 ## Author-term matrix (long, sparse)
-atm = nouns %>% 
-    filter(lemma %in% vocab) %>% 
-    count(auid, lemma)
+# atm = nouns %>% 
+#     filter(lemma %in% vocab) %>% 
+#     count(auid, lemma)
 
-## ~75% of authors have >100 tokens after vocabulary selection
+## ~80% of authors have >100 tokens after vocabulary selection
 atm %>% 
+    filter(text %in% vocab) %>% 
     group_by(auid) %>% 
     summarize(total_tokens = sum(n)) %>% 
     ggplot(aes(total_tokens)) +
@@ -196,15 +209,22 @@ atm %>%
     geom_rug() +
     scale_x_log10()
 
-assert_that(length(setdiff(author_meta$auid, atm$auid)) == 0L, 
-            msg = 'Some authors dropped in vocabulary selection')
+## Assert that no authors have been dropped
+atm %>% 
+    filter(text %in% vocab) %>% 
+    distinct(auid) %>% 
+    as_vector() %>% 
+    setdiff(author_meta$auid) %>% 
+    length() %>% 
+    {. == 0L} %>% 
+    assert_that(msg = 'Some authors dropped in vocabulary selection')
 
 
 
 ## Output ----
 list(H = H, 
      vocab = vocab, 
-     atm = atm) %>% 
+     atm = filter(atm, text %in% vocab)) %>% 
     write_rds(str_c(data_dir, '09_H.Rds'))
 
 write_csv(atm, str_c(data_dir, '09_atm.csv'))

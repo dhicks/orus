@@ -166,6 +166,7 @@ toc()
 
 ## Output ----
 write_rds(dept_dummies, file.path(data_dir, '11_dept_dummies.Rds'))
+write_rds(au_dept_xwalk, file.path(data_dir, '11_au_dept_xwalk.Rds'))
 
 list(test = test_authors, 
      train = train_authors, 

@@ -35,7 +35,7 @@ data_dir = '../data/'
 plots_dir = '../plots/'
 
 ## Values of k to use in gamma_sm
-selected_k = c(25, 50, 100)
+selected_k = c(25, 50, 100, 150)
 # selected_k = c(85)
 
 ## Nice labels for regression estimate plots
@@ -80,26 +80,11 @@ author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>%
 
 assert_that(all(!is.na(author_meta$n_coauthors)))
 
-## Department dummies ----
-author_meta %>% 
-    select(department) %>% 
-    unnest(department) %>% 
-    count(department) %>% 
-    write_csv(file.path(data_dir, '12_departments.csv'))
+dept_dummies = read_rds(file.path(data_dir, '11_dept_dummies.Rds'))
 
-dept_xwalk = read_csv(file.path(data_dir, 
-                   '12_departments_canonical.csv')) %>% 
-    select(-n)
+au_dept_xwalk = read_rds(file.path(data_dir, '11_au_dept_xwalk.Rds'))
 
-dept_dummies = author_meta %>% 
-    select(auid, department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    select(auid, dept = dept_canonical) %>% 
-    filter(!duplicated(.)) %>% 
-    mutate(t = 1L) %>% 
-    pivot_wider(names_from = dept, values_from = t, 
-                values_fill = 0L)
+test_train = read_rds(file.path(data_dir, '11_test_train.Rds'))
 
 
 ## Extract topic models gamma ----
@@ -118,14 +103,15 @@ gamma = matrices %>%
 gamma_50 = filter(gamma, k == 50)
 gamma_sm = filter(gamma, k %in% selected_k)
 
+dept_gamma = read_rds(file.path(data_dir, '11_dept_gamma.Rds'))
+
+
 ## Term lists ----
 beta_50 = matrices %>% 
     filter(k == 50) %>% 
     pull(beta) %>% 
     flatten() %>% 
     as_tibble()
-
-
 
 beta_50 %>% 
     group_by(topic) %>% 
@@ -141,6 +127,7 @@ beta_50 %>%
     # collapse_rows(columns = 1) %>% 
     write_lines(file.path(plots_dir, '12_beta.tex'))
     
+
 ## Plot showing sample ----
 author_meta %>% 
     select(oru) %>% 
@@ -156,6 +143,7 @@ author_meta %>%
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_sample.png'), 
        height = 4, width = 7)
+
 
 ## Gender distribution ----
 gender_coarse_plot = ggplot(author_meta, 
@@ -188,12 +176,7 @@ ggsave(str_c(plots_dir, '12_gender.png'),
 
 ## Network viz ----
 ## author-department network
-dept_net = author_meta %>%
-    select(-where(is.list), department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk, by = c('department')) %>% 
-    select(auid, dept = dept_canonical) %>% 
-    filter(!duplicated(.)) %>% 
+dept_net = au_dept_xwalk %>% 
     graph_from_data_frame(directed = FALSE) %>% 
     as_tbl_graph() %>% 
     left_join(author_meta, by = c(name = 'auid')) %>%
@@ -280,15 +263,13 @@ ggsave(str_c(plots_dir, '12_network.png'),
 ## ORU-dep't network
 oru_dept_net = author_meta %>% 
     filter(oru_lgl) %>% 
-    select(auid, oru, department) %>% 
+    select(auid, oru) %>% 
     unnest(oru) %>% 
-    unnest(department) %>% 
-    select(oru, department) %>% 
-    left_join(dept_xwalk) %>% 
-    count(oru, dept = dept_canonical) %>% 
+    left_join(au_dept_xwalk, by = 'auid') %>% 
+    count(oru, dept) %>% 
     graph_from_data_frame(directed = FALSE) %>% 
     as_tbl_graph() %>% 
-    mutate(type = case_when(name %in% dept_xwalk$dept_canonical ~ 'department',
+    mutate(type = case_when(name %in% au_dept_xwalk$dept ~ 'department',
                             TRUE ~ 'ORU'))
 
 oru_dept_layout = layout_with_stress(oru_dept_net)
@@ -560,11 +541,11 @@ at_plot = gamma_50 %>%
 at_plot
 
 ## And same for 85
-gamma_sm %>% 
-    filter(k == 50) %>% 
-    select(-where(is.list), oru) %>% 
-    unnest(oru) %>% 
-    {at_plot %+% .}
+# gamma_sm %>% 
+#     filter(k == 50) %>% 
+#     select(-where(is.list), oru) %>% 
+#     unnest(oru) %>% 
+#     {at_plot %+% .}
 
 ## ORU-level topic distributions
 gamma_oru = gamma %>% 
@@ -624,20 +605,17 @@ ggsave(str_c(plots_dir, '12_oru_entropy.png'),
 
 ## Distributions within departments
 dept_topics = author_meta %>% 
-    select(-where(is.list), department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    select(auid, department = dept_canonical) %>% 
+    left_join(au_dept_xwalk, by = 'auid') %>% 
+    select(auid, dept) %>% 
     filter(!duplicated(.)) %>% 
-    add_count(department) %>% 
+    add_count(dept) %>% 
     filter(n > 60) %>% 
     inner_join(gamma_50, by = 'auid') %>% 
-    rename(department = department.x) %>% 
     ggplot(aes(topic, auid, fill = gamma)) +
     geom_raster() +
     scale_fill_viridis_c(option = 'A', 
                          trans = 'sqrt') +
-    facet_wrap(vars(k, department), scales = 'free', 
+    facet_wrap(vars(k, dept), scales = 'free', 
                ncol = 4) +
     ggtitle('Author-topic distributions, grouped by department', 
             subtitle = Sys.time())
@@ -841,11 +819,8 @@ author_meta %>%
     filter(auid %in% mds_coords$auid) %>% 
     # select(-where(is.list), department) %>% 
     unnest(oru) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    select(-department) %>% 
-    rename(department = dept_canonical) %>% 
-    add_count(department) %>% 
+    left_join(au_dept_xwalk, by = 'auid') %>% 
+    add_count(dept) %>% 
     filter(n >= 10) %>%
     left_join(mds_coords) %>%
     mutate(k = as.integer(k)) %>%
@@ -854,7 +829,7 @@ author_meta %>%
                fill = oru)) +
     geom_point(aes(alpha = oru_lgl), shape = 21L) +
     coord_equal() +
-    facet_wrap(vars(k, department)) +
+    facet_wrap(vars(k, dept)) +
     theme_void() +
     scale_fill_viridis_d(option = 'A', direction = -1) +
     scale_alpha_discrete(range = c(.5, 1)) +
@@ -866,56 +841,53 @@ author_meta %>%
 
 ## Author-department distance ----
 ## Departments of interest:  >= 40 non-ORU authors
-depts_of_interest = author_meta %>% 
-    filter(!oru_lgl) %>% 
-    select(department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    count(dept_canonical) %>% 
-    filter(n >= 40) %>% 
-    pull(dept_canonical)
-
-## Split non-ORU authors from these deptartments
-set.seed(2019-06-05)
-train_authors = author_meta %>% 
-    filter(!oru_lgl) %>% 
-    select(department, auid) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    filter(dept_canonical %in% depts_of_interest) %>% 
-    group_by(department) %>% 
-    sample_frac(size = .5) %>% 
-    ungroup() %>% 
-    pull(auid)
-
-## Departmental-mean topic distributions
-gamma_dept = gamma %>% 
-    filter(auid %in% train_authors) %>% 
-    select(-where(is.list), department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    select(-department) %>% 
-    rename(department = dept_canonical) %>% 
-    filter(department %in% depts_of_interest) %>% 
-    ## Department mean topic distributions
-    group_by(k, topic, department) %>% 
-    summarize(gamma_dept = mean(gamma)) %>% 
-    ungroup()
+# depts_of_interest = author_meta %>% 
+#     filter(!oru_lgl) %>% 
+#     select(department) %>% 
+#     unnest(department) %>% 
+#     left_join(dept_xwalk) %>% 
+#     count(dept_canonical) %>% 
+#     filter(n >= 40) %>% 
+#     pull(dept_canonical)
+# 
+# ## Split non-ORU authors from these departments
+# set.seed(2019-06-05)
+# train_authors = author_meta %>% 
+#     filter(!oru_lgl) %>% 
+#     select(department, auid) %>% 
+#     unnest(department) %>% 
+#     left_join(dept_xwalk) %>% 
+#     filter(dept_canonical %in% depts_of_interest) %>% 
+#     group_by(department) %>% 
+#     sample_frac(size = .5) %>% 
+#     ungroup() %>% 
+#     pull(auid)
+# 
+# ## Departmental-mean topic distributions
+# gamma_dept = gamma %>% 
+#     filter(auid %in% train_authors) %>% 
+#     select(-where(is.list), department) %>% 
+#     unnest(department) %>% 
+#     left_join(dept_xwalk) %>% 
+#     select(-department) %>% 
+#     rename(department = dept_canonical) %>% 
+#     filter(department %in% depts_of_interest) %>% 
+#     ## Department mean topic distributions
+#     group_by(k, topic, department) %>% 
+#     summarize(gamma_dept = mean(gamma)) %>% 
+#     ungroup()
+# 
 
 tic()
-dept_dist = gamma %>% 
-    select(-where(is.list), department) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
+dept_dist = gamma %>%
     select(-department) %>% 
-    rename(department = dept_canonical) %>% 
-    filter(!duplicated(.)) %>% 
-    inner_join(gamma_dept, by = c('k', 'topic', 
-                                  'department')) %>% 
-    filter(! auid %in% train_authors) %>% 
-    hellinger(gamma, gamma_dept, auid, department) %>% 
-    # mutate(h_dist_logit = qlogis(h_dist)) %>% 
-    left_join(author_meta, by = 'auid', 
+    left_join(au_dept_xwalk, by = 'auid') %>%
+    inner_join(dept_gamma, by = c('k', 'topic',
+                                  'dept'), 
+               suffix = c('', '_dept')) %>%
+    filter(! auid %in% test_train$train) %>%
+    hellinger(gamma, gamma_dept, auid, dept) %>%
+    left_join(author_meta, by = 'auid',
               suffix = c('', '_meta'))
 toc()
 
@@ -923,7 +895,7 @@ ggplot(dept_dist, aes(h_dist)) +
     geom_density() +
     facet_wrap(vars(k), scales = 'free')
 
-ggplot(dept_dist, aes(department, h_dist, color = oru_lgl)) +
+ggplot(dept_dist, aes(dept, h_dist, color = oru_lgl)) +
     # geom_point() +
     stat_summary() +
     facet_wrap(vars(k), scales = 'free_x') +
@@ -936,7 +908,7 @@ ggplot(dept_dist, aes(department, h_dist, color = oru_lgl)) +
 dist_lm = dept_dist %>% 
     mutate(log_n_docs = log10(n_docs)) %>% 
     select(k, h_dist, auid, oru_lgl, first_year_1997, 
-           gender, log_n_docs, log_n_coauths, department) %>% 
+           gender, log_n_docs, log_n_coauths, dept) %>% 
     group_nest(k) %>% 
     mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
 
@@ -984,7 +956,7 @@ dist_lm_fixed = dept_dist %>%
     select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
     select(k, h_dist, auid, oru, first_year_1997, 
-           gender, log_n_docs, log_n_coauths, department) %>% 
+           gender, log_n_docs, log_n_coauths, dept) %>% 
     group_nest(k) %>% 
     mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
 
@@ -1012,19 +984,16 @@ ggsave(str_c(plots_dir, '12_dept_dist_fixed_reg.png'),
 ## Distances between ORU faculty and their non-ORU codepartmentals
 codept_dist = gamma_sm %>% 
     # filter(auid %in% c('35394261000', '7005725041')) %>% 
-    select(k, department, topic, oru_lgl, auid, gamma, auid) %>% 
-    unnest(department) %>% 
-    left_join(dept_xwalk) %>% 
-    select(-department) %>% 
-    rename(department = dept_canonical) %>% 
+    select(k, topic, oru_lgl, auid, gamma, auid) %>% 
+    left_join(au_dept_xwalk, by = 'auid') %>% 
     filter(!duplicated(.)) %>% 
     group_split(oru_lgl) %>%   ## non-ORUs are first, ORUs are second
     reduce(full_join, 
-           by = c('k', 'topic', 'department')) %>% 
+           by = c('k', 'topic', 'dept')) %>% 
     filter(!is.na(auid.x), !is.na(auid.y)) %>% 
     hellinger(gamma1 = gamma.y, gamma2= gamma.x, 
               id1 = auid.y, id2 = auid.x, 
-              department) %>% 
+              dept) %>% 
     ## Codepartmental minimal distance
     group_by(k, auid = auid.y) %>% 
     summarize(min_codept_dist = min(h_dist), 

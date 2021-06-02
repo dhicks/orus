@@ -127,7 +127,7 @@ beta_50 %>%
           caption = 'Top 5 terms (noun phrases) in each topic, $k=50$ model') %>% 
     # collapse_rows(columns = 1) %>% 
     write_lines(file.path(plots_dir, '12_beta.tex'))
-    
+
 
 ## Plot showing sample ----
 author_meta %>% 
@@ -663,47 +663,37 @@ ggsave(str_c(plots_dir, '12_entropy_regression.png'),
 
 
 ## Silhouette analysis ----
-## See the scratch file `Hellinger_low_memory.R` for an attempt to include non-ORU authors
-make_cross = function(dataf, join_cols = c('k', 'topic')) {
-    full_join(dataf, dataf, by = join_cols)
-}
+dist_mx = gamma_sm %>% 
+    select(k, auid, topic, gamma) %>% 
+    group_split(k) %>% 
+    set_names(selected_k) %>% 
+    map(hellinger, id1 = 'auid', df = FALSE)
 
-set.seed(2021-05-27)
-codept_sample = author_meta %>% 
-    filter(!oru_lgl) %>% 
-    sample_n(300) %>% 
-    pull(auid)
-
-## ~2 sec
-tic()
-crossed = gamma_sm %>%
-    filter(oru_lgl|auid %in% codept_sample) %>%
-    select(k, topic, auid, gamma) %>%
-    group_by(k, topic) %>%
-    group_split() %>% #str(max.level = 1)
-    map_dfr(make_cross) %>% 
-    filter(auid.x != auid.y)
-toc()
-
-## Hellinger distances for all pairs
-## ~1.4 sec for k = 5, 45, 85, 125
-tic()
-dist = hellinger(crossed)
-toc()
+dist = dist_mx %>% 
+    map(as_tibble, rownames = 'auid') %>% 
+    map_dfr(pivot_longer, 
+            -auid,
+            names_to = 'auid_y', 
+            values_to = 'dist', 
+            .id = 'k') %>% 
+    rename(auid_x = auid) %>% 
+    filter(auid_x < auid_y) %>% 
+    mutate(k = as.integer(k))
 
 ## Mean distance w/in ORUs
 ## NB crossed should already eliminate self-pairs
 interior_mean_dist = dist %>%
-    left_join(author_meta, by = c('auid.x' = 'auid')) %>%
-    left_join(author_meta, by = c('auid.y' = 'auid'),
+    left_join(author_meta, by = c('auid_x' = 'auid')) %>%
+    filter(oru_lgl) %>% 
+    left_join(author_meta, by = c('auid_y' = 'auid'),
               suffix = c('.x', '.y')) %>%
-    filter(oru_lgl.x, oru_lgl.y) %>% 
+    filter(oru_lgl.y) %>% 
     select(-where(is.list), matches('oru')) %>% 
     unnest(c(oru.x, oru.y)) %>% 
     filter(oru.x == oru.y) %>%
-    group_by(k, auid = auid.x, oru = oru.x) %>%
-    summarize(int_mean_dist = mean(h_dist), 
-              int_min_dist = min(h_dist)) %>%
+    group_by(k, auid = auid_x, oru = oru.x) %>%
+    summarize(int_mean_dist = mean(dist), 
+              int_min_dist = min(dist)) %>%
     ungroup()
 
 # ## Minimum distance to non-ORU author
@@ -721,14 +711,16 @@ interior_mean_dist = dist %>%
 
 ## Exterior minimum distance
 exterior_min_dist = dist %>%
-    left_join(author_meta, by = c('auid.x' = 'auid')) %>%
-    left_join(author_meta, by = c('auid.y' = 'auid'),
+    left_join(author_meta, by = c('auid_x' = 'auid')) %>%
+    filter(oru_lgl) %>% 
+    left_join(author_meta, by = c('auid_y' = 'auid'),
               suffix = c('.x', '.y')) %>%
+    filter(oru_lgl.y) %>% 
     select(-where(is.list), matches('oru')) %>% 
     unnest(c(oru.x, oru.y)) %>% 
     filter(oru.x != oru.y) %>%
-    group_by(k, auid = auid.x, oru = oru.x) %>%
-    summarize(ext_min_dist = min(h_dist)) %>%
+    group_by(k, auid = auid_x, oru = oru.x) %>%
+    summarize(ext_min_dist = min(dist)) %>%
     ungroup()
 
 ## Silhouette plot
@@ -743,37 +735,33 @@ full_join(interior_mean_dist, exterior_min_dist) %>%
     coord_equal()
 
 ## MDS viz of Hellinger distances
-mds_coords = dist %>%
-    split(.$k) %>%
-    map(select, -k) %>%
-    map(spread, auid.y, h_dist) %>%
-    map(column_to_rownames, var = 'auid.x') %>%
-    map(as.dist) %>%
+tic()
+mds_coords = dist_mx %>%
+    map(as.dist) %>% 
     map(cmdscale, k = 2) %>%
     # map(MASS::isoMDS, k = 2) %>% map('points') %>%
     # map(MASS::sammon, k = 2) %>% map('points') %>% 
-    map(as.data.frame) %>%
-    map(rownames_to_column, var = 'auid') %>%
-    map(as_tibble) %>%
+    map(as_tibble, rownames = 'auid') %>%
     bind_rows(.id = 'k')
+toc()
 
 ## MDS check
 ## On average MDS distance corresponds to Hellinger distance
 ## But MDS distances can be 0 even for large Hellinger distance
-full_join(mds_coords, mds_coords, by = 'k') %>% 
-    ## Pairwise Euclidean distances
-    filter(auid.x != auid.y) %>% 
-    mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>% 
-    select(k, auid.x, auid.y, mds_dist) %>% 
-    mutate(k = as.integer(k)) %>% 
-    ## Join w/ Hellinger distances
-    inner_join(dist, by = c('k', 'auid.x', 'auid.y')) %>% 
-    ## Plot
-    filter(auid.x > auid.y) %>% 
-    ggplot(aes(h_dist, mds_dist)) +
-    geom_point() +
-    geom_smooth() +
-    facet_wrap(vars(k), scales = 'free')
+# full_join(mds_coords, mds_coords, by = 'k') %>% 
+#     ## Pairwise Euclidean distances
+#     filter(auid.x != auid.y) %>% 
+#     mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>% 
+#     select(k, auid.x, auid.y, mds_dist) %>% 
+#     mutate(k = as.integer(k)) %>% 
+#     ## Join w/ Hellinger distances
+#     inner_join(dist, by = c('k', 'auid.x', 'auid.y')) %>% 
+#     ## Plot
+#     filter(auid.x > auid.y) %>% 
+#     ggplot(aes(h_dist, mds_dist)) +
+#     geom_point() +
+#     geom_smooth() +
+#     facet_wrap(vars(k), scales = 'free')
 
 mds_plot = right_join(author_meta,
                       mds_coords) %>%
@@ -796,7 +784,7 @@ mds_plot = right_join(author_meta,
     # scale_fill_brewer(palette = 'Set1') +
     scale_color_viridis_d(option = 'A', direction = -1) +
     scale_fill_viridis_d(option = 'A', direction = -1) +
-    scale_alpha_discrete(range = c(.5, 1)) +
+    scale_alpha_discrete(range = c(.2, 1)) +
     coord_equal() +
     facet_wrap(vars(k), ncol = 2, scales = 'fixed') +
     theme_void() +
@@ -822,7 +810,7 @@ author_meta %>%
     unnest(oru) %>% 
     left_join(au_dept_xwalk, by = 'auid') %>% 
     add_count(dept) %>% 
-    filter(n >= 10) %>%
+    filter(n >= 50) %>%
     left_join(mds_coords) %>%
     mutate(k = as.integer(k)) %>%
     filter(k == 100) %>%
@@ -833,7 +821,7 @@ author_meta %>%
     facet_wrap(vars(k, dept)) +
     theme_void() +
     scale_fill_viridis_d(option = 'A', direction = -1) +
-    scale_alpha_discrete(range = c(.5, 1)) +
+    scale_alpha_discrete(range = c(.25, 1)) +
     theme(panel.border = element_rect(fill = 'transparent'))
 
 # plotly::ggplotly()
@@ -879,28 +867,27 @@ author_meta %>%
 #     ungroup()
 # 
 
-tic()
-dept_dist = gamma %>%
-    select(-department) %>% 
-    left_join(au_dept_xwalk, by = 'auid') %>%
-    inner_join(dept_gamma, by = c('k', 'topic',
-                                  'dept'), 
-               suffix = c('', '_dept')) %>%
-    filter(! auid %in% test_train$train) %>%
-    hellinger(gamma, gamma_dept, auid, dept) %>%
-    left_join(author_meta, by = 'auid',
-              suffix = c('', '_meta'))
-toc()
+dept_dist = gamma %>% 
+    filter(! auid %in% test_train$train) %>% 
+    select(k, auid, topic, gamma) %>% 
+    split(.$k) %>% 
+    map2_dfr(group_split(dept_gamma, k),
+             ~ hellinger(.x, 'auid', topics2 = .y, id2 = 'dept', 
+                         df = TRUE), 
+             .id = 'k') %>% 
+    mutate(k = as.integer(k)) %>% 
+    inner_join(au_dept_xwalk, by = c('auid', 'dept')) %>% 
+    left_join(author_meta, by = 'auid')
 
-ggplot(dept_dist, aes(h_dist)) +
+ggplot(dept_dist, aes(dist)) +
     geom_density() +
     facet_wrap(vars(k), scales = 'free')
 
-ggplot(dept_dist, aes(dept, h_dist, color = oru_lgl)) +
-    # geom_point() +
-    stat_summary() +
-    facet_wrap(vars(k), scales = 'free_x') +
-    coord_flip()
+# ggplot(dept_dist, aes(dept, dist, color = oru_lgl)) +
+#     # geom_point() +
+#     stat_summary() +
+#     facet_wrap(vars(k), scales = 'free_x') +
+#     coord_flip()
 
 # ggplot(divergence, aes(department, div, color = gender)) +
 #     stat_summary() +
@@ -908,10 +895,10 @@ ggplot(dept_dist, aes(dept, h_dist, color = oru_lgl)) +
 
 dist_lm = dept_dist %>% 
     mutate(log_n_docs = log10(n_docs)) %>% 
-    select(k, h_dist, auid, oru_lgl, first_year_1997, 
+    select(k, dist, auid, oru_lgl, first_year_1997, 
            gender, log_n_docs, log_n_coauths, dept) %>% 
     group_nest(k) %>% 
-    mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
+    mutate(model = map(data, ~lm(dist ~ . - auid, data = .)))
 
 dist_lm %>% 
     select(-data) %>% 
@@ -926,7 +913,7 @@ dist_lm %>%
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
     select(-model) %>% 
     unnest(coefs) %>% 
-    filter(!str_detect(term, 'department')) %>% 
+    filter(! term %in% au_dept_xwalk$dept) %>% 
     mutate(is_intercept = str_detect(term, 'Intercept')) %>% 
     ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
@@ -956,10 +943,10 @@ dist_lm_fixed = dept_dist %>%
     # filter(k == 45) %>% 
     select(-where(is.list), oru) %>% 
     unnest(oru) %>% 
-    select(k, h_dist, auid, oru, first_year_1997, 
+    select(k, dist, auid, oru, first_year_1997, 
            gender, log_n_docs, log_n_coauths, dept) %>% 
     group_nest(k) %>% 
-    mutate(model = map(data, ~lm(h_dist ~ . - auid, data = .)))
+    mutate(model = map(data, ~lm(dist ~ . - auid, data = .)))
 
 dist_lm_fixed %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
@@ -986,23 +973,21 @@ ggsave(str_c(plots_dir, '12_dept_dist_fixed_reg.png'),
 ## H3 ----
 ## Silhouette plot, distance to codepartmentals vs. distance to co-ORUs
 ## Distances between ORU faculty and their non-ORU codepartmentals
-codept_dist = gamma_sm %>% 
-    # filter(auid %in% c('35394261000', '7005725041')) %>% 
-    select(k, topic, oru_lgl, auid, gamma, auid) %>% 
-    left_join(au_dept_xwalk, by = 'auid') %>% 
+codept_dist = dist %>% 
+    left_join(author_meta, by = c('auid_x' = 'auid')) %>% 
+    filter(oru_lgl) %>% 
+    left_join(author_meta, by = c('auid_y' = 'auid')) %>% 
+    filter(!oru_lgl.y) %>% 
+    left_join(au_dept_xwalk, by = c('auid_x' = 'auid')) %>% 
+    left_join(au_dept_xwalk, by = c('auid_y' = 'auid')) %>% 
+    filter(dept.x == dept.y) %>% 
+    select(k, auid_x, auid_y, dist) %>% 
     filter(!duplicated(.)) %>% 
-    group_split(oru_lgl) %>%   ## non-ORUs are first, ORUs are second
-    reduce(full_join, 
-           by = c('k', 'topic', 'dept')) %>% 
-    filter(!is.na(auid.x), !is.na(auid.y)) %>% 
-    hellinger(gamma1 = gamma.y, gamma2= gamma.x, 
-              id1 = auid.y, id2 = auid.x, 
-              dept) %>% 
-    ## Codepartmental minimal distance
-    group_by(k, auid = auid.y) %>% 
-    summarize(min_codept_dist = min(h_dist), 
-              mean_codept_dist = mean(h_dist)) %>% 
+    group_by(k, auid = auid_x) %>% 
+    summarize(min_codept_dist = min(dist), 
+              mean_codept_dist = mean(dist)) %>% 
     ungroup()
+
 
 inner_join(interior_mean_dist, 
            codept_dist, 
@@ -1032,6 +1017,7 @@ inner_join(interior_mean_dist,
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist.png'), 
        width = 7*3*.75, height = 4*3, scale = .8)
+
 last_plot() + aes(int_mean_dist, mean_codept_dist)
 ggsave(str_c(plots_dir, '12_oru_dept_mean_dist.png'), 
        width = 7*3*.75, height = 4*3, scale = .8)
@@ -1066,43 +1052,58 @@ inner_join(interior_mean_dist,
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist_ridges.png'), 
        width = 6, height = 4, scale = 1.5)
+
 last_plot() + aes(diff_mean) +
     xlab('Mean departmental distance - mean ORU distance\n(Hellinger scale)')
 ggsave(str_c(plots_dir, '12_oru_dept_mean_dist_ridges.png'), 
        width = 6, height = 4, scale = 1.5)
 
 ## Based on dep't and ORU topic models instead of indviduals
-tic()
-oru_dist = gamma %>%
+oru_dist = gamma %>% 
     filter(oru_lgl) %>% 
-    unnest(oru) %>% 
-    left_join(oru_gamma, by = c('k', 'topic', 'oru'), 
-              suffix = c('', '_oru')) %>%
-    hellinger(gamma, gamma_oru, auid, oru) %>%
-    left_join(author_meta, by = 'auid',
-              suffix = c('', '_meta'))
-toc()
+    split(.$k) %>% 
+    map2_dfr(group_split(oru_gamma, k), 
+             ~ hellinger(.x, 'auid', 
+                         topics2 = .y, id2 = 'oru', 
+                         df = TRUE), 
+             .id = 'k') %>% 
+    mutate(k = as.integer(k)) %>% 
+    left_join(author_meta, by = 'auid') %>% 
+    unnest(oru.x) %>% 
+    filter(oru.x == oru.y) %>% 
+    rename(oru = oru.x)
 
 oru_dist %>% 
     filter(k %in% selected_k, 
            oru != 'AQRC') %>% 
-    select(k, auid, oru, oru_dist = h_dist) %>% 
+    select(k, auid, oru, oru_dist = dist) %>% 
     left_join(dept_dist, by = c('k', 'auid')) %>% 
-    rename(dept_dist = h_dist, 
+    rename(dept_dist = dist, 
            oru = oru.x) %>% 
-    ggplot(aes(oru_dist, dept_dist)) +
-    geom_point() +
+    ggplot(aes(oru_dist, dept_dist, fill = oru)) +
+    geom_point(shape = 21L) +
     stat_function(fun = 'identity', linetype = 'dashed') +
-    facet_wrap(vars(k, oru), ncol = 7)
+    facet_wrap(vars(k, oru), ncol = 7) +
+    scale_color_viridis_d(option = 'A', direction = -1, 
+                      guide = FALSE) +
+    scale_fill_viridis_d(option = 'A', direction = -1, 
+                         guide = FALSE) +
+    facet_wrap(vars(k, oru), ncol = 7) +
+    coord_equal() +
+    xlab('Distance to ORU-level distribution') +
+    ylab('Distance to department-level distributions') +
+    ggtitle('ORU vs. departmental distance', 
+            subtitle = Sys.time())
+
 ggsave(str_c(plots_dir, '12_oru_dept_org_dist.png'), 
        width = 7*3*.75, height = 4*3, scale = .8)
 
 oru_dist %>% 
     filter(k %in% selected_k, 
            oru != 'AQRC') %>% 
-    select(k, auid, oru, oru_dist = h_dist) %>% 
+    select(k, auid, oru, oru_dist = dist) %>% 
     left_join(dept_dist, by = c('k', 'auid')) %>% 
-    rename(dept_dist = h_dist, 
+    rename(dept_dist = dist, 
            oru = oru.x) %>% 
     mutate(diff = dept_dist - oru_dist) %>%
     ggplot(aes(diff, fct_rev(oru), color = oru, fill = oru)) +
@@ -1122,7 +1123,7 @@ oru_dist %>%
                           guide = FALSE) +
     scale_fill_viridis_d(option = 'A', direction = -1, 
                          guide = FALSE) +
-    xlab('Min. departmental distance - min. ORU distance\n(Hellinger scale)') +
+    xlab('Departmental distance - ORU distance\n(Hellinger scale)') +
     ylab('ORU') +
     facet_wrap(vars(k), ncol = 2, scales = 'free') +
     ggtitle('ORU vs. co-departmental distance', 

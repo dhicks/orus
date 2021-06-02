@@ -11,6 +11,35 @@ library(tictoc)
 
 data_dir = file.path('..', 'data')
 
+#' Estimate topic distribution for new docs
+#' @param tm A fitted `stm` topic model
+#' @param dtm 
+#' @return A dataframe with columns `topic`, `doc_id`, and `gamma`
+fit_new_docs = function(tm, dtm, verbose = FALSE) {
+    corpus = dtm %>% 
+        asSTMCorpus() %>% 
+        alignCorpus(tm$vocab, verbose)
+    
+    new_fit = fitNewDocuments(model = tm, 
+                              documents = corpus$documents)
+    theta = new_fit$theta %>% 
+        as_tibble(.name_repair = 'unique') %>% 
+        # set_names(., str_remove(names(.), '...')) %>% 
+        mutate(doc_id = names(corpus$documents)) %>%
+        select(doc_id, everything()) %>%
+        pivot_longer(-doc_id, 
+                     names_to = 'topic',
+                     names_prefix = '...',
+                     values_to = 'gamma') %>%
+        mutate(topic = as.integer(topic))
+    return(theta)
+}
+
+# foo = fit_new_docs(models$model[[5]], orutm, verbose = TRUE)
+# filter(foo, is.na(topic))
+
+
+
 ## Load data ----
 author_meta = read_rds(file.path(data_dir, '05_author_meta.Rds'))
 
@@ -115,26 +144,8 @@ assert_that(
               0L), 
     msg = 'Papers in both oru_papers and train_papers')
 
+
 ## Fit departments ----
-fit_new_docs = function(tm, dtm, verbose = FALSE) {
-    corpus = dtm %>% 
-        asSTMCorpus() %>% 
-        alignCorpus(tm$vocab, verbose)
-    
-    new_fit = fitNewDocuments(model = tm, documents = corpus$documents)
-    theta = new_fit$theta %>% 
-        as_tibble(.name_repair = 'universal') %>% 
-        mutate(doc_id = names(corpus$documents)) %>% 
-        select(doc_id, everything()) %>% 
-        pivot_longer(-doc_id, names_to = 'topic', values_to = 'gamma') %>% 
-        mutate(topic = str_remove_all(topic, '...'), 
-               topic = as.integer(topic))
-    return(theta)
-}
-
-## TODO: 
-## - map over all models
-
 ## Department-term matrix
 tic()
 dtm = ann %>% 
@@ -164,6 +175,28 @@ toc()
 #     coord_flip()
 
 
+## Fit ORUs ----
+auid_oru = author_meta %>% 
+    filter(oru_lgl) %>% 
+    unnest(oru) %>% 
+    select(auid, oru) %>% 
+    filter(!duplicated(.))
+
+## ORU-term matrix
+orutm = inner_join(auid_oru, papers_df, by = 'auid') %>% 
+    select(oru, scopus_id) %>% 
+    filter(!duplicated(.)) %>% 
+    inner_join(ann, by = c('scopus_id' = 'doc_id')) %>% 
+    filter(clean_text %in% vocab) %>% 
+    count(oru, text = clean_text) %>% 
+    cast_sparse(row = oru, col = text, value = n)
+
+oru_gamma = models %>% 
+    mutate(oru = map(model, ~fit_new_docs(., orutm))) %>% 
+    select(k, oru) %>% 
+    unnest(oru) %>% 
+    rename(oru = doc_id)
+
 ## Output ----
 write_rds(dept_dummies, file.path(data_dir, '11_dept_dummies.Rds'))
 write_rds(au_dept_xwalk, file.path(data_dir, '11_au_dept_xwalk.Rds'))
@@ -178,3 +211,6 @@ write_rds(dtm, file.path(data_dir, '11_dept_term_matrix.Rds'))
 
 write_rds(dept_gamma, file.path(data_dir, '11_dept_gamma.Rds'))
 
+write_rds(orutm, file.path(data_dir, '11_oru_term_matrix.Rds'))
+
+write_rds(oru_gamma, file.path(data_dir, '11_oru_gamma.Rds'))

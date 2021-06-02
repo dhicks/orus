@@ -12,8 +12,8 @@ library(furrr)
 n_workers = 6
 seed = 2021-05-25
 
-# n_topics = c(5, seq(25, 150, by = 25))
-n_topics = 5
+n_topics = c(5, seq(25, 150, by = 25))
+# n_topics = 5
 
 data_dir = '../data/'
 
@@ -56,26 +56,6 @@ if (interactive()){
 
 ## Topic modeling ----
 holdout = make.heldout(atm_sparse, seed = seed)
-
-## holdout auids are in the same order as dept_dummies$auid
-assert_that(all(names(holdout$documents) == dept_dummies$auid))
-
-
-
-
-## 872 sec for k = 100
-# tic()
-# test_model = stm(holdout$documents,
-#                  holdout$vocab,
-#                  K = 20,
-#                  data = dept_dummies,
-#                  prevalence = ~ . - auid,
-#                  seed = seed*2,
-#                  max.em.its = 150,
-#                  verbose = TRUE)
-# toc()
-# 
-# foo = estimateEffect(c(1) ~ . - auid, stmobj = test_model, metadata = dept_dummies)
 
 print(str_c('Fitting ', length(n_topics), ' topic models'))
 if (parallelly::supportsMulticore()) {

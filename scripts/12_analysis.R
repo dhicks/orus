@@ -1,9 +1,10 @@
-#' ----
+#' ---
 #' title: "Analysis"
 #' author: "Dan Hicks"
-#' 
-#' toc: true
-#' ----
+#' output:
+#'   html_document:
+#'     toc: true
+#' ---
 
 library(tidyverse)
 library(broom)
@@ -35,7 +36,7 @@ data_dir = '../data/'
 plots_dir = '../plots/'
 
 ## Values of k to use in gamma_sm
-selected_k = c(25, 50, 100, 150)
+selected_k = c(5, 25, 50, 100)
 # selected_k = c(85)
 
 ## Nice labels for regression estimate plots
@@ -662,6 +663,58 @@ ggsave(str_c(plots_dir, '12_entropy_regression.png'),
        width = 6, height = 4, scale = 1.5)
 
 
+## Viz for department and ORU topic distributions ----
+# cluster_order = function(topics, id) {
+#     topics %>% 
+#         hellinger(id) %>% 
+#         as.dist() %>% 
+#         hclust() %>% 
+#         as.dendrogram() %>% 
+#         labels()
+# }
+# 
+# foo = cluster_order(filter(dept_gamma, k == 25), 'dept')
+# 
+# dept_gamma %>% 
+#     filter(k == 100) %>% 
+#     mutate(dept = fct_relevel(dept, cluster_order(., 'dept'))) %>% 
+#     ggplot(aes(dept, topic, fill = gamma)) +
+#     geom_tile() +
+#     coord_flip()
+# 
+# oru_gamma %>% 
+#     filter(k == 100) %>% 
+#     mutate(oru = fct_relevel(oru, cluster_order(., 'oru'))) %>% 
+#     ggplot(aes(oru, topic, fill = gamma)) +
+#     geom_tile() +
+#     coord_flip()
+
+
+dept_gamma %>% 
+    filter(k %in% selected_k) %>% 
+    ggplot(aes(fct_rev(dept), topic, fill = gamma)) +
+    geom_tile() +
+    facet_wrap(vars(k), scales = 'free_x') +
+    coord_flip() +
+    scale_fill_viridis_c(option = 'B') +
+    labs(x = 'department')
+
+ggsave(file.path(plots_dir, '12_dept_gamma.png'), 
+       width = 6, height = 6, scale = 2)
+
+oru_gamma %>% 
+    filter(k %in% selected_k) %>% 
+    ggplot(aes(fct_rev(oru), topic, fill = gamma)) +
+    geom_tile() +
+    facet_wrap(vars(k), scales = 'free_x') +
+    coord_flip() +
+    scale_fill_viridis_c(option = 'B') +
+    labs(x = 'ORU')
+
+ggsave(file.path(plots_dir, '12_oru_gamma.png'), 
+       width = 4, height = 4, scale = 1.5)
+
+
 ## Silhouette analysis ----
 dist_mx = gamma_sm %>% 
     select(k, auid, topic, gamma) %>% 
@@ -734,34 +787,52 @@ full_join(interior_mean_dist, exterior_min_dist) %>%
     facet_wrap(vars(k)) +
     coord_equal()
 
-## MDS viz of Hellinger distances
+## t-SNE viz of Hellinger distances ----
+tidy_mds = function(mx) {
+    Rtsne::Rtsne(mx, is_distance = TRUE, 
+                 theta = 0.5, 
+                 perplexity = 100,
+                 max_iter = 5000) %>% 
+        .$Y %>% 
+        as_tibble() %>% 
+        mutate(auid = rownames(mx)) %>% 
+        select(auid, everything())
+}
+
 tic()
-mds_coords = dist_mx %>%
-    map(as.dist) %>% 
-    map(cmdscale, k = 2) %>%
-    # map(MASS::isoMDS, k = 2) %>% map('points') %>%
-    # map(MASS::sammon, k = 2) %>% map('points') %>% 
-    map(as_tibble, rownames = 'auid') %>%
-    bind_rows(.id = 'k')
+mds_coords = map_dfr(dist_mx, tidy_mds, .id = 'k')
 toc()
+
+# tic()
+# mds_coords = dist_mx %>%
+#     map(as.dist) %>% 
+#     # map(cmdscale, k = 2) %>%
+#     # map(MASS::isoMDS, k = 2) %>% map('points') %>%
+#     map(MASS::sammon, k = 2) %>% map('points') %>%
+#     map(as_tibble, rownames = 'auid') %>%
+#     bind_rows(.id = 'k')
+# toc()
+
 
 ## MDS check
 ## On average MDS distance corresponds to Hellinger distance
 ## But MDS distances can be 0 even for large Hellinger distance
-# full_join(mds_coords, mds_coords, by = 'k') %>% 
-#     ## Pairwise Euclidean distances
-#     filter(auid.x != auid.y) %>% 
-#     mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>% 
-#     select(k, auid.x, auid.y, mds_dist) %>% 
-#     mutate(k = as.integer(k)) %>% 
-#     ## Join w/ Hellinger distances
-#     inner_join(dist, by = c('k', 'auid.x', 'auid.y')) %>% 
-#     ## Plot
-#     filter(auid.x > auid.y) %>% 
-#     ggplot(aes(h_dist, mds_dist)) +
-#     geom_point() +
-#     geom_smooth() +
-#     facet_wrap(vars(k), scales = 'free')
+tic()
+full_join(mds_coords, mds_coords, by = 'k') %>%
+    filter(auid.x < auid.y) %>%
+    ## Pairwise Euclidean distances
+    mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>%
+    select(k, auid.x, auid.y, mds_dist) %>%
+    mutate(k = as.integer(k)) %>%
+    ## Join w/ Hellinger distances
+    inner_join(dist, by = c('k', 'auid.x' = 'auid_x', 'auid.y' = 'auid_y')) %>%
+    ## Plot
+    ggplot(aes(dist, mds_dist)) +
+    geom_hex() +
+    # geom_point() +
+    # geom_smooth() +
+    facet_wrap(vars(k), scales = 'free')
+toc()
 
 mds_plot = right_join(author_meta,
                       mds_coords) %>%
@@ -779,7 +850,7 @@ mds_plot = right_join(author_meta,
     ),
     size = .8,
     show.legend = FALSE) +
-    geom_dl(aes(label = oru), method = 'top.bumptwice') +
+    geom_dl(aes(label = oru), method = 'extreme.grid') +
     # scale_color_brewer(palette = 'Set1') +
     # scale_fill_brewer(palette = 'Set1') +
     scale_color_viridis_d(option = 'A', direction = -1) +
@@ -791,7 +862,7 @@ mds_plot = right_join(author_meta,
     theme(panel.border = element_rect(fill = 'transparent')) +
     # theme(panel.background = element_rect(fill = 'grey90'),
     #       legend.background = element_rect(fill = 'grey90'))
-    ggtitle('MDS visualization of Hellinger distances between researchers',
+    ggtitle('t-SNE visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
 mds_plot
 
@@ -810,21 +881,27 @@ author_meta %>%
     unnest(oru) %>% 
     left_join(au_dept_xwalk, by = 'auid') %>% 
     add_count(dept) %>% 
-    filter(n >= 50) %>%
+    filter(n >= 50, dept != 'Plant Sciences') %>%
     left_join(mds_coords) %>%
     mutate(k = as.integer(k)) %>%
-    filter(k == 100) %>%
+    filter(k == 50) %>%
     ggplot(aes(V1, V2, 
                fill = oru)) +
-    geom_point(aes(alpha = oru_lgl), shape = 21L) +
+    geom_point(aes(alpha = oru_lgl), shape = 21L, 
+               size = 5) +
     coord_equal() +
-    facet_wrap(vars(k, dept)) +
+    facet_wrap(vars(k, dept), ncol = 6, scales = 'fixed') +
     theme_void() +
-    scale_fill_viridis_d(option = 'A', direction = -1) +
-    scale_alpha_discrete(range = c(.25, 1)) +
-    theme(panel.border = element_rect(fill = 'transparent'))
+    scale_fill_viridis_d(option = 'A', direction = -1, 
+                         guide = FALSE) +
+    scale_alpha_discrete(range = c(.25, 1), 
+                         guide = FALSE) +
+    theme(panel.border = element_rect(fill = 'transparent')) +
+    ggtitle('t-SNE visualization of Hellinger distances between researchers',
+            subtitle = Sys.time())
 
-# plotly::ggplotly()
+ggsave(str_c(plots_dir, '12_mds_dept.png'), 
+       height = 8, width = 12, scale = 2)
 
 
 

@@ -3,6 +3,7 @@
 ## - Construct topic distributions for departments
 
 library(tidyverse)
+library(tidylog)
 library(tidytext)
 library(stm)
 
@@ -12,6 +13,7 @@ library(tictoc)
 data_dir = file.path('..', 'data')
 
 #' Estimate topic distribution for new docs
+#' 
 #' @param tm A fitted `stm` topic model
 #' @param dtm 
 #' @return A dataframe with columns `topic`, `doc_id`, and `gamma`

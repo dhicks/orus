@@ -1,3 +1,6 @@
 data/pubs
 data/docs
 data
+*.html
+*/api_key*.R
+*/scraps/

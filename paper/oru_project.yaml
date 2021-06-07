@@ -1607,6 +1607,58 @@ references:
   type: chapter
   URL: https://works.bepress.com/diana_hicks/31/
 
+- id: HicksImpactingCapabilitiesConceptual2018
+  abstract: >-
+    There is widespread interest in evaluating the social impacts of research
+    and other scholarly activities. Conventional metrics for social impacts
+    focus on economics or wealth creation, such as patents or technology
+    transfer. These kinds of metrics are less appropriate for many scholarly
+    fields, and miss the specific social concerns or needs that researchers aim
+    to address. In this paper, drawing on ideas from ethics and development
+    economics, we develop a conceptual framework for characterizing the social
+    goals of research. We first distinguish resources — such as wealth and
+    intellectual credit — from the goals of scholarship, and further distinguish
+    inward- and outward-facing goals. Outward-facing goals refer to the intended
+    social impacts of research. Next we introduce the Capabilities Approach, a
+    conceptual framework for human well-being developed by ethicists and
+    economists over the last 40 years. This Approach focuses on basic human
+    needs, rather than wealth, and we draw specifically on a list of central
+    human capabilities developed by philosopher Martha Nussbaum. We propose that
+    the items on this list provide a useful starting point for articulating the
+    specific social aims of research. We argue that the Capabilities Approach
+    can facilitate research communication and improve the recognition of public
+    engagement in academic and funding institutions. Familiar bibliographic data
+    and text mining methods can be used in a capabilities-inspired portfolio
+    analysis, and modest changes to existing data collection systems — for
+    tenure and promotion, or research funding applications — could support the
+    development of even richer capabilities-inspired metrics and incentive
+    systems.
+  accessed:
+    - year: 2018
+      month: 8
+      day: 28
+  author:
+    - family: Hicks
+      given: Daniel J.
+    - family: Stahmer
+      given: Carl
+    - family: Smith
+      given: MacKenzie
+  container-title: Frontiers in Research Metrics and Analytics
+  container-title-short: Front. Res. Metr. Anal.
+  DOI: 10.3389/frma.2018.00024
+  ISSN: 2504-0537
+  issued:
+    - year: 2018
+  language: English
+  source: Frontiers
+  title: >-
+    Impacting Capabilities: A Conceptual Framework for the Social Value of
+    Research
+  title-short: Impacting Capabilities
+  type: article-journal
+  URL: https://www.frontiersin.org/articles/10.3389/frma.2018.00024/full
+
 - id: HicksNationalRoboticsInitiative2019
   abstract: >-
     The U.S. National Science Foundation (NSF), together with other federal
@@ -1689,6 +1741,62 @@ references:
   type: article-journal
   URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0218273
   volume: '14'
+
+- id: HofstraDiversityInnovationParadox2020
+  abstract: >-
+    Prior work finds a diversity paradox: Diversity breeds innovation, yet
+    underrepresented groups that diversify organizations have less successful
+    careers within them. Does the diversity paradox hold for scientists as well?
+    We study this by utilizing a near-complete population of ∼1.2 million US
+    doctoral recipients from 1977 to 2015 and following their careers into
+    publishing and faculty positions. We use text analysis and machine learning
+    to answer a series of questions: How do we detect scientific innovations?
+    Are underrepresented groups more likely to generate scientific innovations?
+    And are the innovations of underrepresented groups adopted and rewarded? Our
+    analyses show that underrepresented groups produce higher rates of
+    scientific novelty. However, their novel contributions are devalued and
+    discounted: For example, novel contributions by gender and racial minorities
+    are taken up by other scholars at lower rates than novel contributions by
+    gender and racial majorities, and equally impactful contributions of gender
+    and racial minorities are less likely to result in successful scientific
+    careers than for majority groups. These results suggest there may be
+    unwarranted reproduction of stratification in academic careers that
+    discounts diversity’s role in innovation and partly explains the
+    underrepresentation of some groups in academia.
+  accessed:
+    - year: 2020
+      month: 4
+      day: 15
+  author:
+    - family: Hofstra
+      given: Bas
+    - family: Kulkarni
+      given: Vivek V.
+    - family: Munoz-Najar Galvez
+      given: Sebastian
+    - family: He
+      given: Bryan
+    - family: Jurafsky
+      given: Dan
+    - family: McFarland
+      given: Daniel A.
+  container-title: Proceedings of the National Academy of Sciences
+  container-title-short: PNAS
+  DOI: 10.1073/pnas.1915378117
+  ISBN: '9781915378118'
+  ISSN: 0027-8424, 1091-6490
+  issued:
+    - year: 2020
+      month: 4
+      day: 14
+  language: en
+  page: '201915378'
+  publisher: National Academy of Sciences
+  section: Social Sciences
+  source: DOI.org (Crossref)
+  title: The Diversity–Innovation Paradox in Science
+  type: article-journal
+  URL: http://www.pnas.org/lookup/doi/10.1073/pnas.1915378117
 
 - id: HolbrookWhatInterdisciplinaryCommunication2013
   abstract: >-
@@ -2307,6 +2415,44 @@ references:
   URL: https://doi.org/10.1080/03610927808827707
   volume: '7'
 
+- id: McElreathStatisticalRethinkingBayesian2016
+  abstract: >-
+    Statistical Rethinking: A Bayesian Course with Examples in R and Stan builds
+    readers’ knowledge of and confidence in statistical modeling. Reflecting the
+    need for even minor programming in today’s model-based statistics, the book
+    pushes readers to perform step-by-step calculations that are usually
+    automated. This unique computational approach ensures that readers
+    understand enough of the details to make reasonable choices and
+    interpretations in their own modeling work.  The text presents generalized
+    linear multilevel models from a Bayesian perspective, relying on a simple
+    logical interpretation of Bayesian probability and maximum entropy. It
+    covers from the basics of regression to multilevel models. The author also
+    discusses measurement error, missing data, and Gaussian process models for
+    spatial and network autocorrelation.  By using complete R code examples
+    throughout, this book provides a practical foundation for performing
+    statistical inference. Designed for both PhD students and seasoned
+    professionals in the natural and social sciences, it prepares them for more
+    advanced or specialized statistical modeling.  Web ResourceThe book is
+    accompanied by an R package (rethinking) that is available on the author’s
+    website and GitHub. The two core functions (map and map2stan) of this
+    package allow a variety of statistical models to be constructed from
+    standard model formulas.
+  author:
+    - family: McElreath
+      given: Richard
+  ISBN: 978-1-4822-5346-7
+  issued:
+    - year: 2016
+      month: 1
+      day: 5
+  language: en
+  number-of-pages: '485'
+  publisher: CRC Press
+  source: Google Books
+  title: 'Statistical Rethinking: A Bayesian Course with Examples in R and Stan'
+  title-short: Statistical Rethinking
+  type: book
+
 - id: MeetChallengeInterdisciplinary2016
   accessed:
     - year: 2016
@@ -2351,6 +2497,62 @@ references:
   type: article-journal
   URL: http://linkinghub.elsevier.com/retrieve/pii/S037722171500274X
   volume: '246'
+
+- id: MorganPrestigeDrivesEpistemic2018
+  abstract: >-
+    The spread of ideas in the scientific community is often viewed as a
+    competition, in which good ideas spread further because of greater intrinsic
+    fitness, and publication venue and citation counts correlate with importance
+    and impact. However, relatively little is known about how structural factors
+    influence the spread of ideas, and specifically how where an idea originates
+    might influence how it spreads. Here, we investigate the role of faculty
+    hiring networks, which embody the set of researcher transitions from
+    doctoral to faculty institutions, in shaping the spread of ideas in computer
+    science, and the importance of where in the network an idea originates. We
+    consider comprehensive data on the hiring events of 5032 faculty at all 205
+    Ph.D.-granting departments of computer science in the U.S. and Canada, and
+    on the timing and titles of 200,476 associated publications. Analyzing five
+    popular research topics, we show empirically that faculty hiring can and
+    does facilitate the spread of ideas in science. Having established such a
+    mechanism, we then analyze its potential consequences using epidemic models
+    to simulate the generic spread of research ideas and quantify the impact of
+    where an idea originates on its longterm diffusion across the network. We
+    find that research from prestigious institutions spreads more quickly and
+    completely than work of similar quality originating from less prestigious
+    institutions. Our analyses establish the theoretical trade-offs between
+    university prestige and the quality of ideas necessary for efficient
+    circulation. Our results establish faculty hiring as an underlying mechanism
+    that drives the persistent epistemic advantage observed for elite
+    institutions, and provide a theoretical lower bound for the impact of
+    structural inequality in shaping the spread of ideas in science.
+  accessed:
+    - year: 2018
+      month: 10
+      day: 26
+  author:
+    - family: Morgan
+      given: Allison C.
+    - family: Economou
+      given: Dimitrios J.
+    - family: Way
+      given: Samuel F.
+    - family: Clauset
+      given: Aaron
+  container-title: EPJ Data Science
+  DOI: 10.1140/epjds/s13688-018-0166-4
+  ISSN: 2193-1127
+  issue: '1'
+  issued:
+    - year: 2018
+      month: 12
+  language: En
+  page: '40'
+  source: epjdatascience.springeropen.com
+  title: Prestige drives epistemic inequality in the diffusion of scientific ideas
+  type: article-journal
+  URL: >-
+    https://epjdatascience.springeropen.com/articles/10.1140/epjds/s13688-018-0166-4
+  volume: '7'
 
 - id: NationalAcademyofSciencesFacilitatingInterdisciplinaryResearch2004
   abstract: >-
@@ -2957,6 +3159,25 @@ references:
   URL: http://doi.wiley.com/10.1111/ajps.12103
   volume: '58'
 
+- id: Rosen-ZviAuthortopicModelAuthors2004
+  author:
+    - family: Rosen-Zvi
+      given: Michal
+    - family: Griffiths
+      given: Thomas
+    - family: Steyvers
+      given: Mark
+    - family: Smyth
+      given: Padhraic
+  container-title: Proceedings of the 20th conference on Uncertainty in artificial intelligence
+  issued:
+    - year: 2004
+  page: 487–494
+  publisher: AUAI Press
+  source: Google Scholar
+  title: The author-topic model for authors and documents
+  type: paper-conference
+
 - id: SaCharacteristicsOrganizationAdministrative2008
   abstract: >-
     This paper examines the characteristics and organizational issues associated
@@ -3409,6 +3630,23 @@ references:
   URL: https://doi.org/10.1007/s11192-012-0712-y
   volume: '93'
 
+- id: vanderMaatenVisualizingDataUsing2008
+  author:
+    - family: Maaten
+      given: Laurens
+      non-dropping-particle: van der
+    - family: Hinton
+      given: Geoffrey
+  container-title: Journal of Machine Learning Research
+  issue: '86'
+  issued:
+    - year: 2008
+  page: 2579-2605
+  title: Visualizing data using t-SNE
+  type: article-journal
+  URL: http://jmlr.org/papers/v9/vandermaaten08a.html
+  volume: '9'
+
 - id: VeldenComparisonTopicExtraction2017
   abstract: >-
     This is the last paper in the Synthesis section of this special issue on
@@ -3655,6 +3893,108 @@ references:
   type: book
   URL: https://CRAN.R-project.org/package=tidyverse
   version: 1.2.1
+
+- id: YanScholarlyNetworkSimilarities2012
+  abstract: >-
+    This study explores the similarity among six types of scholarly networks
+    aggregated at the institution level, including bibliographic coupling
+    networks, citation networks, cocitation networks, topical networks,
+    coauthorship networks, and coword networks. Cosine distance is chosen to
+    measure the similarities among the six networks. The authors found that
+    topical networks and coauthorship networks have the lowest similarity;
+    cocitation networks and citation networks have high similarity;
+    bibliographic coupling networks and cocitation networks have high
+    similarity; and coword networks and topical networks have high similarity.
+    In addition, through multidimensional scaling, two dimensions can be
+    identified among the six networks: Dimension 1 can be interpreted as
+    citation-based versus noncitation-based, and Dimension 2 can be interpreted
+    as social versus cognitive. The authors recommend the use of hybrid or
+    heterogeneous networks to study research interaction and scholarly
+    communications.
+  accessed:
+    - year: 2021
+      month: 6
+      day: 4
+  author:
+    - family: Yan
+      given: Erjia
+    - family: Ding
+      given: Ying
+  container-title: Journal of the American Society for Information Science and Technology
+  DOI: https://doi.org/10.1002/asi.22680
+  ISSN: 1532-2890
+  issue: '7'
+  issued:
+    - year: 2012
+  language: en
+  note: '_eprint: https://asistdl.onlinelibrary.wiley.com/doi/pdf/10.1002/asi.22680'
+  page: 1313-1326
+  source: Wiley Online Library
+  title: >-
+    Scholarly network similarities: How bibliographic coupling networks,
+    citation networks, cocitation networks, topical networks, coauthorship
+    networks, and coword networks relate to each other
+  title-short: Scholarly network similarities
+  type: article-journal
+  URL: https://asistdl.onlinelibrary.wiley.com/doi/abs/10.1002/asi.22680
+  volume: '63'
+
+- id: YoutieBibliographicCouplingNetwork2013
+  abstract: >-
+    Science is increasingly organized in large-scale science centers.
+    Expectations are that center-based research should yield qualitatively
+    different research than single-investigator-produced research, but
+    demonstrating the particular effects of a center is challenging. The notion
+    of ‘centerness’ is that science centers can yield findings that reflect
+    conceptual collisions across disciplinary or geographic boundaries between a
+    center’s scientific members. Collaborative research commonly is assessed
+    using co-authorships of scientific publications. Co-authorship measures can
+    be conveniently and unobtrusively operationalized, yet they can yield
+    indicators (especially for a small center) showing little change in
+    collaboration in a center-context, while richer findings of collaboration
+    are evidenced in observing other aspects of center members’ behavior. This
+    article puts forth the use of social network analysis and bibliographic
+    coupling as measures of ‘centerness’ and presents their characteristics in
+    the context of an National Science Foundation (NSF) science center.
+    Bibliographic coupling is characterized as a measure of centerness over the
+    time period of the establishment of an NSF-funded science center. We also
+    examine changes in bibliographic coupling indicators alongside changes in
+    co-authorship networks and a social network survey of center participants.
+    Bibliographic coupling is shown to make a distinctive contribution to
+    measurement of centerness, demonstrating increasing coupling from the
+    pre-center and since-center periods. This increase in centerness as
+    represented in bibliographic coupling does not dramatically change when
+    self-citations are removed. Overall, results show this to be a useful and
+    consistent measure of centerness and knowledge coalescence within the
+    research center environment.
+  accessed:
+    - year: 2021
+      month: 6
+      day: 4
+  author:
+    - family: Youtie
+      given: Jan
+    - family: Kay
+      given: Luciano
+    - family: Melkers
+      given: Julia
+  container-title: Research Evaluation
+  container-title-short: Research Evaluation
+  DOI: 10.1093/reseval/rvt002
+  ISSN: 0958-2029
+  issue: '3'
+  issued:
+    - year: 2013
+      month: 9
+      day: 1
+  page: 145-156
+  source: Silverchair
+  title: >-
+    Bibliographic coupling and network analysis to assess knowledge coalescence
+    in a research center environment
+  type: article-journal
+  URL: https://doi.org/10.1093/reseval/rvt002
+  volume: '22'
 
 - id: ZossMappingInteractionsEvolving2012
   abstract: >-

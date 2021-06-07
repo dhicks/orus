@@ -12,7 +12,7 @@ library(furrr)
 n_workers = 6
 seed = 2021-05-25
 
-n_topics = c(5, seq(25, 150, by = 25))
+n_topics = c(5, 10, 15, 20, seq(25, 150, by = 25))
 # n_topics = 5
 
 data_dir = '../data/'

@@ -478,7 +478,6 @@ ggsave(str_c(plots_dir, '12_cites_regression.png'),
        width = 6, height = 4, scale = 1)
 
 ## Topic models ----
-
 model_stats %>% 
     select(k, 
            coherence = semantic_coherence, ## want *high*
@@ -550,15 +549,15 @@ at_plot
 #     {at_plot %+% .}
 
 ## ORU-level topic distributions
-gamma_oru = gamma %>% 
-    select(-where(is.list), oru) %>% 
-    unnest(oru) %>% 
-    # filter(oru != 'AQRC') %>% 
-    group_by(k, oru, topic) %>% 
-    summarize(gamma = mean(gamma)) %>% 
-    ungroup()
+# gamma_oru = gamma %>% 
+#     select(-where(is.list), oru) %>% 
+#     unnest(oru) %>% 
+#     # filter(oru != 'AQRC') %>% 
+#     group_by(k, oru, topic) %>% 
+#     summarize(gamma = mean(gamma)) %>% 
+#     ungroup()
 
-ggplot(gamma_oru, aes(oru, topic, fill = gamma)) +
+ggplot(oru_gamma, aes(oru, topic, fill = gamma)) +
     geom_raster() +
     scale_fill_viridis_c(option = 'A', 
                          trans = 'sqrt') +
@@ -586,7 +585,7 @@ ggplot(H_gamma, aes(oru_lgl, H, color = oru_lgl)) +
     facet_wrap(vars(k), scales = 'free_y')
 
 ## ORU-level entropies
-gamma_oru %>% 
+oru_gamma %>% 
     group_by(k, oru) %>% 
     mutate(H_term = -gamma * log2(gamma)) %>% 
     summarize(H = sum(H_term)) %>% 
@@ -596,7 +595,7 @@ gamma_oru %>%
     geom_line(show.legend = FALSE) +
     geom_dl(aes(label = oru), method = 'last.points', 
             position = position_nudge(x = 5)) +
-    xlim(NA, 165) +
+    xlim(NA, 180) +
     scale_color_viridis_d(option = 'B') +
     stat_function(fun = function(x) log2(x), 
                   inherit.aes = FALSE, color = 'black') +
@@ -716,20 +715,12 @@ ggsave(file.path(plots_dir, '12_oru_gamma.png'),
 
 
 ## Silhouette analysis ----
-dist_mx = gamma_sm %>% 
+dist = gamma_sm %>% 
     select(k, auid, topic, gamma) %>% 
     group_split(k) %>% 
     set_names(selected_k) %>% 
-    map(hellinger, id1 = 'auid', df = FALSE)
-
-dist = dist_mx %>% 
-    map(as_tibble, rownames = 'auid') %>% 
-    map_dfr(pivot_longer, 
-            -auid,
-            names_to = 'auid_y', 
-            values_to = 'dist', 
+    map_dfr(hellinger, id1 = 'auid', df = TRUE, 
             .id = 'k') %>% 
-    rename(auid_x = auid) %>% 
     filter(auid_x < auid_y) %>% 
     mutate(k = as.integer(k))
 
@@ -795,12 +786,28 @@ tidy_mds = function(mx) {
                  max_iter = 5000) %>% 
         .$Y %>% 
         as_tibble() %>% 
-        mutate(auid = rownames(mx)) %>% 
-        select(auid, everything())
+        mutate(id = rownames(mx)) %>% 
+        select(id, everything())
 }
 
+dist_comb_mx = gamma_sm %>% 
+    select(-oru) %>% 
+    bind_rows(dept_gamma) %>% 
+    bind_rows(oru_gamma) %>% 
+    mutate(id = case_when(
+        !is.na(auid) ~ auid, 
+        !is.na(dept) ~ dept, 
+        !is.na(oru) ~ oru, 
+        TRUE ~ NA_character_)) %>% 
+    select(k, id, topic, gamma) %T>%
+    {assert_that(all(negate(is.na)(.$id)), 
+                 msg = 'Error combining gammas')} %>% 
+    filter(k %in% selected_k) %>% 
+    base::split(.$k) %>% 
+    map(hellinger, id1 = 'id', df = FALSE)
+
 tic()
-mds_coords = map_dfr(dist_mx, tidy_mds, .id = 'k')
+mds_coords = map_dfr(dist_comb_mx, tidy_mds, .id = 'k')
 toc()
 
 # tic()
@@ -819,43 +826,73 @@ toc()
 ## But MDS distances can be 0 even for large Hellinger distance
 tic()
 full_join(mds_coords, mds_coords, by = 'k') %>%
-    filter(auid.x < auid.y) %>%
+    filter(id.x < id.y) %>%
     ## Pairwise Euclidean distances
     mutate(mds_dist = sqrt((V1.x-V1.y)^2 + (V2.x-V2.y)^2)) %>%
-    select(k, auid.x, auid.y, mds_dist) %>%
+    select(k, id.x, id.y, mds_dist) %>%
     mutate(k = as.integer(k)) %>%
     ## Join w/ Hellinger distances
-    inner_join(dist, by = c('k', 'auid.x' = 'auid_x', 'auid.y' = 'auid_y')) %>%
+    inner_join(dist, by = c('k', 'id.x' = 'auid_x', 'id.y' = 'auid_y')) %>%
     ## Plot
     ggplot(aes(dist, mds_dist)) +
     geom_hex() +
     # geom_point() +
     # geom_smooth() +
+    scale_fill_viridis(trans = 'log10') +
     facet_wrap(vars(k), scales = 'free')
 toc()
 
-mds_plot = right_join(author_meta,
-                      mds_coords) %>%
-    mutate(k = as.integer(k),
-           name = paste(given_name, surname)) %>%
+mds_df = author_meta %>% 
     select(-where(is.list), oru) %>% 
-    unnest(oru) %>%
-    ggplot(aes(V1, V2, color = oru)) +
-    geom_point(aes(label = name, fill = oru, alpha = oru_lgl),
+    unnest(oru) %>% 
+    right_join(mds_coords, 
+               by = c('auid' = 'id')) %>%
+    rename(id = auid) %>% 
+    mutate(k = as.integer(k),
+           type = case_when(
+               id %in% au_dept_xwalk$auid ~ 'author',
+               id %in% au_dept_xwalk$dept ~ 'department', 
+               id %in% oru_gamma$oru ~ 'ORU',
+               TRUE ~ NA_character_),
+           name = case_when(
+               type == 'author' ~ paste(given_name, surname), 
+               type == 'department' ~ id,
+               type == 'ORU' ~ id, 
+               TRUE ~ NA_character_),
+           oru = case_when(
+               type == 'author' ~ oru, 
+               type == 'ORU' ~ id, 
+               type == 'department' ~ '(department)', 
+               TRUE ~ NA_character_), 
+           oru_lgl = case_when(
+               type == 'author' ~ oru_lgl, 
+               type == 'ORU' ~ TRUE, 
+               type == 'department' ~ FALSE, 
+               TRUE ~ FALSE))
+
+assert_that(all(negate(is.na)(mds_df$type)), 
+            msg = 'Missing type in mds_df')
+
+mds_plot = ggplot(mds_df, aes(V1, V2, color = oru)) +
+    geom_point(aes(label = name, fill = oru, 
+                   alpha = oru_lgl, 
+                   size = type, shape = type),
                color = 'black',
-               show.legend = FALSE,
-               shape = 21L) +
-    geom_mark_ellipse(aes(filter = oru_lgl
-                          # label = oru
-    ),
-    size = .8,
-    show.legend = FALSE) +
+               show.legend = FALSE) +
+    geom_mark_ellipse(aes(filter = oru_lgl),
+                      size = .8,
+                      show.legend = FALSE) +
     geom_dl(aes(label = oru), method = 'extreme.grid') +
-    # scale_color_brewer(palette = 'Set1') +
-    # scale_fill_brewer(palette = 'Set1') +
     scale_color_viridis_d(option = 'A', direction = -1) +
     scale_fill_viridis_d(option = 'A', direction = -1) +
     scale_alpha_discrete(range = c(.2, 1)) +
+    scale_size_manual(values = c('author' = 1, 
+                                 'ORU' = 2, 
+                                 'department' = 2)) +
+    scale_shape_manual(values = c('author' = 21, 
+                                  'ORU' = 22, 
+                                  'department' = 23), 
+                       guide = guide_legend()) +
     coord_equal() +
     facet_wrap(vars(k), ncol = 2, scales = 'fixed') +
     theme_void() +
@@ -865,6 +902,7 @@ mds_plot = right_join(author_meta,
     ggtitle('t-SNE visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
 mds_plot
+# plotly::ggplotly()
 
 ggsave(str_c(plots_dir, '12_mds.png'), 
        height = 8, width = 8.5)
@@ -875,19 +913,21 @@ ggsave(str_c(plots_dir, '12_mds_wide.png'),
 
 
 # Similarly, but faceting out by department
-author_meta %>% 
-    filter(auid %in% mds_coords$auid) %>% 
-    # select(-where(is.list), department) %>% 
-    unnest(oru) %>% 
-    left_join(au_dept_xwalk, by = 'auid') %>% 
+mds_df %>% 
+    filter(type != 'ORU', 
+           k == 50) %>% 
+    left_join(au_dept_xwalk, by = c('id' = 'auid')) %>% 
+    mutate(dept = case_when(
+        type == 'author' ~ dept, 
+        type == 'department' ~ id, 
+        TRUE ~ NA_character_)) %>% 
+    # pull(dept) %>% negate(is.na)() %>% all()
     add_count(dept) %>% 
     filter(n >= 50, dept != 'Plant Sciences') %>%
-    left_join(mds_coords) %>%
-    mutate(k = as.integer(k)) %>%
-    filter(k == 50) %>%
     ggplot(aes(V1, V2, 
                fill = oru)) +
-    geom_point(aes(alpha = oru_lgl), shape = 21L, 
+    geom_point(aes(alpha = oru_lgl|type == 'department', 
+                   shape = type), 
                size = 5) +
     coord_equal() +
     facet_wrap(vars(k, dept), ncol = 6, scales = 'fixed') +
@@ -896,6 +936,10 @@ author_meta %>%
                          guide = FALSE) +
     scale_alpha_discrete(range = c(.25, 1), 
                          guide = FALSE) +
+    scale_shape_manual(values = c('author' = 21, 
+                                  'ORU' = 22, 
+                                  'department' = 23), 
+                       guide = FALSE) +
     theme(panel.border = element_rect(fill = 'transparent')) +
     ggtitle('t-SNE visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
@@ -949,7 +993,8 @@ dept_dist = gamma %>%
     select(k, auid, topic, gamma) %>% 
     split(.$k) %>% 
     map2_dfr(group_split(dept_gamma, k),
-             ~ hellinger(.x, 'auid', topics2 = .y, id2 = 'dept', 
+             ~ hellinger(.x, 'auid', 
+                         topics2 = .y, id2 = 'dept', 
                          df = TRUE), 
              .id = 'k') %>% 
     mutate(k = as.integer(k)) %>% 
@@ -1162,7 +1207,7 @@ oru_dist %>%
     stat_function(fun = 'identity', linetype = 'dashed') +
     facet_wrap(vars(k, oru), ncol = 7) +
     scale_color_viridis_d(option = 'A', direction = -1, 
-                      guide = FALSE) +
+                          guide = FALSE) +
     scale_fill_viridis_d(option = 'A', direction = -1, 
                          guide = FALSE) +
     facet_wrap(vars(k, oru), ncol = 7) +

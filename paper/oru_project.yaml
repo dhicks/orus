@@ -830,6 +830,46 @@ references:
   URL: https://CRAN.R-project.org/package=RCurl
   version: 1.98-1.2
 
+- id: DiPreteCumulativeAdvantageMechanism2006
+  abstract: >-
+    Although originally developed by R.K. Merton to explain advancement in
+    scientific careers, cumulative advantage is a general mechanism for
+    inequality across any temporal process (e.g., life course, family
+    generations) in which a favorable relative position becomes a resource that
+    produces further relative gains. This review shows that the term cumulative
+    advantage has developed multiple meanings in the sociological literature. We
+    distinguish between these alternative forms, discuss mechanisms that have
+    been proposed in the literature that may produce cumulative advantage, and
+    review the empirical literature in the areas of education, careers, and
+    related life course processes.
+  accessed:
+    - year: 2018
+      month: 8
+      day: 21
+  author:
+    - family: DiPrete
+      given: Thomas A.
+    - family: Eirich
+      given: Gregory M.
+  container-title: Annual Review of Sociology
+  container-title-short: Annu. Rev. Sociol.
+  DOI: 10.1146/annurev.soc.32.061604.123127
+  ISSN: 0360-0572
+  issue: '1'
+  issued:
+    - year: 2006
+      month: 7
+      day: 6
+  page: 271-297
+  source: annualreviews.org (Atypon)
+  title: >-
+    Cumulative Advantage as a Mechanism for Inequality: A Review of Theoretical
+    and Empirical Developments
+  title-short: Cumulative Advantage as a Mechanism for Inequality
+  type: article-journal
+  URL: https://www.annualreviews.org/doi/10.1146/annurev.soc.32.061604.123127
+  volume: '32'
+
 - id: EigenbrodeEmployingPhilosophicalDialogue2007
   author:
     - family: Eigenbrode
@@ -2472,6 +2512,59 @@ references:
   type: article-journal
   URL: http://www.nature.com/doifinder/10.1038/534589b
   volume: '534'
+
+- id: MertonMatthewEffectScience1968
+  abstract: >-
+    This account of the Matthew effect is another small exercise in the
+    psychosociological analysis of the workings of science as a social
+    institution. The initial problem is transformed by a shift in theoretical
+    perspective. As originally identified, the Matthew effect was construed in
+    terms of enhancement of the position of already eminent scientists who are
+    given disproportionate credit in cases of collaboration or of independent
+    multiple discoveries. Its significance was thus confined to its implications
+    for the reward system of science. By shifting the angle of vision, we note
+    other possible kinds of consequences, this time for the communication system
+    of science. The Matthew effect may serve to heighten the visibility of
+    contributions to science by scientists of acknowledged standing and to
+    reduce the visibility of contributions by authors who are less well known.
+    We examine the psychosocial conditions and mechanisms underlying this effect
+    and find a correlation between the redundancy function of multiple
+    discoveries and the focalizing function of eminent men of science—a function
+    which is reinforced by the great value these men place upon finding basic
+    problems and by their self-assurance. This self-assurance, which is partly
+    inherent, partly the result of experiences and associations in creative
+    scientific environments, and partly a result of later social validation of
+    their position, encourages them to search out risky but important problems
+    and to highlight the results of their inquiry. A macrosocial version of the
+    Matthew principle is apparently involved in those processes of social
+    selection that currently lead to the concentration of scientific resources
+    and talent (50).
+  accessed:
+    - year: 2019
+      month: 9
+      day: 23
+  author:
+    - family: Merton
+      given: Robert K.
+  container-title: Science
+  DOI: 10.1126/science.159.3810.56
+  ISSN: 0036-8075, 1095-9203
+  issue: '3810'
+  issued:
+    - year: 1968
+      month: 1
+      day: 5
+  language: en
+  page: 56-63
+  PMID: '5634379'
+  source: science.sciencemag.org
+  title: >-
+    The Matthew Effect in Science: The reward and communication systems of
+    science are considered
+  title-short: The Matthew Effect in Science
+  type: article-journal
+  URL: https://science.sciencemag.org/content/159/3810/56
+  volume: '159'
 
 - id: MingersReviewTheoryPractice2015
   accessed:

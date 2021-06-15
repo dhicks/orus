@@ -16,7 +16,7 @@ data_dir = '../data/'
 plots_dir = '../plots/'
 
 
-filter_conditions = quos(n_docs >= 15, first_year <= 2009, first_year > 1970)
+filter_conditions = quos(n_docs >= 15, first_year > 1970)
 
 
 ## Load data ----

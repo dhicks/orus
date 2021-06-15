@@ -81,7 +81,7 @@ toc()
 
 ## Topic model quality statistics ----
 plan(multisession, workers = n_workers)
-## ~5 sec
+## ~90 sec
 tic()
 k_result = models %>%
     mutate(semantic_coherence_topicwise = future_map(model, 

@@ -66,6 +66,8 @@ auids = H$atm %>%
 coauths_df = read_rds(str_c(data_dir, '07_coauth_count.Rds'))
 
 author_meta = read_rds(str_c(data_dir, '05_author_meta.Rds')) %>% 
+    ## Looks like this comparator was removed since 2019
+    filter(auid != 7005066180) %>% 
     mutate(first_year_1997 = first_year - 1997, 
            # sub gender terms for sex terms
            gender = fct_recode(gender, 
@@ -647,6 +649,11 @@ H_lm %>%
     unnest(glance)
 
 H_lm %>% 
+    select(k, coefs) %>% 
+    unnest(coefs) %>% 
+    filter(term == 'oru_lglTR')
+
+H_lm %>% 
     select(-where(is.list), coefs) %>% 
     unnest(coefs) %>% 
     filter(term == 'oru_lglTRUE') %>% 
@@ -930,7 +937,7 @@ mds_df %>%
                    shape = type), 
                size = 5) +
     coord_equal() +
-    facet_wrap(vars(k, dept), ncol = 6, scales = 'fixed') +
+    facet_wrap(vars(k, dept), ncol = 5, scales = 'fixed') +
     theme_void() +
     scale_fill_viridis_d(option = 'A', direction = -1, 
                          guide = FALSE) +
@@ -945,7 +952,7 @@ mds_df %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_mds_dept.png'), 
-       height = 8, width = 12, scale = 2)
+       height = 8, width = 12, scale = 1.4)
 
 
 

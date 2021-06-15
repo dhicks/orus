@@ -29,7 +29,7 @@ clean_phrases = function(phrase) {
 }
 
 # foo = head(pubs_df, 2000)
-## 22.524 sec/2000 -> 1216 sec
+## 22.524 sec/2000 -> 1500 sec
 tic()
 phrases_df = pubs_df %>% 
     # head(5) %>%

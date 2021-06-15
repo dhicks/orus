@@ -79,13 +79,13 @@ calculate_H = function(dtm,
 
 
 ## Vocabulary exploration ----
-## 394k distinct phrases
+## 414k distinct phrases
 n_terms = n_distinct(atm$text)
-## 1967 distinct authors
+## 2298 distinct authors
 n_docs = n_distinct(atm$auid)
 
 ## How many terms to get desired doc:term ratio? 
-## 9,835; top 2.5%
+## 11,490; top 2.8%
 n_terms_target = ceiling(n_docs / dt_ratio)
 quantile = n_terms_target / n_terms
 
@@ -102,7 +102,7 @@ H %>%
     count(ndH == 0) %>% 
     mutate(share = n / sum(n))
 
-## Threshold for selection is just under 11
+## Threshold for selection is just over 11
 ndH_thresh = H %>% 
     filter(selected) %>% 
     pull(ndH) %>% 
@@ -112,14 +112,15 @@ H %>%
     ggplot(aes(ndH)) +
     stat_ecdf() +
     geom_hline(yintercept = 1-quantile) +
-    geom_vline(xintercept = ndH_thresh) +
-    geom_rug(aes(color = selected))
+    geom_vline(xintercept = ndH_thresh) #+
+    # geom_rug(aes(color = selected))
 
-H %>% 
-    filter(ndH > 0) %>% 
+H %>%
+    # filter(ndH > 0) %>%
+    sample_n(5000) %>% 
     ggplot(aes(log10(n), delta_H, label = text)) +
     geom_point(aes(alpha = selected, color = selected)) +
-    stat_function(fun = function(x) {ndH_thresh / x}, 
+    stat_function(fun = function(x) {ndH_thresh / x},
                   color = 'black') +
     ylim(0, ndH_thresh)
 

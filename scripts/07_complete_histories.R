@@ -13,16 +13,21 @@ data_dir = '../data/'
 pub_folder = str_c(data_dir, 'docs/')  ## Same folder as 02
 parsed_blocks_folder = str_c(data_dir, 'parsed_blocks/')
 
+known_na = 3L
+
 parsed_file = str_c(data_dir, '07_parsed_histories.Rds')  ## Overall output file
 
-scrape_workers = 5
-parse_workers = 2
+scrape_workers = 4
+parse_workers = 6
+
+valid_eid = function(eid) {
+    ! is.na(eid) & str_detect(eid, '2-s2.0-')
+}
 
 
 ## Load data ----
 paper_meta = read_rds(str_c(data_dir, '06_author_histories.Rds')) %>% 
-    ## Author 7006889518 has an entry w/ the malformed Scopus ID 64
-    filter(!is.na(eid), eid != '64')
+    filter(valid_eid(eid))
 
 eids = paper_meta %>% 
     pull(eid) %>% 
@@ -36,23 +41,31 @@ to_be_downloaded = pub_folder %>%
 to_be_downloaded
 
 ## Functions for scraping from API ----
-scrape_ = function (this_eid) {
+scrape_ = function (this_eid, print_url = FALSE, download = TRUE) {
     ## Basically just an abstraction of the RCurl call
     base_url = 'https://api.elsevier.com/content/abstract/eid/'
     query_url = str_c(base_url, 
                       this_eid, '?',
                       'apiKey=', api_key)
-    print(query_url)
-    raw = getURL(query_url)
-    raw
+    if (print_url) {
+        message(query_url)
+    }
+    if (download) {
+        raw = getURL(query_url)
+        raw
+    } else {
+        return(query_url)
+    }
 }
 
-scrape = function (this_eid, target_folder) {
+# scrape_('2-s2.0-85075958355', download = FALSE)
+
+scrape = function (this_eid, target_folder, ...) {
     ## Either scrape from the API + save the result OR pass
     target_file = str_c(target_folder, this_eid, '.xml')
     # target_file = str_c(target_folder, '/', this_eid, '.xml.zip')
     if (!file.exists(target_file)) {
-        raw = scrape_(this_eid)
+        raw = scrape_(this_eid, ...)
         write_file(raw, target_file)
         # zip(target_file, target_file_xml, flags = '-9Xq')
         # unlink(target_file_xml)
@@ -62,11 +75,11 @@ scrape = function (this_eid, target_folder) {
     }
 }
 
-# scrape(eids[1], pub_folder)
+# scrape(eids[1], pub_folder, download = FALSE)
 
 ## Do the scraping ----
 if (to_be_downloaded > 0) {
-    plan(multiprocess, workers = scrape_workers)
+    plan(multisession, workers = scrape_workers)
     tic()
     pub_files = eids %>% 
         # head(2e3) %>%
@@ -209,9 +222,11 @@ parse_ = function (raw) {
            references = list(references))
 }
 
-parse = function(target_file) {
+parse = function(target_file, stop_on_error = FALSE) {
     # print(target_file)
-    raw = read_file(target_file)
+    raw = target_file %>% 
+        read_file() %>% 
+        str_remove_all('<[0-9][:word:]+>')
     if (raw == '' | str_length(raw) == 155) {
         ## Handle empty responses
         scopus_id = str_extract(target_file, '[0-9]{8,}')
@@ -221,6 +236,9 @@ parse = function(target_file) {
         if (is.null(parsed$error)) {
             return(parsed$result)
         } else {
+            if (stop_on_error) {
+                stop(paste('Error parsing file ', target_file))
+            }
             scopus_id = str_extract(target_file, '[0-9]{8,}')
             return(tibble(scopus_id = scopus_id, error = as.character(parsed$error)))
         }
@@ -230,6 +248,11 @@ parse = function(target_file) {
 # parse('../data/docs/2-s2.0-85007135357.xml') %>% 
 #     unnest(authors) %>% 
 #     select(surname, aff_id, aff_name)
+# debugonce(parse)
+# parse('../data/docs/2-s2.0-85063329503.xml')
+# debugonce(parse_)
+# read_file('../data/docs/2-s2.0-85037746694.xml') %>% 
+#     parse_()
 
 get_eid = function (path) {
     str_extract(path, '[^/]+(?=\\.xml)')
@@ -237,73 +260,79 @@ get_eid = function (path) {
 
 parse_block = function(target_files, 
                        prefix = '08', sep = '_',
-                       target_folder = data_dir) {
+                       target_folder = data_dir, 
+                       write = TRUE,
+                       ...) {
     start = get_eid(first(target_files))
     end = get_eid(last(target_files))
     
     block_file = str_c(target_folder, 
                        str_c(prefix, start, end, sep = sep), 
                        '.Rds')
-    
-    if (!file.exists(block_file)) {
-        parsed_df = map_dfr(target_files, parse)
-        write_rds(parsed_df, block_file)
+    if (!write | !file.exists(block_file)) {
+        parsed_df = map_dfr(target_files, parse, ...)
     } else {
         parsed_df = read_rds(block_file)
+    }
+    if (write & !file.exists(block_file)) {
+        write_rds(parsed_df, block_file)
     }
     
     return(parsed_df)
 }
 
-# parse_block(pub_files[1:10])
+# parse_block('../data/docs/2-s2.0-85063329503.xml', write = FALSE)
 
 if (!file.exists(parsed_file)) {
     block_size = 300
     n_blocks = ceiling(length(pub_files) / block_size)
-    blocks = split(pub_files, 1:n_blocks)
+    blocks_idx = sort(rep_len(1:n_blocks, length(pub_files)))
+    blocks = split(pub_files, blocks_idx)
+    
     
     options(error = recover)
     
-    ## ~80 sec for block of 300 -> ~4.5 hours
-    ## 80 * n_blocks / parse_workers / 3600
+    ## ~20 sec for block of 300 -> 24 minutes
+    ## 20 * n_blocks / parse_workers / 60
     # tic()
     # parse_block(blocks[[1]])
     # toc()
-    
-    plan(multiprocess, workers = parse_workers)
+
+    plan(multisession, workers = parse_workers)
     tic()
     pubs = blocks %>% 
+        # head(2) %>% 
         future_map_dfr(parse_block, 
                        target_folder = parsed_blocks_folder,
-                       .progress = TRUE)
+                       .progress = TRUE, 
+                       .id = 'block') %>% 
+        mutate(block = as.integer(block))
     toc()
     
     ## Validation:  no NA scopus IDs
-    assert_that(sum(is.na(pubs$scopus_id)) == 0)
+    assert_that(sum(is.na(pubs$scopus_id)) == 0L)
     ## Validation:  no parsing errors
-    assert_that(! 'error' %in% names(pubs))
+    assert_that(all(is.na(pubs$error)))
     ## Validation:  exactly 1 row per input document ID
     assert_that(length(eids) == nrow(pubs))
     ## Validation:  complete coverage of paper_meta
     assert_that(length(setdiff(paper_meta$scopus_id, pubs$scopus_id)) == 0L)
     ## Validation:  exactly `known_na` empty rows
-    # assert_that(sum(is.na(pubs$date)) == known_na)
+    assert_that(sum(is.na(pubs$date)) == known_na)
     ## Validation:  no empty rows
-    assert_that(all(!is.na(pubs$date)))
+    # assert_that(all(!is.na(pubs$date)))
     
-    # ## If there are problems, the following can be used to identify and delete blockfiles with problems
-    # problems_idx = with(pubs, which(is.na(scopus_id) | is.na(date)))
-    # 
-    # ## Which blocks contain problems?  
-    # problems_block = problems_idx %% block_size
-    # ## Index of problems w/in their respective blocks
-    # problem_block_idx = problems_idx %/% block_size
-    # 
-    # problem_block_files = blocks[problems_block] %>% 
-    #     modify(get_eid) %>% 
-    #     map(~ str_c(first(.), last(.), sep = '_')) %>% 
+    ## If there are problems, the following can be used to identify and delete blockfiles with problems
+    # filter(pubs, !is.na(error)) %>% view()
+    # filter(pubs, is.na(date)) %>% view()
+    # problem_blocks = pubs %>% 
+    #     filter(!is.na(error)) %>% 
+    #     count(block) %>% 
+    #     pull(block)
+    # problem_block_files = blocks[problem_blocks] %>% 
+    #     modify(get_eid) %>%
+    #     map(~ str_c(first(.), last(.), sep = '_')) %>%
     #     str_c('08_', ., '.Rds')
-    # 
     # file.remove(str_c(parsed_blocks_folder, problem_block_files))
     
     write_rds(pubs, parsed_file)
@@ -312,10 +341,12 @@ if (!file.exists(parsed_file)) {
 }
 
 ## Coauthor count ----
-## ~3 min
+## ~90 sec
+auids = unique(paper_meta$auid)
 tic()
 coauths_df = pubs %>% 
-    # slice(1:500) %>% 
+    # slice(1:500) %>%
+    select(scopus_id, authors) %>% 
     unnest(authors) %>% 
     ## Data has 1 line per author-affiliation-paper combination
     count(scopus_id, auid) %>% 
@@ -323,11 +354,15 @@ coauths_df = pubs %>%
     ## Coauthor pairs w/in articles
     full_join(., ., by = 'scopus_id') %>% 
     filter(auid.x != auid.y) %>% 
+    ## Only auids in paper_meta
+    filter(auid.x %in% auids) %>% 
     ## Count number of unique coauthors for each author
     count(auid.x, auid.y) %>% 
     select(-n) %>% 
     count(auid = auid.x, name = 'n_coauthors')
 toc()
+
+assert_that(are_equal(nrow(coauths_df), length(auids)))
 
 write_rds(coauths_df, str_c(data_dir, '07_coauth_count.Rds'))
 

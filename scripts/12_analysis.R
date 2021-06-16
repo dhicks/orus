@@ -120,13 +120,13 @@ beta_50 = matrices %>%
 beta_50 %>% 
     group_by(topic) %>% 
     slice_max(beta, n = 5) %>% 
-    arrange(topic, beta) %>% 
+    arrange(topic, desc(beta)) %>% 
     kable(digits = 4, 
           format = 'latex', 
           longtable = TRUE, 
           booktabs = TRUE, 
           escape = TRUE,
-          label = 'beta_table', 
+          label = 'beta', 
           caption = 'Top 5 terms (noun phrases) in each topic, $k=50$ model') %>% 
     # collapse_rows(columns = 1) %>% 
     write_lines(file.path(plots_dir, '12_beta.tex'))
@@ -952,7 +952,7 @@ mds_df %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_mds_dept.png'), 
-       height = 8, width = 12, scale = 1.4)
+       height = 8, width = 12, scale = 1.6)
 
 
 

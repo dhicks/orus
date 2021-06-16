@@ -1782,6 +1782,47 @@ references:
   URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0218273
   volume: '14'
 
+- id: HitchcockReichenbachCommonCause2021
+  abstract: >-
+    The Common Cause Principle was introduced by HansReichenbach, in The
+    Direction of Time, which was publishedposthumously in 1956. Suppose that two
+    events A and Bare positively correlated:
+    p(A∩B)>p(A)p(B)p(A∩B)>p(A)p(B)p(A\cap B)>p(A)p(B). Suppose,moreover, that
+    neither event is a cause of the other. Then,Reichenbach’s Common Cause
+    Principle (RCCP) states that Aand B will have a common cause that renders
+    them conditionallyindependent. Reichenbach incorporated his RCCP into a new
+    probablistictheory of causation, and used it to describe a
+    (purported)macrostatistical temporal asymmetry in analogy with the second
+    law ofthermodynamics. The principle is significant because it posits
+    aconnection between causal structure and probabilistic correlations,thus
+    facilitating causal inference from observed correlations.However, RCCP has
+    been controversial, and a number of counterexampleshave been proposed. RCCP
+    is often seen as an antecedent of theCausal Markov Condition, which plays a
+    central role in causalmodeling and causal inference. RCCP has also been
+    taken to captureassumptions about the behavior of classical systems that
+    appear to beviolated in quantum mechanics.
+  accessed:
+    - year: 2021
+      month: 6
+      day: 16
+  author:
+    - family: Hitchcock
+      given: Christopher
+    - family: Rédei
+      given: Miklós
+  container-title: The Stanford Encyclopedia of Philosophy
+  edition: Summer 2021
+  editor:
+    - family: Zalta
+      given: Edward N.
+  issued:
+    - year: 2021
+  publisher: Metaphysics Research Lab, Stanford University
+  source: Stanford Encyclopedia of Philosophy
+  title: Reichenbach’s Common Cause Principle
+  type: chapter
+  URL: https://plato.stanford.edu/archives/sum2021/entries/physics-Rpcc/
+
 - id: HofstraDiversityInnovationParadox2020
   abstract: >-
     Prior work finds a diversity paradox: Diversity breeds innovation, yet
@@ -3416,10 +3457,6 @@ references:
     - year: 2018
       month: 3
       day: 14
-  original-date:
-    - year: 2014
-      month: 7
-      day: 3
   publisher: Explosion AI
   source: GitHub
   title: >-

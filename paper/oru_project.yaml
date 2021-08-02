@@ -301,6 +301,29 @@ references:
   title-short: International Research Management
   type: book
 
+- id: BlondelFastUnfoldingCommunities2008
+  author:
+    - family: Blondel
+      given: Vincent D
+    - family: Guillaume
+      given: Jean-Loup
+    - family: Lambiotte
+      given: Renaud
+    - family: Lefebvre
+      given: Etienne
+  container-title: 'Journal of Statistical Mechanics: Theory and Experiment'
+  container-title-short: J. Stat. Mech.
+  DOI: 10.1088/1742-5468/2008/10/P10008
+  issue: '10'
+  issued:
+    - year: 2008
+  page: P10008
+  title: Fast unfolding of communities in large networks
+  type: article-journal
+  URL: >-
+    http://stacks.iop.org/1742-5468/2008/i=10/a=P10008?key=crossref.46968f6ec61eb8f907a760be1c5ace52
+  volume: '2008'
+
 - id: BoardmanRoleStrainUniversity2007
   accessed:
     - year: 2019
@@ -326,6 +349,83 @@ references:
   URL: >-
     http://muse.jhu.edu/content/crossref/journals/journal_of_higher_education/v078/78.4boardman.html
   volume: '78'
+
+- id: BoyackClusteringMoreTwo2011
+  abstract: >-
+    Background We investigate the accuracy of different similarity approaches
+    for clustering over two million biomedical documents. Clustering large sets
+    of text documents is important for a variety of information needs and
+    applications such as collection management and navigation, summary and
+    analysis. The few comparisons of clustering results from different
+    similarity approaches have focused on small literature sets and have given
+    conflicting results. Our study was designed to seek a robust answer to the
+    question of which similarity approach would generate the most coherent
+    clusters of a biomedical literature set of over two million documents.
+    Methodology We used a corpus of 2.15 million recent (2004-2008) records from
+    MEDLINE, and generated nine different document-document similarity matrices
+    from information extracted from their bibliographic records, including
+    titles, abstracts and subject headings. The nine approaches were comprised
+    of five different analytical techniques with two data sources. The five
+    analytical techniques are cosine similarity using term frequency-inverse
+    document frequency vectors (tf-idf cosine), latent semantic analysis (LSA),
+    topic modeling, and two Poisson-based language models – BM25 and PMRA
+    (PubMed Related Articles). The two data sources were a) MeSH subject
+    headings, and b) words from titles and abstracts. Each similarity matrix was
+    filtered to keep the top-n highest similarities per document and then
+    clustered using a combination of graph layout and average-link clustering.
+    Cluster results from the nine similarity approaches were compared using (1)
+    within-cluster textual coherence based on the Jensen-Shannon divergence, and
+    (2) two concentration measures based on grant-to-article linkages indexed in
+    MEDLINE. Conclusions PubMed's own related article approach (PMRA) generated
+    the most coherent and most concentrated cluster solution of the nine
+    text-based similarity approaches tested, followed closely by the BM25
+    approach using titles and abstracts. Approaches using only MeSH subject
+    headings were not competitive with those based on titles and abstracts.
+  accessed:
+    - year: 2021
+      month: 7
+      day: 26
+  author:
+    - family: Boyack
+      given: Kevin W.
+    - family: Newman
+      given: David
+    - family: Duhon
+      given: Russell J.
+    - family: Klavans
+      given: Richard
+    - family: Patek
+      given: Michael
+    - family: Biberstine
+      given: Joseph R.
+    - family: Schijvenaars
+      given: Bob
+    - family: Skupin
+      given: André
+    - family: Ma
+      given: Nianli
+    - family: Börner
+      given: Katy
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0018029
+  ISSN: 1932-6203
+  issue: '3'
+  issued:
+    - year: 2011
+      month: 3
+      day: 17
+  language: en
+  page: e18029
+  publisher: Public Library of Science
+  source: PLoS Journals
+  title: >-
+    Clustering More than Two Million Biomedical Publications: Comparing the
+    Accuracies of Nine Text-Based Similarity Approaches
+  title-short: Clustering More than Two Million Biomedical Publications
+  type: article-journal
+  URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0018029
+  volume: '6'
 
 - id: BoyackMappingBackboneScience2005
   abstract: >-
@@ -1606,6 +1706,43 @@ references:
   type: article-journal
   URL: https://www.frontiersin.org/articles/10.3389/frma.2018.00009/full
   volume: '3'
+
+- id: HicksBibliometricsSocialValidation2016
+  abstract: >-
+    This paper introduces a bibliometric, citation network-based method for
+    assessing the social validation of novel research, and applies this method
+    to the development of high-throughput toxicology research at the US
+    Environmental Protection Agency. Social validation refers to the acceptance
+    of novel research methods by a relevant scientific community; it is formally
+    independent of the technical validation of methods, and is frequently
+    studied in history, philosophy, and social studies of science using
+    qualitative methods. The quantitative methods introduced here find that
+    high-throughput toxicology methods are spread throughout a large and
+    well-connected research community, which suggests high social validation.
+    Further assessment of social validation involving mixed qualitative and
+    quantitative methods are discussed in the conclusion.
+  accessed:
+    - year: 2017
+      month: 1
+      day: 4
+  author:
+    - family: Hicks
+      given: Daniel J.
+  container-title: PLOS ONE
+  container-title-short: PLOS ONE
+  DOI: 10.1371/journal.pone.0168597
+  ISSN: 1932-6203
+  issue: '12'
+  issued:
+    - year: 2016
+      month: 12
+      day: 22
+  page: e0168597
+  source: PLoS Journals
+  title: Bibliometrics for Social Validation
+  type: article-journal
+  URL: http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0168597
+  volume: '11'
 
 - id: HicksBibliometricsToolResearch2012
   abstract: >-

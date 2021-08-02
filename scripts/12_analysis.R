@@ -580,30 +580,60 @@ H_gamma = gamma %>%
 H_50 = filter(H_gamma, k == 50)
 
 ## Distributions of topic entropies
-ggplot(H_gamma, aes(oru_lgl, H, color = oru_lgl)) +
-    geom_violin(draw_quantiles = .5, size = 1) +
-    geom_sina(alpha = .1) +
+ggplot(H_gamma, aes(oru_lgl, H)) +
+    geom_sina(aes(color = oru_lgl), alpha = .2) +
+    geom_violin(draw_quantiles = c(.25, .5, .75), size = 1, fill = NA) +
     # scale_x_discrete(breaks = NULL) +
-    facet_wrap(vars(k), scales = 'free_y')
+    scale_color_discrete(guide = 'none') +
+    facet_wrap(vars(k), scales = 'free_y') +
+    geom_hline(aes(yintercept = 0), alpha = .25) +
+    geom_hline(aes(yintercept = H), alpha = .25,
+               data = tibble(k = unique(H_gamma$k), 
+                             H = log2(k))) +
+    labs(x = 'ORU affiliation', 
+         title = 'Researcher entropies', 
+         subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_entropies.png'), 
+       width = 6, height = 4, scale = 1.5)
 
-## ORU-level entropies
+ggplot(H_gamma, aes(as.factor(k), H, 
+                    group = interaction(k, oru_lgl), color = oru_lgl)) +
+    geom_violin(draw_quantiles = .5) +
+    stat_summary(geom = 'line', aes(group = oru_lgl), 
+                 position = position_dodge(width = 1))
+
+## ORU- and department-level entropies
 oru_gamma %>% 
-    group_by(k, oru) %>% 
+    bind_rows(dept_gamma) %>% 
+    mutate(name = if_else(is.na(dept), oru, dept),
+           is_oru = !is.na(oru),
+           oru = if_else(is_oru, oru, NA_character_)) %>% 
+    group_by(k, is_oru, oru, name) %>% 
     mutate(H_term = -gamma * log2(gamma)) %>% 
     summarize(H = sum(H_term)) %>% 
     ungroup() %>% 
-    ggplot(aes(k, H, color = oru)) +
-    geom_point(show.legend = FALSE) +
-    geom_line(show.legend = FALSE) +
-    geom_dl(aes(label = oru), method = 'last.points', 
+    ggplot(aes(k, H, color = oru, group = name)) +
+    geom_point(show.legend = FALSE, 
+               alpha = .1, color = 'black', 
+               data = ~ filter(.x, !is_oru)) +
+    geom_point(show.legend = FALSE, 
+               data = ~ filter(.x, is_oru)) +
+    geom_line(show.legend = FALSE, size = .5, 
+              alpha = .1, color = 'black',
+              data = ~ filter(.x, !is_oru)) +
+    geom_line(show.legend = FALSE, size = 1, 
+              data = ~ filter(.x, is_oru)) +
+    geom_dl(aes(label = oru), #method = 'last.points', 
+            method = list('angled.boxes', box.color = 'red'),
             position = position_nudge(x = 5)) +
-    xlim(NA, 180) +
-    scale_color_viridis_d(option = 'B') +
+    xlim(NA, 160) +
+    scale_color_viridis_d(option = 'C') +
+    # scale_alpha_discrete(range = c(0.75, 1)) +
     stat_function(fun = function(x) log2(x), 
-                  inherit.aes = FALSE, color = 'black') +
-    theme(panel.background = element_rect(fill = 'grey90'),
-          legend.background = element_rect(fill = 'grey90'))
-ggsave(str_c(plots_dir, '12_oru_entropy.png'), 
+                  inherit.aes = FALSE, color = 'black')
+    # theme(panel.background = element_rect(fill = 'grey90'),
+    #       legend.background = element_rect(fill = 'grey90'))
+ggsave(str_c(plots_dir, '12_oru_dept_entropy.png'), 
        width = 6, height = 4, scale = 1.5)
 
 ## Distributions within departments
@@ -627,6 +657,69 @@ ggsave(str_c(plots_dir, '12_dept_topics.png'),
        width = 4*2+1, height = 8*2, 
        scale = 2)
 
+
+## Network of departments based on Hellinger similarity ----
+## Department-only pairwise Hellinger distances/similarities
+dept_dist = dept_gamma %>% 
+    bind_rows(oru_gamma) %>% 
+    mutate(name = if_else(is.na(oru), dept, oru)) %>% 
+    filter(k %in% selected_k) %>% 
+    split(.$k) %>% 
+    map(hellinger, id1 = 'name', df = TRUE) %>% 
+    map(filter, name_x <= name_y) %>%
+    map(mutate, sim = 1 - dist)
+
+
+
+## Construct and viz networks
+dept_hell_nets = dept_dist %>% 
+    map(mutate, weight = sim) %>% 
+    # filter(sim > quantile(sim, .75)) %>% 
+    map(graph_from_data_frame, directed = FALSE) %>% 
+    map(as_tbl_graph) %>% 
+    map(mutate, 
+        community = as.factor(group_louvain(weights = sim)), 
+        type = if_else(name %in% oru_gamma$oru, 
+                       'oru', 
+                       'department'))
+
+make_net_viz = function(dataf, k = NULL) {
+    plot = ggraph(dataf, layout = 'stress', weights = weight) +
+        geom_edge_link(aes(alpha = sim, width = sim)) +
+        # geom_node_point() +
+        geom_node_label(aes(label = str_wrap(name, width = 20),
+                            fill = as.numeric(community), 
+                            size = type), 
+                        # size = 2,
+                        alpha = .5
+                        ) +
+        # scale_fill_viridis(discrete = TRUE, option = 'A') +
+        scale_fill_distiller(palette = 'Set1', guide = 'none') +
+        scale_size_manual(values = c(1, 3)) +
+        scale_edge_alpha(limits = c(0, 1), range = c(0, 1)) +
+        scale_edge_width(limits = c(0, 1), range = c(0, 1)) +
+        labs(edge_alpha = 'Hellinger\nsimilarity',
+             edge_width = 'Hellinger\nsimilarity')
+    if (!is.null(k)) {
+        plot + ggtitle(str_c('k = ', k))
+    }
+}
+
+dept_hell_net_viz = imap(dept_hell_nets, make_net_viz)
+
+dept_hell_net_viz[['50']] +
+    scale_size_manual(values = c(2, 4)) +
+    labs(title = 'Hellinger similarity network, departments, k = 50', 
+         subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_dept_hell_net_50.png'), 
+       width = 6, height = 4, scale = 1.5)
+
+wrap_plots(dept_hell_net_viz) + 
+    plot_layout(guides = 'collect') +
+    plot_annotation(title = 'Hellinger similarity networks, departments', 
+                    subtitle = Sys.time())
+ggsave(str_c(plots_dir, '12_dept_hell_net.png'), 
+       width = 6*2, height = 4*2, scale = 1.5)
 
 
 ## Regression model of entropy ----
@@ -1042,13 +1135,27 @@ dist_lm %>%
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
     select(-model) %>% 
     unnest(coefs) %>% 
-    filter(! term %in% au_dept_xwalk$dept) %>% 
+    filter(! str_detect(term, 'dept')) %>% 
     mutate(is_intercept = str_detect(term, 'Intercept')) %>% 
     ggplot(aes(term, estimate, ymin = conf.low, ymax = conf.high)) +
     geom_pointrange() +
     geom_hline(yintercept = 0, linetype = 'dashed') +
     facet_wrap(vars(k, is_intercept), scales = 'free') +
     coord_flip()
+
+dist_lm %>% 
+    mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    select(-model) %>% 
+    unnest(coefs) %>% 
+    filter(str_detect(term, 'first_year')) %>% 
+    select(k, estimate, conf.low, conf.high)
+
+dist_lm %>% 
+    mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 
+    select(-model) %>% 
+    unnest(coefs) %>% 
+    filter(str_detect(term, 'log_n_docs')) %>% 
+    select(k, estimate, conf.low, conf.high)
 
 dist_lm %>% 
     mutate(coefs = map(model, tidy, conf.int = TRUE)) %>% 

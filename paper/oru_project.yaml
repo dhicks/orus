@@ -2940,6 +2940,40 @@ references:
   type: article-journal
   URL: http://dx.doi.org/10.1007/s11229-012-0175-y
 
+- id: OrtmannSparseStressModel2016
+  abstract: >-
+    Force-directed layout methods constitute the most common approach to draw
+    general graphs. Among them, stress minimization produces layouts of
+    comparatively high quality but also imposes comparatively high computational
+    demands. We propose a speed-up method based on the aggregation of terms in
+    the objective function. It is akin to aggregate repulsion from far-away
+    nodes during spring embedding but transfers the idea from the layout space
+    into a preprocessing phase. An initial experimental study informs a method
+    to select representatives, and subsequent more extensive experiments
+    indicate that our method yields better approximations of minimum-stress
+    layouts in less time than related methods.
+  accessed:
+    - year: 2021
+      month: 7
+      day: 29
+  author:
+    - family: Ortmann
+      given: Mark
+    - family: Klimenta
+      given: Mirza
+    - family: Brandes
+      given: Ulrik
+  container-title: arXiv:1608.08909 [cs]
+  issued:
+    - year: 2016
+      month: 11
+      day: 28
+  language: en
+  source: arXiv.org
+  title: A Sparse Stress Model
+  type: article-journal
+  URL: http://arxiv.org/abs/1608.08909
+
 - id: PaulTopicModelingResearch2009
   accessed:
     - year: 2019

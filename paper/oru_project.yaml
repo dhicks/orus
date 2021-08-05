@@ -1919,6 +1919,46 @@ references:
   URL: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0218273
   volume: '14'
 
+- id: HicksVirtuesScientificPractice2016
+  abstract: >-
+    “Practice” has become a ubiquitous term in the history of science, and yet
+    historians have not always reflected on its philosophical import and in
+    particular on its potential connections with ethics. This essay draws on the
+    work of the virtue ethicist Alasdair MacIntyre to develop a theory of
+    “communal practices” and explore how such an approach can inform the history
+    of science, including allegations about the corruption of science by wealth
+    or power, consideration of scientific ethics or “moral economies,” the role
+    of values in science, the ethical distinctiveness (or not) of scientific
+    vocations, and the relationship between history of science and the practice
+    of science itself.
+  accessed:
+    - year: 2016
+      month: 9
+      day: 26
+  author:
+    - family: Hicks
+      given: Daniel J.
+    - family: Stapleford
+      given: Thomas A.
+  container-title: Isis
+  container-title-short: Isis
+  DOI: 10.1086/688346
+  ISSN: 0021-1753
+  issue: '3'
+  issued:
+    - year: 2016
+      month: 9
+      day: 7
+  page: 449-472
+  source: journals.uchicago.edu.proxy1.lib.uwo.ca (Atypon)
+  title: >-
+    The Virtues of Scientific Practice: MacIntyre, Virtue Ethics, and the
+    Historiography of Science
+  title-short: The Virtues of Scientific Practice
+  type: article-journal
+  URL: http://www.journals.uchicago.edu/doi/abs/10.1086/688346
+  volume: '107'
+
 - id: HitchcockReichenbachCommonCause2021
   abstract: >-
     The Common Cause Principle was introduced by HansReichenbach, in The
@@ -2997,6 +3037,17 @@ references:
   title-short: Topic Modeling of Research Fields
   type: paper-conference
   URL: https://www.aclweb.org/anthology/R09-1061
+
+- id: PenceChallengesCommunityScience
+  author:
+    - family: Pence
+      given: Charles
+    - family: Hicks
+      given: Daniel
+  title: >-
+    Challenges for ‘Community’ in Science and Values: Cases from Robotics
+    Research
+  type: manuscript
 
 - id: PolyakovDoesAcademicCollaboration2017
   abstract: >-

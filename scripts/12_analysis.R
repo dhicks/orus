@@ -51,6 +51,11 @@ term_labels = tribble(
     'log_n_docs', 'publications (log count)'
 )
 
+hidetitle = function(plot) {
+    plot +
+        ggtitle(label = NULL, subtitle = NULL)
+}
+
 
 
 ## Load data ----
@@ -146,6 +151,7 @@ author_meta %>%
     ggtitle('Count of researchers by ORU', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_sample.png'), 
+       plot = hidetitle(last_plot()),
        height = 4, width = 7)
 
 
@@ -174,6 +180,7 @@ gender_coarse_plot + labs(title = 'A') +
     gender_fine_plot + labs(title = 'B') +
     plot_layout(guides = 'collect')
 ggsave(str_c(plots_dir, '12_gender.png'), 
+       plot = hidetitle(last_plot()),
        height = 4, width = 7, scale = 2)
 
 
@@ -262,6 +269,7 @@ net %>%
          color = 'node type') +
     theme_graph()
 ggsave(str_c(plots_dir, '12_network.png'),
+       plot = hidetitle(last_plot()),
        height = 10, width = 15, dpi = 300, scale = .75)
 
 ## ORU-dep't network
@@ -300,6 +308,7 @@ oru_dept_net %>%
     scale_edge_width(range = c(.5, 3)) +
     theme_graph()
 ggsave(str_c(plots_dir, '12_oru_dept_network.png'),
+       plot = hidetitle(last_plot()),
        height = 10, width = 15, dpi = 300, scale = .6)
 
 
@@ -355,6 +364,7 @@ tidy(n_coauths_lm, conf.int = TRUE) %>%
     ggtitle('Est. effect of ORU affiliation on coauthor counts',
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_coauths_regression.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 3, scale = 1)
 
 
@@ -410,6 +420,7 @@ tidy(n_docs_lm, conf.int = TRUE) %>%
     ggtitle('Est. effect of ORU affiliation on publication counts',
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_pub_regression.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 3, scale = 1)
 
 
@@ -477,6 +488,7 @@ cites_lm %>%
     ggtitle('Est. effect of ORU affiliation on citation counts', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_cites_regression.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1)
 
 ## Topic models ----
@@ -594,6 +606,7 @@ ggplot(H_gamma, aes(oru_lgl, H)) +
          title = 'Researcher entropies', 
          subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_entropies.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 ggplot(H_gamma, aes(as.factor(k), H, 
@@ -634,6 +647,7 @@ oru_gamma %>%
     # theme(panel.background = element_rect(fill = 'grey90'),
     #       legend.background = element_rect(fill = 'grey90'))
 ggsave(str_c(plots_dir, '12_oru_dept_entropy.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 ## Distributions within departments
@@ -719,6 +733,7 @@ wrap_plots(dept_hell_net_viz) +
     plot_annotation(title = 'Hellinger similarity networks, departments', 
                     subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_dept_hell_net.png'), 
+       plot = hidetitle(last_plot()),
        width = 6*2, height = 4*2, scale = 1.5)
 
 
@@ -759,6 +774,7 @@ H_lm %>%
     ggtitle('Est. effect of ORU affiliation on topic entropy', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_entropy_regression.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 
@@ -799,6 +815,7 @@ dept_gamma %>%
     labs(x = 'department')
 
 ggsave(file.path(plots_dir, '12_dept_gamma.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 6, scale = 2)
 
 oru_gamma %>% 
@@ -811,6 +828,7 @@ oru_gamma %>%
     labs(x = 'ORU')
 
 ggsave(file.path(plots_dir, '12_oru_gamma.png'), 
+       plot = hidetitle(last_plot()),
        width = 4, height = 4, scale = 1.5)
 
 
@@ -1005,6 +1023,7 @@ mds_plot
 # plotly::ggplotly()
 
 ggsave(str_c(plots_dir, '12_mds.png'), 
+       plot = hidetitle(last_plot()),
        height = 8, width = 8.5)
 
 ggsave(str_c(plots_dir, '12_mds_wide.png'), 
@@ -1045,6 +1064,7 @@ mds_df %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_mds_dept.png'), 
+       plot = hidetitle(last_plot()),
        height = 8, width = 12, scale = 1.6)
 
 
@@ -1172,6 +1192,7 @@ dist_lm %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_dept_dist_reg.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 ## Separate estimates for each ORU
@@ -1202,6 +1223,7 @@ dist_lm_fixed %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_dept_dist_fixed_reg.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 
@@ -1252,6 +1274,7 @@ inner_join(interior_mean_dist,
     ggtitle('ORU vs. co-departmental distance', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist.png'), 
+       plot = hidetitle(last_plot()),
        width = 7*3*.75, height = 4*3, scale = .8)
 
 last_plot() + aes(int_mean_dist, mean_codept_dist)
@@ -1287,6 +1310,7 @@ inner_join(interior_mean_dist,
     ggtitle('ORU vs. co-departmental distance', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist_ridges.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 last_plot() + aes(diff_mean) +
@@ -1332,6 +1356,7 @@ oru_dist %>%
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_oru_dept_org_dist.png'), 
+       plot = hidetitle(last_plot()),
        width = 7*3*.75, height = 4*3, scale = .8)
 
 oru_dist %>% 
@@ -1365,4 +1390,5 @@ oru_dist %>%
     ggtitle('ORU vs. co-departmental distance', 
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_org_dist_ridges.png'), 
+       plot = hidetitle(last_plot()),
        width = 7*3*.75, height = 4*3, scale = .8)

@@ -173,7 +173,10 @@ gender_fine_plot = author_meta %>%
     scale_fill_brewer(palette = 'Set2') +
     scale_y_continuous(labels = scales::percent_format()) +
     labs(x = 'ORU', 
-         y = 'share')
+         y = 'share') + 
+    theme(axis.text.x = element_text(angle = 30, 
+                                     vjust = 1, 
+                                     hjust=1))
 gender_fine_plot
 
 gender_coarse_plot + labs(title = 'A') +
@@ -181,7 +184,7 @@ gender_coarse_plot + labs(title = 'A') +
     plot_layout(guides = 'collect')
 ggsave(str_c(plots_dir, '12_gender.png'), 
        plot = hidetitle(last_plot()),
-       height = 4, width = 7, scale = 2)
+       height = 4, width = 7, scale = 1)
 
 
 #+ network, cache = TRUE
@@ -294,12 +297,12 @@ oru_dept_net %>%
     ggraph(layout = 'nicely') +
     geom_edge_link(aes(alpha = n, width = n)) +
     geom_node_point(aes(color = type)) +
-    geom_node_label(aes(label = name), 
+    geom_node_label(aes(label = str_wrap(name, 20)), 
                     alpha = .5,
                     data = function(dataf) {
                         subset(dataf, type == 'ORU')
                     }) +
-    geom_node_text(aes(label = name),
+    geom_node_text(aes(label = str_wrap(name, 20)),
                    size = 2,
                    data = function(dataf) {
                        subset(dataf, type == 'department')
@@ -596,7 +599,9 @@ H_50 = filter(H_gamma, k == 50)
 plot_entropies = function(dataf) {
     ggplot(dataf, aes(oru_lgl, H)) +
         geom_sina(aes(color = oru_lgl), alpha = .2) +
-        geom_violin(draw_quantiles = c(.25, .5, .75), size = 1, fill = NA) +
+        geom_violin(draw_quantiles = c(.25, .5, .75), 
+                    size = 1, 
+                    fill = NA) +
         # scale_x_discrete(breaks = NULL) +
         scale_color_discrete(guide = 'none') +
         facet_wrap(vars(k), scales = 'free_y') +
@@ -614,8 +619,9 @@ ggsave(str_c(plots_dir, '12_entropies.png'),
        width = 6, height = 4, scale = 1.5)
 plot_entropies(filter(H_gamma, k %in% selected_k))    
 ggsave(str_c(plots_dir, '12_entropies_selected.png'), 
-       plot = hidetitle(last_plot()), 
-       width = 6, height = 4, scale = 1.5)
+       plot = hidetitle(last_plot()) + 
+           scale_size(range = c(.5, .5), guide = 'none'), 
+       width = 6, height = 4, scale = 1)
 
 ggplot(H_gamma, aes(as.factor(k), H, 
                     group = interaction(k, oru_lgl), color = oru_lgl)) +
@@ -645,7 +651,13 @@ oru_gamma %>%
     geom_line(show.legend = FALSE, size = 1, 
               data = ~ filter(.x, is_oru)) +
     geom_dl(aes(label = oru), #method = 'last.points', 
-            method = list('angled.boxes', box.color = 'red'),
+            method = list(#'angled.boxes', 
+                "far.from.others.borders",
+                "calc.boxes",
+                #"enlarge.box",
+                "draw.rects",
+                box.color = NA, 
+                cex = .65),
             position = position_nudge(x = 5)) +
     xlim(NA, 160) +
     scale_color_viridis_d(option = 'C') +
@@ -656,7 +668,7 @@ oru_gamma %>%
 #       legend.background = element_rect(fill = 'grey90'))
 ggsave(str_c(plots_dir, '12_oru_dept_entropy.png'), 
        plot = hidetitle(last_plot()),
-       width = 6, height = 4, scale = 1.5)
+       width = 6, height = 4, scale = 1)
 
 ## Distributions within departments
 dept_topics = author_meta %>% 
@@ -784,7 +796,7 @@ H_lm %>%
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_entropy_regression.png'), 
        plot = hidetitle(last_plot()),
-       width = 6, height = 4, scale = 1.5)
+       width = 6, height = 4, scale = 1)
 
 
 #+ topic_viz, cache = TRUE
@@ -1206,7 +1218,7 @@ dist_lm %>%
 
 ggsave(str_c(plots_dir, '12_dept_dist_reg.png'), 
        plot = hidetitle(last_plot()),
-       width = 6, height = 4, scale = 1.5)
+       width = 6, height = 4, scale = 1)
 
 ## Separate estimates for each ORU
 dist_lm_fixed = dept_dist %>% 
@@ -1277,22 +1289,26 @@ inner_join(interior_mean_dist,
     stat_function(fun = identity, linetype = 'dashed', 
                   inherit.aes = FALSE) +
     scale_color_viridis_d(option = 'A', direction = -1, 
-                          guide = FALSE) +
+                          guide = 'none') +
     scale_fill_viridis_d(option = 'A', direction = -1, 
-                         guide = FALSE) +
+                         guide = 'none') +
     facet_wrap(vars(k, oru), ncol = 7) +
     coord_equal() +
     xlab('Minimal distance to co-ORU members') +
+    scale_x_continuous(breaks = scales::pretty_breaks(n = 2),
+        guide = guide_axis(n.dodge = 1)) +
     ylab('Minimal distance to co-departmentals') +
+    scale_y_continuous(breaks = scales::pretty_breaks(n = 2)) +
     ggtitle('ORU vs. co-departmental distance', 
-            subtitle = Sys.time())
+            subtitle = Sys.time()) + 
+    theme(panel.spacing.x = unit(.25, 'in'))
 ggsave(str_c(plots_dir, '12_oru_dept_min_dist.png'), 
        plot = hidetitle(last_plot()),
-       width = 7*3*.75, height = 4*3, scale = .8)
+       width = 7*3*.75, height = 4*3, scale = .5)
 
 last_plot() + aes(int_mean_dist, mean_codept_dist)
 ggsave(str_c(plots_dir, '12_oru_dept_mean_dist.png'), 
-       width = 7*3*.75, height = 4*3, scale = .8)
+       width = 7*3*.75, height = 4*3, scale = .5)
 
 
 inner_join(interior_mean_dist, 
@@ -1314,9 +1330,9 @@ inner_join(interior_mean_dist,
     # geom_rug() +
     geom_vline(xintercept = 0, linetype = 'dashed') +
     scale_color_viridis_d(option = 'A', direction = -1, 
-                          guide = FALSE) +
+                          guide = 'none') +
     scale_fill_viridis_d(option = 'A', direction = -1, 
-                         guide = FALSE) +
+                         guide = 'none') +
     xlab('Min. departmental distance - min. ORU distance\n(Hellinger scale)') +
     ylab('ORU') +
     facet_wrap(vars(k), ncol = 2, scales = 'free') +
@@ -1358,19 +1374,22 @@ oru_dist %>%
     stat_function(fun = 'identity', linetype = 'dashed') +
     facet_wrap(vars(k, oru), ncol = 7) +
     scale_color_viridis_d(option = 'A', direction = -1, 
-                          guide = FALSE) +
+                          guide = 'none') +
     scale_fill_viridis_d(option = 'A', direction = -1, 
-                         guide = FALSE) +
+                         guide = 'none') +
     facet_wrap(vars(k, oru), ncol = 7) +
     coord_equal() +
     xlab('Distance to ORU-level distribution') +
+    scale_x_continuous(breaks = scales::pretty_breaks(2)) +
     ylab('Distance to department-level distributions') +
+    scale_y_continuous(breaks = scales::pretty_breaks(2)) +
     ggtitle('ORU vs. departmental distance', 
-            subtitle = Sys.time())
+            subtitle = Sys.time()) + 
+    theme(panel.spacing.x = unit(.25, 'in'))
 
 ggsave(str_c(plots_dir, '12_oru_dept_org_dist.png'), 
        plot = hidetitle(last_plot()),
-       width = 7*3*.75, height = 4*3, scale = .8)
+       width = 7*3*.75, height = 4*3, scale = .5)
 
 oru_dist %>% 
     filter(k %in% selected_k, 
@@ -1404,4 +1423,4 @@ oru_dist %>%
             subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_oru_dept_org_dist_ridges.png'), 
        plot = hidetitle(last_plot()),
-       width = 7*3*.75, height = 4*3, scale = .8)
+       width = 7*3*.75, height = 4*3, scale = .5)

@@ -57,7 +57,7 @@ hidetitle = function(plot) {
 }
 
 
-
+#+ load_data
 ## Load data ----
 models = read_rds(str_c(data_dir, '10_models.Rds'))
 
@@ -114,7 +114,7 @@ gamma_sm = filter(gamma, k %in% selected_k)
 dept_gamma = read_rds(file.path(data_dir, '11_dept_gamma.Rds'))
 oru_gamma = read_rds(file.path(data_dir, '11_oru_gamma.Rds'))
 
-
+#+ desc_plots_tabs
 ## Term lists ----
 beta_50 = matrices %>% 
     filter(k == 50) %>% 
@@ -184,7 +184,7 @@ ggsave(str_c(plots_dir, '12_gender.png'),
        height = 4, width = 7, scale = 2)
 
 
-
+#+ network, cache = TRUE
 ## Network viz ----
 ## author-department network
 dept_net = au_dept_xwalk %>% 
@@ -312,7 +312,7 @@ ggsave(str_c(plots_dir, '12_oru_dept_network.png'),
        height = 10, width = 15, dpi = 300, scale = .6)
 
 
-
+#+ productivity
 ## Coauthor count ----
 n_coauths_lm = author_meta %>% 
     select(log_n_coauths, auid, oru_lgl, 
@@ -491,6 +491,7 @@ ggsave(str_c(plots_dir, '12_cites_regression.png'),
        plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1)
 
+#+ topic_models
 ## Topic models ----
 model_stats %>% 
     select(k, 
@@ -592,21 +593,28 @@ H_gamma = gamma %>%
 H_50 = filter(H_gamma, k == 50)
 
 ## Distributions of topic entropies
-ggplot(H_gamma, aes(oru_lgl, H)) +
-    geom_sina(aes(color = oru_lgl), alpha = .2) +
-    geom_violin(draw_quantiles = c(.25, .5, .75), size = 1, fill = NA) +
-    # scale_x_discrete(breaks = NULL) +
-    scale_color_discrete(guide = 'none') +
-    facet_wrap(vars(k), scales = 'free_y') +
-    geom_hline(aes(yintercept = 0), alpha = .25) +
-    geom_hline(aes(yintercept = H), alpha = .25,
-               data = tibble(k = unique(H_gamma$k), 
-                             H = log2(k))) +
-    labs(x = 'ORU affiliation', 
-         title = 'Researcher entropies', 
-         subtitle = Sys.time())
+plot_entropies = function(dataf) {
+    ggplot(dataf, aes(oru_lgl, H)) +
+        geom_sina(aes(color = oru_lgl), alpha = .2) +
+        geom_violin(draw_quantiles = c(.25, .5, .75), size = 1, fill = NA) +
+        # scale_x_discrete(breaks = NULL) +
+        scale_color_discrete(guide = 'none') +
+        facet_wrap(vars(k), scales = 'free_y') +
+        geom_hline(aes(yintercept = 0), alpha = .25) +
+        geom_hline(aes(yintercept = H), alpha = .25,
+                   data = tibble(k = unique(dataf$k), 
+                                 H = log2(k))) +
+        labs(x = 'ORU affiliation', 
+             title = 'Researcher entropies', 
+             subtitle = Sys.time())
+}
+plot_entropies(H_gamma)
 ggsave(str_c(plots_dir, '12_entropies.png'), 
        plot = hidetitle(last_plot()),
+       width = 6, height = 4, scale = 1.5)
+plot_entropies(filter(H_gamma, k %in% selected_k))    
+ggsave(str_c(plots_dir, '12_entropies_selected.png'), 
+       plot = hidetitle(last_plot()), 
        width = 6, height = 4, scale = 1.5)
 
 ggplot(H_gamma, aes(as.factor(k), H, 
@@ -644,8 +652,8 @@ oru_gamma %>%
     # scale_alpha_discrete(range = c(0.75, 1)) +
     stat_function(fun = function(x) log2(x), 
                   inherit.aes = FALSE, color = 'black')
-    # theme(panel.background = element_rect(fill = 'grey90'),
-    #       legend.background = element_rect(fill = 'grey90'))
+# theme(panel.background = element_rect(fill = 'grey90'),
+#       legend.background = element_rect(fill = 'grey90'))
 ggsave(str_c(plots_dir, '12_oru_dept_entropy.png'), 
        plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
@@ -706,7 +714,7 @@ make_net_viz = function(dataf, k = NULL) {
                             size = type), 
                         # size = 2,
                         alpha = .5
-                        ) +
+        ) +
         # scale_fill_viridis(discrete = TRUE, option = 'A') +
         scale_fill_distiller(palette = 'Set1', guide = 'none') +
         scale_size_manual(values = c(1, 3)) +
@@ -726,6 +734,7 @@ dept_hell_net_viz[['50']] +
     labs(title = 'Hellinger similarity network, departments, k = 50', 
          subtitle = Sys.time())
 ggsave(str_c(plots_dir, '12_dept_hell_net_50.png'), 
+       plot = hidetitle(last_plot()),
        width = 6, height = 4, scale = 1.5)
 
 wrap_plots(dept_hell_net_viz) + 
@@ -778,6 +787,7 @@ ggsave(str_c(plots_dir, '12_entropy_regression.png'),
        width = 6, height = 4, scale = 1.5)
 
 
+#+ topic_viz, cache = TRUE
 ## Viz for department and ORU topic distributions ----
 # cluster_order = function(topics, id) {
 #     topics %>% 
@@ -832,6 +842,7 @@ ggsave(file.path(plots_dir, '12_oru_gamma.png'),
        width = 4, height = 4, scale = 1.5)
 
 
+#+ silhouette, cache = TRUE
 ## Silhouette analysis ----
 dist = gamma_sm %>% 
     select(k, auid, topic, gamma) %>% 
@@ -896,6 +907,7 @@ full_join(interior_mean_dist, exterior_min_dist) %>%
     facet_wrap(vars(k)) +
     coord_equal()
 
+#+ mds_viz, cache = TRUE
 ## t-SNE viz of Hellinger distances ----
 tidy_mds = function(mx) {
     Rtsne::Rtsne(mx, is_distance = TRUE, 
@@ -1043,32 +1055,33 @@ mds_df %>%
     # pull(dept) %>% negate(is.na)() %>% all()
     add_count(dept) %>% 
     filter(n >= 50, dept != 'Plant Sciences') %>%
+    mutate(dept = str_wrap(dept, width = 20)) %>% 
     ggplot(aes(V1, V2, 
                fill = oru)) +
     geom_point(aes(alpha = oru_lgl|type == 'department', 
                    shape = type), 
-               size = 5) +
+               size = 2) +
     coord_equal() +
-    facet_wrap(vars(k, dept), ncol = 5, scales = 'fixed') +
+    facet_wrap(vars(dept), ncol = 5, scales = 'fixed') +
     theme_void() +
     scale_fill_viridis_d(option = 'A', direction = -1, 
-                         guide = FALSE) +
+                         guide = 'none') +
     scale_alpha_discrete(range = c(.25, 1), 
-                         guide = FALSE) +
+                         guide = 'none') +
     scale_shape_manual(values = c('author' = 21, 
                                   'ORU' = 22, 
                                   'department' = 23), 
-                       guide = FALSE) +
+                       guide = 'none') +
     theme(panel.border = element_rect(fill = 'transparent')) +
     ggtitle('t-SNE visualization of Hellinger distances between researchers',
             subtitle = Sys.time())
 
 ggsave(str_c(plots_dir, '12_mds_dept.png'), 
        plot = hidetitle(last_plot()),
-       height = 8, width = 12, scale = 1.6)
+       height = 8, width = 12, scale = 1)
 
 
-
+#+ author-dept distance
 ## Author-department distance ----
 ## Departments of interest:  >= 40 non-ORU authors
 # depts_of_interest = author_meta %>% 
@@ -1227,7 +1240,7 @@ ggsave(str_c(plots_dir, '12_dept_dist_fixed_reg.png'),
        width = 6, height = 4, scale = 1.5)
 
 
-
+#+ h3
 ## H3 ----
 ## Silhouette plot, distance to codepartmentals vs. distance to co-ORUs
 ## Distances between ORU faculty and their non-ORU codepartmentals

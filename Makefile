@@ -5,7 +5,7 @@ SCRIPTS = scripts
 R = R
 DATA = data
 
-figures := $(addprefix $(IMG)/, sample.png network.png oru_dept_network.png gender.png coauths_regression.png pub_regression.png cites_regression.png mds.png mds_dept.png dept_gamma.png oru_gamma.png oru_dept_entropy.png dept_hell_net.png entropies.png entropy_regression.png dept_dist_reg.png dept_dist_fixed_reg.png oru_dept_min_dist.png oru_dept_min_dist_ridges.png oru_dept_org_dist.png oru_dept_org_dist_ridges.png)
+figures := $(addprefix $(IMG)/, sample.png network.png oru_dept_network.png gender.png coauths_regression.png pub_regression.png cites_regression.png mds.png mds_dept.png dept_gamma.png oru_gamma.png oru_dept_entropy.png dept_hell_net.png entropies.png entropies_selected.png entropy_regression.png dept_dist_reg.png dept_dist_fixed_reg.png oru_dept_min_dist.png oru_dept_min_dist_ridges.png oru_dept_org_dist.png oru_dept_org_dist_ridges.png dept_hell_net_50.png)
 
 analysis = $(SCRIPTS)/12_analysis.html
 
@@ -26,7 +26,7 @@ $(PAPER)/oru_paper.pdf: $(PAPER)/oru_paper.md \
 	cd $(PAPER); pandoc header.yaml oru_paper.md -o oru_paper.pdf --citeproc --pdf-engine=lualatex
 supplement: $(PAPER)/supplement.pdf
 $(PAPER)/supplement.pdf: paper $(PAPER)/supplement.md
-	cd $(PAPER); pandoc header.yaml supplement.md -o supplement.pdf --citeproc --pdf-engine=lualatex
+	cd $(PAPER); pandoc supplement.md -o supplement.pdf --citeproc --pdf-engine=lualatex
 
 
 $(analysis): $(SCRIPTS)/12_analysis.R \

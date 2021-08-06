@@ -369,7 +369,7 @@ Because of these challenges, interdisciplinary research may be difficult, to the
 
 # Acknowledgments #
 
-DJH's postdoctoral fellowship at UC Davis was funded by a gift to the university from Elsevier.  The funder had no influence on the design, data collection, analysis, or interpretation of this study. 
+DJH's postdoctoral fellowship at UC Davis was funded by a gift to the university from Elsevier.  The funder had no influence on the design, data collection, analysis, or interpretation of this study.  Thanks to Duncan Temple Lang and Jane Carlen for advice on the analytical approaches used in this study. 
 
 # References #
 

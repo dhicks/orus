@@ -9,14 +9,14 @@ figures := $(addprefix $(IMG)/, sample.png network.png oru_dept_network.png gend
 
 analysis = $(SCRIPTS)/12_analysis.html
 
-all: figures paper supplement
+all: figures paper supplement tex
 
 .PHONY: figures
 figures: $(analysis) $(figures) 
 $(IMG)/%.png: $(subst $(IMG)/, $(PLOTS)/12_, $(IMG)/%.png)
 	cp $< $@
 
-.PHONY: paper supplement
+.PHONY: paper supplement tex
 paper: $(PAPER)/oru_paper.pdf
 $(PAPER)/oru_paper.pdf: $(PAPER)/oru_paper.md \
                         $(PAPER)/oru_project.yaml \
@@ -24,10 +24,16 @@ $(PAPER)/oru_paper.pdf: $(PAPER)/oru_paper.md \
                         $(analysis) \
                         $(figures)
 	cd $(PAPER); pandoc header.yaml oru_paper.md -o oru_paper.pdf --citeproc --pdf-engine=lualatex
+
 supplement: $(PAPER)/supplement.pdf
 $(PAPER)/supplement.pdf: paper $(PAPER)/supplement.md
-	cd $(PAPER); pandoc supplement.md -o supplement.pdf --citeproc --pdf-engine=lualatex
-
+	cd $(PAPER); pandoc header.yaml supplement.md -o supplement.pdf --citeproc --pdf-engine=lualatex
+	
+tex: $(PAPER)/oru_paper.tex
+$(PAPER)/oru_paper.tex: $(PAPER)/oru_paper.md \
+                        $(PAPER)/oru_project.yaml \
+                        $(PAPER)/header.yaml
+	cd $(PAPER); pandoc header.yaml oru_paper.md -o oru_paper.tex -s --citeproc --wrap=none
 
 $(analysis): $(SCRIPTS)/12_analysis.R \
                              $(R)/hellinger.R \

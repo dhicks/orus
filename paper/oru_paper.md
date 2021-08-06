@@ -5,8 +5,10 @@ author:  |
  | Data Science Initiative, UC Davis
  | Cognitive and Information Sciences, UC Merced
  | <hicks.daniel.j@gmail.com>
+ | ORCID: 0000-0001-7945-4416
 numbersections: true
 bibliography: oru_project.yaml
+csl: apa-6th-edition.csl
 header-includes: 
     - \usepackage{graphics}
     - \usepackage{enumitem}
@@ -14,8 +16,6 @@ header-includes:
     - \usepackage{multirow}
 abstract: "Organized Research Units (ORUs) are non-departmental units utilized by US research universities to support interdisciplinary research initiatives, among other goals.  This study examined the impacts of ORUs at one large public research university, the University of California, Davis (UC Davis), using a large corpus of journal article metadata and abstracts for both faculty affiliated with UCD ORUs and a comparison set of other faculty.  Using regression analysis, I find that ORUs appeared to increase the number of coauthors of affiliated faculty, but did not appear to directly effect publication or citation counts.  Next, I frame interdisciplinarity in terms of a notion of discursive space, and use a topic model approach to situate researchers within this discursive space.  The evidence generally indicates that ORUs promoted multidisciplinarity rather than interdisciplinarity.  In the conclusion, drawing on work in philosophy of science on inter- and multidisciplinarity, I argue that multidisciplinarity is not necessarily inferior to interdisciplinarity."
 ---
-
-<!-- https://www.mitpressjournals.org/journals/qss/sub -->
 
 \linenumbers
 
@@ -369,7 +369,20 @@ Because of these challenges, interdisciplinary research may be difficult, to the
 
 # Acknowledgments #
 
-DJH's postdoctoral fellowship at UC Davis was funded by a gift to the university from Elsevier.  The funder had no influence on the design, data collection, analysis, or interpretation of this study.  Thanks to Duncan Temple Lang and Jane Carlen for advice on the analytical approaches used in this study. 
+Thanks to Duncan Temple Lang and Jane Carlen for advice on the analytical approaches used in this study. 
+
+# Author contributions #
+
+DJH is responsible for conceptualization, data curation, formal analysis, investigation, methodology, project administration, resources, software, validation, visualization, writing - original draft, and writing - review & editing. 
+
+# Competing interests and funding #
+
+DJH's postdoctoral fellowship at UC Davis was funded by a gift to the university from Elsevier.  The funder had no influence on the design, data collection, analysis, or interpretation of this study.  
+
+# Data availability #
+
+Unless otherwise noted, all data used in this project was retrieved from Scopus, using either the web interface or application programming interface (API), between November 2018 and June 2019.  Due to intellectual property restrictions the data cannot be made publicly available.  Some downstream analysis files may be provided upon request.  All code used in data collection and analysis is available at <https://github.com/dhicks/orus>.  
+
 
 # References #
 
